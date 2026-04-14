@@ -32,21 +32,22 @@ func _ready() -> void:
 	_setup_wave()
 
 func _process(_delta: float) -> void:
+	_handle_build_input()
 	_update_tower_preview()
 	_update_hud_feedback()
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ability_1"):
+func _handle_build_input() -> void:
+	if Input.is_action_just_pressed("ability_1"):
 		_toggle_tower_selection("basic_tower")
 		return
-	if event.is_action_pressed("ability_3"):
+	if Input.is_action_just_pressed("ability_3"):
 		_toggle_tower_selection("heavy_battery")
 		return
-	if event.is_action_pressed("command_secondary"):
+	if Input.is_action_just_pressed("command_secondary"):
 		GameState.clear_selection()
 		_clear_preview()
 		return
-	if event.is_action_pressed("command_primary") and _has_selected_tower():
+	if Input.is_action_just_pressed("command_primary") and _has_selected_tower():
 		_try_place_selected_tower()
 
 func _setup_map() -> void:
