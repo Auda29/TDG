@@ -75,7 +75,7 @@ func _handle_build_input() -> void:
 		_try_sell_selected_tower()
 		return
 	if Input.is_action_just_pressed("cycle_target_mode"):
-		_try_cycle_selected_tower_targeting()
+		_try_cycle_selected_tower_targeting(1)
 		return
 	if Input.is_action_just_pressed("command_secondary"):
 		_clear_selected_placed_tower()
@@ -115,8 +115,10 @@ func _setup_hud() -> void:
 		hud_instance.build_tower_requested.connect(_toggle_tower_selection)
 	if hud_instance.has_signal("sell_selected_requested"):
 		hud_instance.sell_selected_requested.connect(_try_sell_selected_tower)
-	if hud_instance.has_signal("cycle_targeting_requested"):
-		hud_instance.cycle_targeting_requested.connect(_try_cycle_selected_tower_targeting)
+	if hud_instance.has_signal("cycle_targeting_previous_requested"):
+		hud_instance.cycle_targeting_previous_requested.connect(func() -> void: _try_cycle_selected_tower_targeting(-1))
+	if hud_instance.has_signal("cycle_targeting_next_requested"):
+		hud_instance.cycle_targeting_next_requested.connect(func() -> void: _try_cycle_selected_tower_targeting(1))
 	if hud_instance.has_signal("pause_toggled"):
 		hud_instance.pause_toggled.connect(_set_game_paused)
 	if hud_instance.has_signal("auto_wave_toggled"):
@@ -343,13 +345,13 @@ func _clear_selected_placed_tower() -> void:
 			GameState.selected_placed_tower.set_selected(false)
 	GameState.selected_placed_tower = null
 
-func _try_cycle_selected_tower_targeting() -> void:
+func _try_cycle_selected_tower_targeting(step: int = 1) -> void:
 	var tower := GameState.selected_placed_tower
 	if tower == null or not is_instance_valid(tower):
 		return
 	if not tower.has_method("cycle_targeting_mode"):
 		return
-	tower.cycle_targeting_mode()
+	tower.cycle_targeting_mode(step)
 	var target_mode_label: String = tower.get_targeting_mode_label() if tower.has_method("get_targeting_mode_label") else "Targeting"
 	hud_instance.show_event("Targeting: %s" % target_mode_label, Color(0.6, 0.9, 1.0), 0.9)
 

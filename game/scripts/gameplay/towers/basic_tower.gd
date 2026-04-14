@@ -190,11 +190,11 @@ func _get_overwatch_multiplier() -> float:
 		return 1.0
 	return commander.get_overwatch_multiplier_for_position(global_position)
 
-func cycle_targeting_mode() -> void:
+func cycle_targeting_mode(step: int = 1) -> void:
 	var current_index: int = TARGETING_MODES.find(_targeting_mode)
 	if current_index < 0:
 		current_index = 0
-	_targeting_mode = TARGETING_MODES[(current_index + 1) % TARGETING_MODES.size()]
+	_targeting_mode = TARGETING_MODES[posmod(current_index + step, TARGETING_MODES.size())]
 	queue_redraw()
 
 func get_targeting_mode_label() -> String:

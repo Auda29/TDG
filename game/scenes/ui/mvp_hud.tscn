@@ -78,9 +78,9 @@ anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 offset_left = -320.0
-offset_top = -170.0
+offset_top = -220.0
 offset_right = -20.0
-offset_bottom = 170.0
+offset_bottom = 220.0
 mouse_filter = 1
 visible = false
 
@@ -93,25 +93,147 @@ theme_override_constants/margin_bottom = 10
 
 [node name="SelectedVBox" type="VBoxContainer" parent="SelectedPanel/SelectedMargin"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
-[node name="SelectedTitleLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+[node name="HeaderPanel" type="PanelContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+layout_mode = 2
+
+[node name="HeaderMargin" type="MarginContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HeaderHBox" type="HBoxContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SilhouettePanel" type="PanelContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+
+[node name="SilhouetteLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/SilhouettePanel"]
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "⬢"
+
+[node name="HeaderTextVBox" type="VBoxContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="SelectedTitleLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/HeaderTextVBox"]
 layout_mode = 2
 text = "Selected Tower"
 
-[node name="SelectedStatsLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+[node name="SelectedSubtitleLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/HeaderTextVBox"]
+layout_mode = 2
+text = "Defense Unit"
+
+[node name="StatsPanel" type="PanelContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+layout_mode = 2
+
+[node name="StatsMargin" type="MarginContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/StatsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="SelectedStatsLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/StatsPanel/StatsMargin"]
 layout_mode = 2
 text = "No tower selected"
 autowrap_mode = 3
 
-[node name="TargetModeButton" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+[node name="ActionsPanel" type="PanelContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
 layout_mode = 2
-text = "Targeting: First"
+
+[node name="ActionsMargin" type="MarginContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ActionsVBox" type="VBoxContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ActionsTitleLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox"]
+layout_mode = 2
+text = "Tower Actions"
+
+[node name="TargetingRow" type="HBoxContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="TargetPrevButton" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "<"
 disabled = true
 
-[node name="SellButton" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+[node name="TargetModeLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+text = "◎ First"
+
+[node name="TargetNextButton" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = ">"
+disabled = true
+
+[node name="SellButton" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox"]
 layout_mode = 2
 text = "Sell Tower"
+disabled = true
+
+[node name="UpgradesPanel" type="PanelContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+layout_mode = 2
+
+[node name="UpgradesMargin" type="MarginContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="UpgradesVBox" type="VBoxContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="UpgradesTitleLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox"]
+layout_mode = 2
+text = "Upgrade Slots"
+
+[node name="UpgradeSlots" type="GridContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+
+[node name="UpgradeSlotA" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
+layout_mode = 2
+text = "Slot A\nLocked"
+disabled = true
+
+[node name="UpgradeSlotB" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
+layout_mode = 2
+text = "Slot B\nLocked"
+disabled = true
+
+[node name="UpgradeSlotC" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
+layout_mode = 2
+text = "Slot C\nLocked"
+disabled = true
+
+[node name="UpgradeSlotD" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
+layout_mode = 2
+text = "Slot D\nLocked"
 disabled = true
 
 [node name="BottomBar" type="PanelContainer" parent="."]
