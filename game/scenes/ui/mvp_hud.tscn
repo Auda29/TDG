@@ -84,6 +84,43 @@ offset_bottom = 220.0
 mouse_filter = 1
 visible = false
 
+[node name="FrameTop" type="ColorRect" parent="SelectedPanel"]
+layout_mode = 0
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 2.0
+mouse_filter = 2
+color = Color(0.42, 0.82, 0.96, 0.85)
+
+[node name="FrameBottom" type="ColorRect" parent="SelectedPanel"]
+layout_mode = 0
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -2.0
+mouse_filter = 2
+color = Color(0.42, 0.82, 0.96, 0.45)
+
+[node name="CornerTL" type="ColorRect" parent="SelectedPanel"]
+layout_mode = 0
+offset_right = 18.0
+offset_bottom = 18.0
+mouse_filter = 2
+color = Color(0.60, 0.90, 1.0, 0.9)
+
+[node name="CornerBR" type="ColorRect" parent="SelectedPanel"]
+layout_mode = 0
+anchors_preset = 12
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -18.0
+offset_top = -18.0
+mouse_filter = 2
+color = Color(0.96, 0.72, 0.24, 0.8)
+
 [node name="SelectedMargin" type="MarginContainer" parent="SelectedPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
@@ -132,6 +169,12 @@ text = "Selected Tower"
 layout_mode = 2
 text = "Defense Unit"
 
+[node name="HeaderDivider" type="ColorRect" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.48, 0.82, 0.94, 0.45)
+
 [node name="StatsPanel" type="PanelContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
 layout_mode = 2
 
@@ -146,6 +189,12 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 text = "No tower selected"
 autowrap_mode = 3
+
+[node name="StatsDivider" type="ColorRect" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.48, 0.82, 0.94, 0.25)
 
 [node name="ActionsPanel" type="PanelContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
 layout_mode = 2
@@ -191,6 +240,12 @@ disabled = true
 layout_mode = 2
 text = "Sell Tower"
 disabled = true
+
+[node name="ActionsDivider" type="ColorRect" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.96, 0.72, 0.24, 0.22)
 
 [node name="UpgradesPanel" type="PanelContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
 layout_mode = 2

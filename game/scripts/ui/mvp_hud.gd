@@ -40,6 +40,10 @@ const TARGET_ICONS := {
 @onready var status_panel: PanelContainer = $BottomBar/Margin/RootHBox/StatusPanel
 @onready var center_panel: PanelContainer = $BottomBar/Margin/RootHBox/CenterPanel
 @onready var selected_panel: PanelContainer = $SelectedPanel
+@onready var frame_top: ColorRect = $SelectedPanel/FrameTop
+@onready var frame_bottom: ColorRect = $SelectedPanel/FrameBottom
+@onready var corner_tl: ColorRect = $SelectedPanel/CornerTL
+@onready var corner_br: ColorRect = $SelectedPanel/CornerBR
 @onready var credits_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/CreditsLabel
 @onready var wave_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/WaveLabel
 @onready var base_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/BaseLabel
@@ -56,18 +60,25 @@ const TARGET_ICONS := {
 @onready var auto_wave_button: CheckButton = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/AutoWaveButton
 @onready var next_wave_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/NextWaveButton
 @onready var header_panel: PanelContainer = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel
+@onready var header_divider: ColorRect = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderDivider
 @onready var silhouette_panel: PanelContainer = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/SilhouettePanel
 @onready var silhouette_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/SilhouettePanel/SilhouetteLabel
 @onready var selected_title_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/HeaderTextVBox/SelectedTitleLabel
 @onready var selected_subtitle_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/HeaderTextVBox/SelectedSubtitleLabel
 @onready var stats_panel: PanelContainer = $SelectedPanel/SelectedMargin/SelectedVBox/StatsPanel
+@onready var stats_divider: ColorRect = $SelectedPanel/SelectedMargin/SelectedVBox/StatsDivider
 @onready var selected_stats_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/StatsPanel/StatsMargin/SelectedStatsLabel
 @onready var actions_panel: PanelContainer = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel
+@onready var actions_divider: ColorRect = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsDivider
 @onready var target_prev_button: Button = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow/TargetPrevButton
 @onready var target_mode_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow/TargetModeLabel
 @onready var target_next_button: Button = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow/TargetNextButton
 @onready var sell_button: Button = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/SellButton
 @onready var upgrades_panel: PanelContainer = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel
+@onready var upgrade_slot_a: Button = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotA
+@onready var upgrade_slot_b: Button = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotB
+@onready var upgrade_slot_c: Button = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotC
+@onready var upgrade_slot_d: Button = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotD
 
 var _placement_text: String = "Build off"
 var _banner_timer: float = 0.0
@@ -87,6 +98,10 @@ var _auto_wave_enabled: bool = true
 var _can_start_next_wave: bool = false
 var _run_over: bool = false
 var _run_status_text: String = ""
+var _header_pulse_time: float = 0.0
+var _current_header_base_color: Color = Color(0.26, 0.42, 0.48, 1.0)
+var _current_silhouette_base_color: Color = Color(0.16, 0.22, 0.26, 1.0)
+var _current_accent_color: Color = UI_COLOR_DEFENDER_SOFT
 
 func _ready() -> void:
 	basic_tower_button.pressed.connect(func() -> void: build_tower_requested.emit("basic_tower"))
@@ -94,10 +109,14 @@ func _ready() -> void:
 	sell_button.pressed.connect(func() -> void: sell_selected_requested.emit())
 	target_prev_button.pressed.connect(func() -> void: cycle_targeting_previous_requested.emit())
 	target_next_button.pressed.connect(func() -> void: cycle_targeting_next_requested.emit())
-	target_prev_button.mouse_entered.connect(func() -> void: target_prev_button.modulate = Color(0.30, 0.48, 0.58, 1.0))
-	target_prev_button.mouse_exited.connect(func() -> void: target_prev_button.modulate = Color(0.18, 0.28, 0.34, 1.0))
-	target_next_button.mouse_entered.connect(func() -> void: target_next_button.modulate = Color(0.30, 0.48, 0.58, 1.0))
-	target_next_button.mouse_exited.connect(func() -> void: target_next_button.modulate = Color(0.18, 0.28, 0.34, 1.0))
+	target_prev_button.mouse_entered.connect(func() -> void: _set_arrow_button_visual(target_prev_button, "hover"))
+	target_prev_button.mouse_exited.connect(func() -> void: _set_arrow_button_visual(target_prev_button, "normal"))
+	target_prev_button.button_down.connect(func() -> void: _set_arrow_button_visual(target_prev_button, "pressed"))
+	target_prev_button.button_up.connect(func() -> void: _set_arrow_button_visual(target_prev_button, "hover" if target_prev_button.get_rect().has_point(target_prev_button.get_local_mouse_position()) else "normal"))
+	target_next_button.mouse_entered.connect(func() -> void: _set_arrow_button_visual(target_next_button, "hover"))
+	target_next_button.mouse_exited.connect(func() -> void: _set_arrow_button_visual(target_next_button, "normal"))
+	target_next_button.button_down.connect(func() -> void: _set_arrow_button_visual(target_next_button, "pressed"))
+	target_next_button.button_up.connect(func() -> void: _set_arrow_button_visual(target_next_button, "hover" if target_next_button.get_rect().has_point(target_next_button.get_local_mouse_position()) else "normal"))
 	pause_button.pressed.connect(_on_pause_button_pressed)
 	auto_wave_button.toggled.connect(func(enabled: bool) -> void: auto_wave_toggled.emit(enabled))
 	next_wave_button.pressed.connect(func() -> void: next_wave_requested.emit())
@@ -120,6 +139,15 @@ func _process(delta: float) -> void:
 	threat_label.text = _threat_text
 	threat_label.modulate = _threat_color
 	hint_label.text = _run_status_text if _run_over else "1/3 or buttons = build | LMB = place/select | Select commander to move | RMB = cancel | Right panel = tower actions | X/T optional | 2 = Overwatch"
+	_header_pulse_time += delta
+	if selected_panel.visible:
+		var pulse_strength: float = 0.08 + 0.04 * sin(_header_pulse_time * 2.2)
+		header_panel.self_modulate = _current_header_base_color.lerp(Color(1, 1, 1, 1), pulse_strength)
+		silhouette_panel.self_modulate = _current_silhouette_base_color.lerp(Color(1, 1, 1, 1), pulse_strength * 0.45)
+		frame_top.color = _current_accent_color.lerp(Color(1, 1, 1, 1), pulse_strength * 0.55)
+		frame_bottom.color = _current_accent_color.lerp(Color(0, 0, 0, 1), 0.35)
+		corner_tl.color = _current_accent_color.lerp(Color(1, 1, 1, 1), pulse_strength * 0.65)
+		corner_br.color = _current_accent_color.lerp(Color(0, 0, 0, 1), 0.18)
 	if _damage_flash_timer > 0.0:
 		_damage_flash_timer = maxf(0.0, _damage_flash_timer - delta)
 		var flash_alpha: float = (_damage_flash_timer / 0.45) * 0.28
@@ -236,6 +264,13 @@ func _apply_visual_theme() -> void:
 	stats_panel.self_modulate = Color(0.86, 0.90, 0.96, 1.0)
 	actions_panel.self_modulate = Color(0.82, 0.88, 0.94, 1.0)
 	upgrades_panel.self_modulate = Color(0.80, 0.84, 0.90, 1.0)
+	header_divider.color = Color(0.48, 0.82, 0.94, 0.45)
+	stats_divider.color = Color(0.48, 0.82, 0.94, 0.25)
+	actions_divider.color = Color(0.96, 0.72, 0.24, 0.22)
+	frame_top.color = Color(0.42, 0.82, 0.96, 0.85)
+	frame_bottom.color = Color(0.42, 0.82, 0.96, 0.45)
+	corner_tl.color = Color(0.60, 0.90, 1.0, 0.9)
+	corner_br.color = Color(0.96, 0.72, 0.24, 0.8)
 	for label in [credits_label, wave_label, base_label, mode_label, placement_label, commander_label, hint_label, selected_title_label, selected_subtitle_label, selected_stats_label, silhouette_label, target_mode_label]:
 		label.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	credits_label.add_theme_color_override("font_color", UI_COLOR_DEFENDER)
@@ -247,16 +282,18 @@ func _apply_visual_theme() -> void:
 	threat_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
 	banner_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
 	boss_name_label.add_theme_color_override("font_color", UI_COLOR_WARNING)
-	for button in [basic_tower_button, heavy_battery_button, pause_button, auto_wave_button, next_wave_button, target_prev_button, target_next_button, sell_button]:
+	for button in [basic_tower_button, heavy_battery_button, pause_button, auto_wave_button, next_wave_button, target_prev_button, target_next_button, sell_button, upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
 		button.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	basic_tower_button.modulate = Color(0.24, 0.34, 0.38, 1.0)
 	heavy_battery_button.modulate = Color(0.34, 0.26, 0.22, 1.0)
 	pause_button.modulate = Color(0.24, 0.24, 0.28, 1.0)
 	auto_wave_button.modulate = Color(0.24, 0.28, 0.24, 1.0)
 	next_wave_button.modulate = Color(0.34, 0.18, 0.16, 1.0)
-	target_prev_button.modulate = Color(0.18, 0.28, 0.34, 1.0)
-	target_next_button.modulate = Color(0.18, 0.28, 0.34, 1.0)
+	_set_arrow_button_visual(target_prev_button, "normal")
+	_set_arrow_button_visual(target_next_button, "normal")
 	sell_button.modulate = Color(0.28, 0.18, 0.16, 1.0)
+	for upgrade_slot in [upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
+		upgrade_slot.modulate = Color(0.18, 0.24, 0.30, 0.95)
 	boss_bar.self_modulate = Color(0.92, 0.88, 0.74, 1.0)
 	boss_health_bar.self_modulate = Color(1.0, 0.78, 0.20, 1.0)
 
@@ -266,10 +303,13 @@ func _update_selected_panel() -> void:
 		selected_title_label.text = "Selected Tower"
 		selected_subtitle_label.text = "Defense Unit"
 		silhouette_label.text = "⬢"
+		_apply_selected_visual_identity("")
 		selected_stats_label.text = "No tower selected"
 		target_mode_label.text = "◎ Targeting"
 		target_prev_button.disabled = true
 		target_next_button.disabled = true
+		_set_arrow_button_visual(target_prev_button, "disabled")
+		_set_arrow_button_visual(target_next_button, "disabled")
 		sell_button.disabled = true
 		return
 	selected_panel.visible = true
@@ -282,6 +322,8 @@ func _update_selected_panel() -> void:
 	target_mode_label.text = "%s %s" % [icon, targeting_label]
 	target_prev_button.disabled = false
 	target_next_button.disabled = false
+	_set_arrow_button_visual(target_prev_button, "normal")
+	_set_arrow_button_visual(target_next_button, "normal")
 	_apply_selected_visual_identity(tower_name)
 	selected_stats_label.text = "Damage: %.1f\nDPS: %.1f\nDamage dealt: %.0f\nKills: %d\nRange: %.0f\nFire rate: %.2f\nSell refund: +%d" % [
 		_selected_tower.damage,
@@ -297,17 +339,44 @@ func _update_selected_panel() -> void:
 
 func _apply_selected_visual_identity(tower_name: String) -> void:
 	if tower_name == "Heavy Battery":
-		header_panel.self_modulate = Color(0.54, 0.38, 0.24, 1.0)
-		silhouette_panel.self_modulate = Color(0.22, 0.16, 0.12, 1.0)
+		_current_header_base_color = Color(0.54, 0.38, 0.24, 1.0)
+		_current_silhouette_base_color = Color(0.22, 0.16, 0.12, 1.0)
+		_current_accent_color = Color(1.0, 0.74, 0.34, 0.95)
 		silhouette_label.text = "▉"
 		selected_subtitle_label.text = "Siege Battery"
 		selected_subtitle_label.add_theme_color_override("font_color", Color(1.0, 0.74, 0.34))
+		for upgrade_slot in [upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
+			upgrade_slot.modulate = Color(0.34, 0.22, 0.16, 0.95)
 	else:
-		header_panel.self_modulate = Color(0.26, 0.42, 0.48, 1.0)
-		silhouette_panel.self_modulate = Color(0.16, 0.22, 0.26, 1.0)
+		_current_header_base_color = Color(0.26, 0.42, 0.48, 1.0)
+		_current_silhouette_base_color = Color(0.16, 0.22, 0.26, 1.0)
+		_current_accent_color = Color(0.58, 0.90, 0.96, 0.95)
 		silhouette_label.text = "⬢"
-		selected_subtitle_label.text = "Line Defense"
+		selected_subtitle_label.text = "Line Defense" if tower_name != "" else "Defense Unit"
 		selected_subtitle_label.add_theme_color_override("font_color", UI_COLOR_DEFENDER_SOFT)
+		for upgrade_slot in [upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
+			upgrade_slot.modulate = Color(0.18, 0.24, 0.30, 0.95)
+	frame_top.color = _current_accent_color
+	header_divider.color = _current_accent_color.lerp(Color(1, 1, 1, 1), 0.18)
+	stats_divider.color = _current_accent_color.lerp(Color(0, 0, 0, 1), 0.35)
+	actions_divider.color = _current_accent_color.lerp(Color(0.96, 0.72, 0.24, 1), 0.35)
+	header_panel.self_modulate = _current_header_base_color
+	silhouette_panel.self_modulate = _current_silhouette_base_color
+
+func _set_arrow_button_visual(button: Button, state: String) -> void:
+	match state:
+		"pressed":
+			button.modulate = Color(0.10, 0.18, 0.24, 1.0)
+			button.scale = Vector2(0.96, 0.96)
+		"hover":
+			button.modulate = Color(0.30, 0.48, 0.58, 1.0)
+			button.scale = Vector2(1.03, 1.03)
+		"disabled":
+			button.modulate = Color(0.14, 0.18, 0.20, 0.7)
+			button.scale = Vector2.ONE
+		"normal":
+			button.modulate = Color(0.18, 0.28, 0.34, 1.0)
+			button.scale = Vector2.ONE
 
 func _update_flow_panel() -> void:
 	pause_button.text = "Resume" if _is_paused else "Pause"
