@@ -6,23 +6,23 @@ signal pause_toggled(paused: bool)
 signal auto_wave_toggled(enabled: bool)
 signal next_wave_requested
 
-@onready var credits_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer/CreditsLabel
-@onready var wave_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer/WaveLabel
-@onready var base_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer/BaseLabel
-@onready var mode_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer/ModeLabel
-@onready var placement_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer/PlacementLabel
-@onready var commander_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer/CommanderLabel
-@onready var event_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer/EventLabel
-@onready var hint_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer/HintLabel
+@onready var credits_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/CreditsLabel
+@onready var wave_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/WaveLabel
+@onready var base_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/BaseLabel
+@onready var mode_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/ModeLabel
+@onready var placement_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/PlacementLabel
+@onready var commander_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/CommanderLabel
+@onready var event_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/EventLabel
+@onready var hint_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/HintLabel
 
-@onready var basic_tower_button: Button = $BottomBar/Margin/RootHBox/BuildPanel/BuildVBox/BasicTowerButton
-@onready var heavy_battery_button: Button = $BottomBar/Margin/RootHBox/BuildPanel/BuildVBox/HeavyBatteryButton
-@onready var pause_button: Button = $BottomBar/Margin/RootHBox/FlowPanel/FlowVBox/PauseButton
-@onready var auto_wave_button: CheckButton = $BottomBar/Margin/RootHBox/FlowPanel/FlowVBox/AutoWaveButton
-@onready var next_wave_button: Button = $BottomBar/Margin/RootHBox/FlowPanel/FlowVBox/NextWaveButton
-@onready var selected_title_label: Label = $BottomBar/Margin/RootHBox/SelectedPanel/SelectedVBox/SelectedTitleLabel
-@onready var selected_stats_label: Label = $BottomBar/Margin/RootHBox/SelectedPanel/SelectedVBox/SelectedStatsLabel
-@onready var sell_button: Button = $BottomBar/Margin/RootHBox/SelectedPanel/SelectedVBox/SellButton
+@onready var basic_tower_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/BasicTowerButton
+@onready var heavy_battery_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/HeavyBatteryButton
+@onready var pause_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/PauseButton
+@onready var auto_wave_button: CheckButton = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/AutoWaveButton
+@onready var next_wave_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/NextWaveButton
+@onready var selected_title_label: Label = $BottomBar/Margin/RootHBox/SelectedPanel/SelectedMargin/SelectedVBox/SelectedTitleLabel
+@onready var selected_stats_label: Label = $BottomBar/Margin/RootHBox/SelectedPanel/SelectedMargin/SelectedVBox/SelectedStatsLabel
+@onready var sell_button: Button = $BottomBar/Margin/RootHBox/SelectedPanel/SelectedMargin/SelectedVBox/SellButton
 
 var _placement_text: String = "Build off"
 var _placement_color: Color = Color(0.7, 0.7, 0.7)
@@ -120,9 +120,13 @@ func _update_selected_panel() -> void:
 		return
 	var tower_name: String = _selected_tower.get_ui_display_name() if _selected_tower.has_method("get_ui_display_name") else String(_selected_tower.name)
 	var refund: int = _selected_tower.get_sell_refund() if _selected_tower.has_method("get_sell_refund") else 0
+	var average_dps: float = _selected_tower.get_average_dps() if _selected_tower.has_method("get_average_dps") else 0.0
 	selected_title_label.text = tower_name
-	selected_stats_label.text = "DMG: %.1f\nRange: %.0f\nFire Rate: %.2f\nSell: +%d" % [
+	selected_stats_label.text = "DMG: %.1f | DPS: %.1f\nDone: %.0f | Kills: %d\nRange: %.0f | Fire: %.2f\nSell: +%d" % [
 		_selected_tower.damage,
+		average_dps,
+		_selected_tower.total_damage_dealt,
+		_selected_tower.total_kills,
 		_selected_tower.attack_range,
 		_selected_tower.fire_rate,
 		refund,

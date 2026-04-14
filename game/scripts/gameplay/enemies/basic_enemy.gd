@@ -39,14 +39,16 @@ func _process(delta: float) -> void:
 	_update_position()
 	queue_redraw()
 
-func apply_damage(amount: float) -> void:
+func apply_damage(amount: float) -> float:
 	var reduced_amount := maxf(1.0, amount - armor)
+	var actual_damage: float = minf(reduced_amount, health)
 	health -= reduced_amount
 	_hit_flash = 1.0
 	queue_redraw()
 	if health <= 0.0:
 		defeated.emit(self)
 		queue_free()
+	return actual_damage
 
 func _update_position() -> void:
 	global_position = curve.sample_baked(progress)

@@ -10,6 +10,9 @@ var _is_preview: bool = false
 var _shot_flash: float = 0.0
 var _last_target_local: Vector2 = Vector2.ZERO
 var _is_selected: bool = false
+var total_damage_dealt: float = 0.0
+var total_kills: int = 0
+var active_time: float = 0.0
 
 @onready var barrel: Node2D = $Barrel
 
@@ -27,6 +30,7 @@ func _process(delta: float) -> void:
 		_shot_flash = 0.0
 		queue_redraw()
 		return
+	active_time += delta
 	_shot_flash = maxf(0.0, _shot_flash - delta * 4.0)
 	_cooldown = maxf(0.0, _cooldown - delta)
 	if _cooldown > 0.0:
@@ -38,7 +42,11 @@ func _process(delta: float) -> void:
 		_shot_flash = 1.0
 		if barrel != null:
 			barrel.rotation = _last_target_local.angle() + PI / 2.0
-		target.apply_damage(damage)
+		var target_health_before: float = target.health
+		var dealt_damage: float = target.apply_damage(damage)
+		total_damage_dealt += dealt_damage
+		if dealt_damage >= target_health_before and target_health_before > 0.0:
+			total_kills += 1
 		var effective_fire_rate := fire_rate * _get_overwatch_multiplier()
 		_cooldown = 1.0 / maxf(0.1, effective_fire_rate)
 	queue_redraw()
@@ -90,3 +98,8 @@ func get_ui_display_name() -> String:
 
 func get_sell_refund() -> int:
 	return int(round(float(tower_cost) * 0.5))
+
+func get_average_dps() -> float:
+	if active_time <= 0.01:
+		return 0.0
+	return total_damage_dealt / active_time

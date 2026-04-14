@@ -16,128 +16,161 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -196.0
+offset_top = -168.0
 mouse_filter = 1
 
 [node name="Margin" type="MarginContainer" parent="BottomBar"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 10
+theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_bottom = 6
 
 [node name="RootHBox" type="HBoxContainer" parent="BottomBar/Margin"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="StatusPanel" type="PanelContainer" parent="BottomBar/Margin/RootHBox"]
-custom_minimum_size = Vector2(360, 0)
+custom_minimum_size = Vector2(460, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="BottomBar/Margin/RootHBox/StatusPanel"]
+[node name="StatusMargin" type="MarginContainer" parent="BottomBar/Margin/RootHBox/StatusPanel"]
 layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
 
-[node name="CreditsLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer"]
+[node name="StatusVBox" type="VBoxContainer" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="StatsGrid" type="GridContainer" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox"]
+layout_mode = 2
+columns = 2
+
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 4
+
+[node name="CreditsLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid"]
 layout_mode = 2
 text = "Credits: 0"
 
-[node name="WaveLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer"]
+[node name="WaveLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid"]
 layout_mode = 2
 text = "Wave: 0"
 
-[node name="BaseLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer"]
+[node name="BaseLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid"]
 layout_mode = 2
 text = "Base HP: 0"
 
-[node name="ModeLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer"]
+[node name="ModeLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid"]
 layout_mode = 2
 text = "Build Mode: Off"
 
-[node name="PlacementLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer"]
+[node name="PlacementLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid"]
 layout_mode = 2
 text = "Placement: Build off"
 
-[node name="CommanderLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer"]
+[node name="CommanderLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid"]
 layout_mode = 2
 text = "Commander: active"
 
-[node name="EventLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer"]
+[node name="EventLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox"]
 layout_mode = 2
 text = ""
 
-[node name="HintLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/VBoxContainer"]
+[node name="HintLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox"]
 layout_mode = 2
 text = ""
 autowrap_mode = 3
 
-[node name="BuildPanel" type="PanelContainer" parent="BottomBar/Margin/RootHBox"]
-custom_minimum_size = Vector2(240, 0)
+[node name="CenterPanel" type="PanelContainer" parent="BottomBar/Margin/RootHBox"]
+custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
 
-[node name="BuildVBox" type="VBoxContainer" parent="BottomBar/Margin/RootHBox/BuildPanel"]
+[node name="CenterMargin" type="MarginContainer" parent="BottomBar/Margin/RootHBox/CenterPanel"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
 
-[node name="BuildTitleLabel" type="Label" parent="BottomBar/Margin/RootHBox/BuildPanel/BuildVBox"]
+[node name="CenterHBox" type="HBoxContainer" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BuildPanel" type="VBoxContainer" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="BuildTitleLabel" type="Label" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
 layout_mode = 2
 text = "Build"
 
-[node name="BasicTowerButton" type="Button" parent="BottomBar/Margin/RootHBox/BuildPanel/BuildVBox"]
+[node name="BasicTowerButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
 layout_mode = 2
 toggle_mode = true
 text = "Basic Tower (100)"
 
-[node name="HeavyBatteryButton" type="Button" parent="BottomBar/Margin/RootHBox/BuildPanel/BuildVBox"]
+[node name="HeavyBatteryButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
 layout_mode = 2
 toggle_mode = true
 text = "Heavy Battery (175)"
 
-[node name="FlowPanel" type="PanelContainer" parent="BottomBar/Margin/RootHBox"]
-custom_minimum_size = Vector2(220, 0)
+[node name="FlowPanel" type="VBoxContainer" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox"]
+custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
 
-[node name="FlowVBox" type="VBoxContainer" parent="BottomBar/Margin/RootHBox/FlowPanel"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="FlowTitleLabel" type="Label" parent="BottomBar/Margin/RootHBox/FlowPanel/FlowVBox"]
+[node name="FlowTitleLabel" type="Label" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel"]
 layout_mode = 2
 text = "Wave Control"
 
-[node name="PauseButton" type="Button" parent="BottomBar/Margin/RootHBox/FlowPanel/FlowVBox"]
+[node name="PauseButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel"]
 layout_mode = 2
 text = "Pause"
 
-[node name="AutoWaveButton" type="CheckButton" parent="BottomBar/Margin/RootHBox/FlowPanel/FlowVBox"]
+[node name="AutoWaveButton" type="CheckButton" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel"]
 layout_mode = 2
 button_pressed = true
 text = "Auto Next Wave"
 
-[node name="NextWaveButton" type="Button" parent="BottomBar/Margin/RootHBox/FlowPanel/FlowVBox"]
+[node name="NextWaveButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel"]
 layout_mode = 2
 text = "Start Next Wave"
 disabled = true
 
 [node name="SelectedPanel" type="PanelContainer" parent="BottomBar/Margin/RootHBox"]
-custom_minimum_size = Vector2(240, 0)
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SelectedVBox" type="VBoxContainer" parent="BottomBar/Margin/RootHBox/SelectedPanel"]
+[node name="SelectedMargin" type="MarginContainer" parent="BottomBar/Margin/RootHBox/SelectedPanel"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
 
-[node name="SelectedTitleLabel" type="Label" parent="BottomBar/Margin/RootHBox/SelectedPanel/SelectedVBox"]
+[node name="SelectedVBox" type="VBoxContainer" parent="BottomBar/Margin/RootHBox/SelectedPanel/SelectedMargin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SelectedTitleLabel" type="Label" parent="BottomBar/Margin/RootHBox/SelectedPanel/SelectedMargin/SelectedVBox"]
 layout_mode = 2
 text = "Selected Tower"
 
-[node name="SelectedStatsLabel" type="Label" parent="BottomBar/Margin/RootHBox/SelectedPanel/SelectedVBox"]
+[node name="SelectedStatsLabel" type="Label" parent="BottomBar/Margin/RootHBox/SelectedPanel/SelectedMargin/SelectedVBox"]
 layout_mode = 2
 text = "No tower selected"
 autowrap_mode = 3
 
-[node name="SellButton" type="Button" parent="BottomBar/Margin/RootHBox/SelectedPanel/SelectedVBox"]
+[node name="SellButton" type="Button" parent="BottomBar/Margin/RootHBox/SelectedPanel/SelectedMargin/SelectedVBox"]
 layout_mode = 2
 text = "Sell Selected (X)"
 disabled = true
