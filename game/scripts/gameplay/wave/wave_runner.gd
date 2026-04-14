@@ -10,6 +10,7 @@ signal enemy_defeated(credit_reward: int)
 var enemy_layer: Node
 var path_curve: Curve2D
 var fortress_callback: Callable
+var spawn_queue: Array = []
 var spawned_count: int = 0
 var active_count: int = 0
 var _spawn_timer: float = 0.0
@@ -37,9 +38,10 @@ func _process(delta: float) -> void:
 		wave_cleared.emit()
 
 func _spawn_enemy() -> void:
-	if enemy_scene == null or enemy_layer == null or path_curve == null:
+	var scene_to_spawn: PackedScene = _get_enemy_scene_for_index(spawned_count)
+	if scene_to_spawn == null or enemy_layer == null or path_curve == null:
 		return
-	var enemy = enemy_scene.instantiate()
+	var enemy = scene_to_spawn.instantiate()
 	enemy.setup(path_curve)
 	enemy.defeated.connect(_on_enemy_removed)
 	enemy.reached_goal.connect(_on_enemy_reached_goal)
@@ -56,3 +58,8 @@ func _on_enemy_reached_goal(enemy: Node) -> void:
 	active_count = max(0, active_count - 1)
 	if fortress_callback.is_valid():
 		fortress_callback.call(enemy)
+
+func _get_enemy_scene_for_index(index: int) -> PackedScene:
+	if index < spawn_queue.size():
+		return spawn_queue[index]
+	return enemy_scene

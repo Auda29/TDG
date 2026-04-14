@@ -2,7 +2,9 @@ extends Node2D
 
 const MAP_SCENE := preload("res://scenes/maps/mvp_map.tscn")
 const BASIC_TOWER_SCENE := preload("res://scenes/gameplay/towers/basic_tower.tscn")
+const HEAVY_BATTERY_SCENE := preload("res://scenes/gameplay/towers/heavy_battery.tscn")
 const BASIC_ENEMY_SCENE := preload("res://scenes/gameplay/enemies/basic_enemy.tscn")
+const SHELLBACK_BRUTE_SCENE := preload("res://scenes/gameplay/enemies/shellback_brute.tscn")
 const BASIC_COMMANDER_SCENE := preload("res://scenes/gameplay/commander/basic_commander.tscn")
 const WAVE_RUNNER_SCENE := preload("res://scenes/gameplay/wave/wave_runner.tscn")
 const HUD_SCENE := preload("res://scenes/ui/mvp_hud.tscn")
@@ -35,16 +37,17 @@ func _process(_delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ability_1"):
-		GameState.selected_tower_id = "basic_tower" if GameState.selected_tower_id == "" else ""
-		if GameState.selected_tower_id == "":
-			_clear_preview()
+		_toggle_tower_selection("basic_tower")
+		return
+	if event.is_action_pressed("ability_3"):
+		_toggle_tower_selection("heavy_battery")
 		return
 	if event.is_action_pressed("command_secondary"):
 		GameState.clear_selection()
 		_clear_preview()
 		return
-	if event.is_action_pressed("command_primary") and GameState.selected_tower_id == "basic_tower":
-		_try_place_basic_tower()
+	if event.is_action_pressed("command_primary") and _has_selected_tower():
+		_try_place_selected_tower()
 
 func _setup_map() -> void:
 	map_instance = MAP_SCENE.instantiate()
@@ -63,41 +66,52 @@ func _setup_hud() -> void:
 func _setup_wave() -> void:
 	wave_runner = WAVE_RUNNER_SCENE.instantiate()
 	wave_runner.enemy_scene = BASIC_ENEMY_SCENE
-	wave_runner.enemy_count = 10
 	wave_runner.spawn_interval = 0.9
 	wave_runner.wave_cleared.connect(_on_wave_cleared)
 	wave_runner.enemy_defeated.connect(_on_enemy_defeated)
 	add_child(wave_runner)
 	_start_wave(current_wave_number)
 
-func _try_place_basic_tower() -> void:
-	var tower = BASIC_TOWER_SCENE.instantiate()
-	var mouse_world := get_global_mouse_position()
+func _toggle_tower_selection(tower_id: String) -> void:
+	GameState.selected_tower_id = "" if GameState.selected_tower_id == tower_id else tower_id
+	if GameState.selected_tower_id == "":
+		_clear_preview()
+
+func _has_selected_tower() -> bool:
+	return _get_selected_tower_scene() != null
+
+func _try_place_selected_tower() -> void:
+	var tower_scene: PackedScene = _get_selected_tower_scene()
+	if tower_scene == null:
+		return
+	var tower = tower_scene.instantiate()
+	var mouse_world: Vector2 = get_global_mouse_position()
 	var existing_towers: Array = tower_layer.get_children()
 	var validation_reason: String = map_instance.get_build_validation_reason(mouse_world, existing_towers)
 	if validation_reason != "ready":
 		hud_instance.show_event(_format_build_reason(validation_reason), Color(1.0, 0.4, 0.4))
 		tower.queue_free()
 		return
-	if not RunState.can_afford(tower.tower_cost):
+	var tower_cost: int = tower.tower_cost
+	if not RunState.can_afford(tower_cost):
 		hud_instance.show_event("Not enough credits", Color(1.0, 0.4, 0.4))
 		tower.queue_free()
 		return
-	RunState.spend_credits(tower.tower_cost)
+	RunState.spend_credits(tower_cost)
 	tower_layer.add_child(tower)
 	tower.global_position = mouse_world
 	hud_instance.show_event("Tower placed", Color(0.5, 1.0, 0.6))
 
-func _on_enemy_reached_goal(_enemy: Node) -> void:
-	RunState.base_hp -= 1
-	hud_instance.show_event("Base hit -1", Color(1.0, 0.5, 0.4))
+func _on_enemy_reached_goal(enemy: Node) -> void:
+	RunState.base_hp -= enemy.fortress_damage
+	hud_instance.show_event("Base hit -%d" % enemy.fortress_damage, Color(1.0, 0.5, 0.4))
 
 func _on_enemy_defeated(credit_reward: int) -> void:
 	RunState.gain_credits(credit_reward)
 	hud_instance.show_event("+%d credits" % credit_reward, Color(0.6, 1.0, 0.6))
 
 func _on_wave_cleared() -> void:
-	var bonus := 75
+	var bonus: int = 75
 	RunState.gain_credits(bonus)
 	hud_instance.show_event("Wave cleared +%d" % bonus, Color(0.9, 0.9, 0.4))
 	current_wave_number += 1
@@ -108,20 +122,35 @@ func _start_wave(wave_number: int) -> void:
 	RunState.current_wave = wave_number
 	wave_runner.enemy_count = 8 + (wave_number * 2)
 	wave_runner.spawn_interval = maxf(0.45, 0.9 - (wave_number - 1) * 0.05)
+	wave_runner.spawn_queue = _build_spawn_queue(wave_number)
 	wave_runner.start_wave(enemy_layer, map_instance.get_enemy_curve(), Callable(self, "_on_enemy_reached_goal"))
 
+func _build_spawn_queue(wave_number: int) -> Array:
+	var total_count: int = 8 + (wave_number * 2)
+	var queue: Array = []
+	for i in range(total_count):
+		queue.append(BASIC_ENEMY_SCENE)
+	if wave_number >= 2:
+		queue[max(0, total_count - 2)] = SHELLBACK_BRUTE_SCENE
+	if wave_number >= 3:
+		queue[max(0, total_count - 5)] = SHELLBACK_BRUTE_SCENE
+	return queue
+
 func _update_tower_preview() -> void:
-	if GameState.selected_tower_id != "basic_tower":
+	var tower_scene: PackedScene = _get_selected_tower_scene()
+	if tower_scene == null:
 		_clear_preview()
 		return
-	if tower_preview == null:
-		tower_preview = BASIC_TOWER_SCENE.instantiate()
+	var selected_name: String = tower_scene.resource_path.get_file()
+	if tower_preview == null or tower_preview.scene_file_path.get_file() != selected_name:
+		_clear_preview()
+		tower_preview = tower_scene.instantiate()
 		tower_preview.set_preview_mode(true)
 		build_layer.add_child(tower_preview)
-	var mouse_world := get_global_mouse_position()
+	var mouse_world: Vector2 = get_global_mouse_position()
 	tower_preview.global_position = mouse_world
 	var validation_reason: String = map_instance.get_build_validation_reason(mouse_world, tower_layer.get_children())
-	var affordable := RunState.can_afford(tower_preview.tower_cost)
+	var affordable: bool = RunState.can_afford(tower_preview.tower_cost)
 	tower_preview.modulate = Color(0.5, 1.0, 0.6, 0.75) if validation_reason == "ready" and affordable else Color(1.0, 0.35, 0.35, 0.75)
 
 func _clear_preview() -> void:
@@ -132,16 +161,34 @@ func _clear_preview() -> void:
 func _update_hud_feedback() -> void:
 	if hud_instance == null:
 		return
-	var placement_status := "Build off"
-	var placement_color := Color(0.7, 0.7, 0.7)
-	if GameState.selected_tower_id == "basic_tower":
+	var placement_status: String = "Build off"
+	var placement_color: Color = Color(0.7, 0.7, 0.7)
+	if _has_selected_tower():
 		var reason: String = map_instance.get_build_validation_reason(get_global_mouse_position(), tower_layer.get_children())
-		if not RunState.can_afford(100):
+		if not RunState.can_afford(_get_selected_tower_cost()):
 			reason = "not_enough_credits"
 		placement_status = _format_build_reason(reason)
 		placement_color = Color(0.5, 1.0, 0.6) if reason == "ready" else Color(1.0, 0.45, 0.45)
 	hud_instance.set_placement_status(placement_status, placement_color)
 	hud_instance.set_commander_state(commander_instance)
+
+func _get_selected_tower_scene() -> PackedScene:
+	match GameState.selected_tower_id:
+		"basic_tower":
+			return BASIC_TOWER_SCENE
+		"heavy_battery":
+			return HEAVY_BATTERY_SCENE
+		_:
+			return null
+
+func _get_selected_tower_cost() -> int:
+	match GameState.selected_tower_id:
+		"basic_tower":
+			return 100
+		"heavy_battery":
+			return 175
+		_:
+			return 0
 
 func _format_build_reason(reason: String) -> String:
 	match reason:

@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/enemies/basic_enemy.gd" id="1"]
+
+[node name="ShellbackBrute" type="Node2D"]
+script = ExtResource("1")
+max_health = 100.0
+move_speed = 70.0
+fortress_damage = 2
+credit_reward = 30
+armor = 4.0
+
+[node name="Body" type="Polygon2D" parent="."]
+color = Color(0.501961, 0.247059, 0.219608, 1)
+polygon = PackedVector2Array(-22, -16, 12, -20, 26, -8, 30, 8, 12, 20, -22, 16, -34, 0)

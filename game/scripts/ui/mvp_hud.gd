@@ -20,13 +20,13 @@ func _process(delta: float) -> void:
 	credits_label.text = "Credits: %d" % RunState.credits
 	wave_label.text = "Wave: %d" % RunState.current_wave
 	base_label.text = "Base HP: %d" % RunState.base_hp
-	mode_label.text = "Build Mode: %s" % ("Basic Tower (100)" if GameState.selected_tower_id != "" else "Off")
+	mode_label.text = "Build Mode: %s" % _get_build_mode_text()
 	placement_label.text = "Placement: %s" % _placement_text
 	placement_label.modulate = _placement_color
 	commander_label.text = _get_commander_text()
 	event_label.text = _event_text
 	event_label.modulate = _event_color
-	hint_label.text = "1 = arm tower | Left Click = place | Right Click = cancel | 2 = Overwatch | WASD = commander"
+	hint_label.text = "1 = Basic Tower | 3 = Heavy Battery | LMB = place | RMB = cancel | 2 = Overwatch | WASD = commander"
 	if _event_timer > 0.0:
 		_event_timer = maxf(0.0, _event_timer - delta)
 		if _event_timer <= 0.0:
@@ -52,3 +52,12 @@ func _get_commander_text() -> String:
 	if _commander.is_overwatch_ready():
 		return "Commander: Overwatch READY"
 	return "Commander: Overwatch %.1fs" % _commander.get_overwatch_cooldown_remaining()
+
+func _get_build_mode_text() -> String:
+	match GameState.selected_tower_id:
+		"basic_tower":
+			return "Basic Tower (100)"
+		"heavy_battery":
+			return "Heavy Battery (175)"
+		_:
+			return "Off"
