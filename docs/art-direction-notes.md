@@ -114,12 +114,12 @@ Verteidigungseinheiten sollen wirken wie:
 - interaktive Elemente klarer und kontrastreicher
 - Gegnerfarben und Towerfarben müssen sich auf Distanz trennen lassen
 
-### Verteidiger
+### Verteidiger-Farbwelt
 
 - Stahlgrau, dunkle Militärtöne, Warnfarben in kleinen Akzenten
 - Energieeffekte klar begrenzt und funktional codiert
 
-### Gegner
+### Gegner-Farbwelt
 
 - organische, krankhafte oder aggressive Töne
 - starke Trennung zwischen Schwarm, Elite und Boss durch Farbwert, Größe und
@@ -143,7 +143,7 @@ Wichtig:
 
 ## Material- und Oberflächenrichtung
 
-### Verteidiger / Festung
+### Festungs-Materialien
 
 - Stahlplatten
 - Betonflächen
@@ -151,7 +151,7 @@ Wichtig:
 - Hitzespuren und Abnutzung
 - Warnstreifen und Einsatzmarkierungen sparsam einsetzen
 
-### Gegner
+### Gegner-Materialien
 
 - Chitin
 - Fleisch

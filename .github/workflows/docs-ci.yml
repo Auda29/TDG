@@ -1,17 +1,16 @@
 name: docs-ci
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 on:
   push:
     branches: [main, master]
     paths:
       - '**/*.md'
+      - '.markdownlint.json'
       - '.github/workflows/docs-ci.yml'
   pull_request:
     paths:
       - '**/*.md'
+      - '.markdownlint.json'
       - '.github/workflows/docs-ci.yml'
 
 concurrency:
@@ -26,13 +25,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Lint markdown
-        uses: DavidAnson/markdownlint-cli2-action@v20
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          globs: |
-            README.md
-            docs/**/*.md
-            game/README.md
+          node-version: 24
+
+      - name: Install markdownlint-cli2
+        run: npm install -g markdownlint-cli2
+
+      - name: Lint markdown
+        run: markdownlint-cli2 "README.md" "docs/**/*.md" "game/README.md"
 
       - name: Check local markdown links
         uses: lycheeverse/lychee-action@v2
