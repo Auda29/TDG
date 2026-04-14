@@ -21,6 +21,10 @@ dist/
 build/
 coverage/
 
+# Godot
+*.import
+game/.godot/
+
 # Pi / local agent state
 .pi/
 .pi-lens/

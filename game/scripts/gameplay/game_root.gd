@@ -9,6 +9,13 @@ const SHELLBACK_BOSS_SCENE := preload("res://scenes/gameplay/enemies/shellback_b
 const BASIC_COMMANDER_SCENE := preload("res://scenes/gameplay/commander/basic_commander.tscn")
 const WAVE_RUNNER_SCENE := preload("res://scenes/gameplay/wave/wave_runner.tscn")
 const HUD_SCENE := preload("res://scenes/ui/mvp_hud.tscn")
+const BASIC_TOWER_DATA := preload("res://data/towers/basic_tower.tres")
+const HEAVY_BATTERY_DATA := preload("res://data/towers/heavy_battery.tres")
+
+const TOWER_DEFS := {
+	"basic_tower": {"scene": BASIC_TOWER_SCENE, "data": BASIC_TOWER_DATA},
+	"heavy_battery": {"scene": HEAVY_BATTERY_SCENE, "data": HEAVY_BATTERY_DATA},
+}
 
 @onready var map_layer: Node2D = $MapLayer
 @onready var build_layer: Node2D = $BuildLayer
@@ -31,6 +38,7 @@ var _screen_shake_time: float = 0.0
 var _screen_shake_strength: float = 0.0
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	RunState.reset_for_new_run(300, 20)
 	GameState.clear_selection()
 	_setup_map()
@@ -39,11 +47,22 @@ func _ready() -> void:
 	_setup_wave()
 
 func _process(delta: float) -> void:
+	if RunState.is_run_over:
+		if Input.is_action_just_pressed("restart_run"):
+			get_tree().paused = false
+			SceneRouter.goto_scene("res://scenes/bootstrap/main.tscn")
+		_update_hud_feedback()
+		return
+	if is_game_paused:
+		_update_hud_feedback()
+		return
 	_handle_build_input()
 	_update_tower_preview()
 	_update_boss_state()
 	_update_screen_shake(delta)
 	_update_hud_feedback()
+	if RunState.base_hp <= 0 and not RunState.is_run_over:
+		_trigger_game_over()
 
 func _handle_build_input() -> void:
 	if Input.is_action_just_pressed("ability_1"):
@@ -54,6 +73,9 @@ func _handle_build_input() -> void:
 		return
 	if Input.is_action_just_pressed("sell_selected"):
 		_try_sell_selected_tower()
+		return
+	if Input.is_action_just_pressed("cycle_target_mode"):
+		_try_cycle_selected_tower_targeting()
 		return
 	if Input.is_action_just_pressed("command_secondary"):
 		_clear_selected_placed_tower()
@@ -205,7 +227,22 @@ func _on_boss_reached_goal(enemy: Node) -> void:
 	if active_boss == enemy:
 		active_boss = null
 
+func _trigger_game_over() -> void:
+	RunState.is_run_over = true
+	waiting_for_manual_next_wave = false
+	auto_start_next_wave = false
+	_clear_preview()
+	_clear_selected_placed_tower()
+	GameState.clear_selection()
+	hud_instance.show_banner("FORTRESS LOST", Color(1.0, 0.42, 0.28), 99.0)
+	hud_instance.show_event("Run over - press R to restart", Color(1.0, 0.68, 0.30), 99.0)
+	if hud_instance.has_method("show_threat"):
+		hud_instance.show_threat("[FAILURE] Base integrity collapsed", Color(1.0, 0.56, 0.30), 99.0)
+	get_tree().paused = true
+
 func _on_wave_cleared() -> void:
+	if RunState.is_run_over:
+		return
 	var bonus: int = 75
 	RunState.gain_credits(bonus)
 	hud_instance.show_event("Wave cleared +%d" % bonus, Color(0.9, 0.9, 0.4))
@@ -278,7 +315,8 @@ func _try_select_tower_at_mouse() -> bool:
 			continue
 		var tower_node: Node2D = tower
 		var distance: float = tower_node.global_position.distance_to(mouse_world)
-		if distance <= 36.0 and distance < best_distance:
+		var selection_radius: float = tower.get_selection_radius() if tower.has_method("get_selection_radius") else 36.0
+		if distance <= selection_radius and distance < best_distance:
 			best_distance = distance
 			best_tower = tower
 	if best_tower != null:
@@ -300,6 +338,16 @@ func _clear_selected_placed_tower() -> void:
 		if GameState.selected_placed_tower.has_method("set_selected"):
 			GameState.selected_placed_tower.set_selected(false)
 	GameState.selected_placed_tower = null
+
+func _try_cycle_selected_tower_targeting() -> void:
+	var tower := GameState.selected_placed_tower
+	if tower == null or not is_instance_valid(tower):
+		return
+	if not tower.has_method("cycle_targeting_mode"):
+		return
+	tower.cycle_targeting_mode()
+	var target_mode_label: String = tower.get_targeting_mode_label() if tower.has_method("get_targeting_mode_label") else "Targeting"
+	hud_instance.show_event("Targeting: %s" % target_mode_label, Color(0.6, 0.9, 1.0), 0.9)
 
 func _try_sell_selected_tower() -> void:
 	var tower := GameState.selected_placed_tower
@@ -367,7 +415,8 @@ func _update_hud_feedback() -> void:
 		placement_color = Color(0.5, 1.0, 0.6) if reason == "ready" else Color(1.0, 0.45, 0.45)
 	elif GameState.selected_placed_tower != null and is_instance_valid(GameState.selected_placed_tower):
 		var refund: int = GameState.selected_placed_tower.get_sell_refund() if GameState.selected_placed_tower.has_method("get_sell_refund") else int(round(float(GameState.selected_placed_tower.tower_cost) * 0.5))
-		placement_status = "Selected tower | Sell: X (+%d)" % refund
+		var targeting_label: String = GameState.selected_placed_tower.get_targeting_mode_label() if GameState.selected_placed_tower.has_method("get_targeting_mode_label") else "First"
+		placement_status = "Selected tower | T: %s | Sell: X (+%d)" % [targeting_label, refund]
 		placement_color = Color(0.5, 0.9, 1.0)
 	elif GameState.is_commander_selected:
 		placement_status = "Commander selected | LMB move | 2 Overwatch"
@@ -378,24 +427,18 @@ func _update_hud_feedback() -> void:
 	hud_instance.set_selected_tower(GameState.selected_placed_tower)
 	hud_instance.set_pause_state(is_game_paused)
 	hud_instance.set_wave_flow_state(auto_start_next_wave, waiting_for_manual_next_wave)
+	if hud_instance.has_method("set_run_state"):
+		hud_instance.set_run_state(RunState.is_run_over, "Run over | Press R to restart")
 
 func _get_selected_tower_scene() -> PackedScene:
-	match GameState.selected_tower_id:
-		"basic_tower":
-			return BASIC_TOWER_SCENE
-		"heavy_battery":
-			return HEAVY_BATTERY_SCENE
-		_:
-			return null
+	var tower_def: Dictionary = TOWER_DEFS.get(GameState.selected_tower_id, {})
+	var tower_scene: PackedScene = tower_def.get("scene", null)
+	return tower_scene
 
 func _get_selected_tower_cost() -> int:
-	match GameState.selected_tower_id:
-		"basic_tower":
-			return 100
-		"heavy_battery":
-			return 175
-		_:
-			return 0
+	var tower_def: Dictionary = TOWER_DEFS.get(GameState.selected_tower_id, {})
+	var tower_data: TowerData = tower_def.get("data", null)
+	return tower_data.tower_cost if tower_data != null else 0
 
 func _format_build_reason(reason: String) -> String:
 	match reason:

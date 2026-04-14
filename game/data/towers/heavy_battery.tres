@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="TowerData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/tower_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+tower_id = "heavy_battery"
+display_name = "Heavy Battery"
+tower_cost = 175
+attack_range = 240.0
+fire_rate = 0.45
+damage = 24.0
+turn_speed = 7.5
+recoil_distance = 10.0
+sway_speed = 2.0
+sway_amount = 0.8
+muzzle_offset = Vector2(0, -20)
+selection_radius = 38.0
+decal_fill_color = Color(0.14, 0.12, 0.10, 0.48)
+decal_arc_color = Color(0.34, 0.40, 0.44, 0.22)
+laser_color = Color(1.0, 0.4, 0.1, 0.95)
+beam_core_color = Color(1.0, 0.72, 0.32, 0.95)
+laser_width = 4.0
+flash_size = 12.0
+impact_radius = 14.0

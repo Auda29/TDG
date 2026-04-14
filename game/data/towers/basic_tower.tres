@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="TowerData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/tower_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+tower_id = "basic_tower"
+display_name = "Basic Tower"
+tower_cost = 100
+attack_range = 180.0
+fire_rate = 1.2
+damage = 8.0
+turn_speed = 12.0
+recoil_distance = 6.0
+sway_speed = 2.8
+sway_amount = 1.2
+muzzle_offset = Vector2(0, -20)
+selection_radius = 30.0
+decal_fill_color = Color(0.10, 0.14, 0.16, 0.42)
+decal_arc_color = Color(0.34, 0.40, 0.44, 0.22)
+laser_color = Color(1.0, 0.9, 0.2, 0.9)
+beam_core_color = Color(1.0, 0.97, 0.75, 0.95)
+laser_width = 2.0
+flash_size = 6.0
+impact_radius = 8.0

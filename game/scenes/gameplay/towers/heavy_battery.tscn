@@ -1,13 +1,11 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/gameplay/towers/basic_tower.gd" id="1"]
+[ext_resource type="Resource" path="res://data/towers/heavy_battery.tres" id="2"]
 
 [node name="HeavyBattery" type="Node2D"]
 script = ExtResource("1")
-tower_cost = 175
-attack_range = 240.0
-fire_rate = 0.45
-damage = 24.0
+tower_data = ExtResource("2")
 
 [node name="Base" type="Polygon2D" parent="."]
 color = Color(0.21, 0.23, 0.26, 1)

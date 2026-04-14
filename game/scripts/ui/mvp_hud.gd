@@ -13,6 +13,13 @@ const UI_COLOR_CARRION_SOFT := Color(0.96, 0.62, 0.28)
 const UI_COLOR_NEUTRAL := Color(0.76, 0.80, 0.82)
 const UI_COLOR_WARNING := Color(0.96, 0.72, 0.24)
 const UI_COLOR_SUCCESS := Color(0.46, 0.92, 0.68)
+const BASIC_TOWER_DATA = preload("res://data/towers/basic_tower.tres")
+const HEAVY_BATTERY_DATA = preload("res://data/towers/heavy_battery.tres")
+
+const TOWER_DISPLAY_DATA := {
+	"basic_tower": BASIC_TOWER_DATA,
+	"heavy_battery": HEAVY_BATTERY_DATA,
+}
 
 @onready var banner_label: Label = $TopBanner/BannerLabel
 @onready var boss_bar: MarginContainer = $BossBar
@@ -56,6 +63,8 @@ var _selected_tower: Node = null
 var _is_paused: bool = false
 var _auto_wave_enabled: bool = true
 var _can_start_next_wave: bool = false
+var _run_over: bool = false
+var _run_status_text: String = ""
 
 func _ready() -> void:
 	basic_tower_button.pressed.connect(func() -> void: build_tower_requested.emit("basic_tower"))
@@ -64,6 +73,8 @@ func _ready() -> void:
 	pause_button.pressed.connect(_on_pause_button_pressed)
 	auto_wave_button.toggled.connect(func(enabled: bool) -> void: auto_wave_toggled.emit(enabled))
 	next_wave_button.pressed.connect(func() -> void: next_wave_requested.emit())
+	basic_tower_button.text = "%s (%d)" % [BASIC_TOWER_DATA.display_name, BASIC_TOWER_DATA.tower_cost]
+	heavy_battery_button.text = "%s (%d)" % [HEAVY_BATTERY_DATA.display_name, HEAVY_BATTERY_DATA.tower_cost]
 	_apply_visual_theme()
 	_update_selected_panel()
 	_update_flow_panel()
@@ -80,7 +91,7 @@ func _process(delta: float) -> void:
 	event_label.modulate = _event_color
 	threat_label.text = _threat_text
 	threat_label.modulate = _threat_color
-	hint_label.text = "1/3 or buttons = build | LMB = place/select | Select commander to move | RMB = cancel | X = sell | 2 = Overwatch"
+	hint_label.text = _run_status_text if _run_over else "1/3 or buttons = build | LMB = place/select | Select commander to move | RMB = cancel | X = sell | T = targeting | 2 = Overwatch"
 	boss_bar.modulate = Color(1, 1, 1, 1)
 	if _screen_flash_timer > 0.0:
 		_screen_flash_timer = maxf(0.0, _screen_flash_timer - delta)
@@ -155,6 +166,11 @@ func set_wave_flow_state(auto_enabled: bool, can_start_next_wave: bool) -> void:
 	_can_start_next_wave = can_start_next_wave
 	_update_flow_panel()
 
+func set_run_state(run_over: bool, status_text: String = "") -> void:
+	_run_over = run_over
+	_run_status_text = status_text
+	_update_flow_panel()
+
 func _get_commander_text() -> String:
 	if _commander == null or not is_instance_valid(_commander):
 		return "Commander: offline"
@@ -167,13 +183,10 @@ func _get_commander_text() -> String:
 	return "Commander: Overwatch %.1fs" % _commander.get_overwatch_cooldown_remaining()
 
 func _get_build_mode_text() -> String:
-	match GameState.selected_tower_id:
-		"basic_tower":
-			return "Basic Tower (100)"
-		"heavy_battery":
-			return "Heavy Battery (175)"
-		_:
-			return "Off"
+	var tower_data = TOWER_DISPLAY_DATA.get(GameState.selected_tower_id)
+	if tower_data == null:
+		return "Off"
+	return "%s (%d)" % [tower_data.display_name, tower_data.tower_cost]
 
 func _apply_visual_theme() -> void:
 	bottom_bar.self_modulate = Color(0.74, 0.82, 0.90, 0.98)
@@ -211,14 +224,16 @@ func _update_selected_panel() -> void:
 	var tower_name: String = _selected_tower.get_ui_display_name() if _selected_tower.has_method("get_ui_display_name") else String(_selected_tower.name)
 	var refund: int = _selected_tower.get_sell_refund() if _selected_tower.has_method("get_sell_refund") else 0
 	var average_dps: float = _selected_tower.get_average_dps() if _selected_tower.has_method("get_average_dps") else 0.0
+	var targeting_label: String = _selected_tower.get_targeting_mode_label() if _selected_tower.has_method("get_targeting_mode_label") else "First"
 	selected_title_label.text = tower_name
-	selected_stats_label.text = "DMG: %.1f | DPS: %.1f\nDone: %.0f | Kills: %d\nRange: %.0f | Fire: %.2f\nSell: +%d" % [
+	selected_stats_label.text = "DMG: %.1f | DPS: %.1f\nDone: %.0f | Kills: %d\nRange: %.0f | Fire: %.2f\nTarget: %s | Sell: +%d" % [
 		_selected_tower.damage,
 		average_dps,
 		_selected_tower.total_damage_dealt,
 		_selected_tower.total_kills,
 		_selected_tower.attack_range,
 		_selected_tower.fire_rate,
+		targeting_label,
 		refund,
 	]
 	sell_button.disabled = false
@@ -226,9 +241,11 @@ func _update_selected_panel() -> void:
 func _update_flow_panel() -> void:
 	pause_button.text = "Resume" if _is_paused else "Pause"
 	auto_wave_button.set_pressed_no_signal(_auto_wave_enabled)
-	next_wave_button.disabled = _auto_wave_enabled or not _can_start_next_wave
+	next_wave_button.disabled = _run_over or _auto_wave_enabled or not _can_start_next_wave
 	next_wave_button.modulate = Color(0.48, 0.22, 0.18, 1.0) if not next_wave_button.disabled else Color(0.22, 0.18, 0.18, 0.9)
-	auto_wave_button.modulate = Color(0.22, 0.34, 0.24, 1.0) if _auto_wave_enabled else Color(0.28, 0.22, 0.20, 1.0)
+	auto_wave_button.modulate = Color(0.22, 0.34, 0.24, 1.0) if _auto_wave_enabled and not _run_over else Color(0.28, 0.22, 0.20, 1.0)
+	pause_button.disabled = _run_over
+	auto_wave_button.disabled = _run_over
 
 func _on_pause_button_pressed() -> void:
 	pause_toggled.emit(not _is_paused)
