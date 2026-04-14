@@ -23,6 +23,10 @@ func set_selected(enabled: bool) -> void:
 	queue_redraw()
 
 func _process(delta: float) -> void:
+	if _is_preview:
+		_shot_flash = 0.0
+		queue_redraw()
+		return
 	_shot_flash = maxf(0.0, _shot_flash - delta * 4.0)
 	_cooldown = maxf(0.0, _cooldown - delta)
 	if _cooldown > 0.0:

@@ -22,6 +22,9 @@ var wave_runner: Node
 var hud_instance: Control
 var tower_preview: Node2D
 var current_wave_number: int = 1
+var auto_start_next_wave: bool = true
+var waiting_for_manual_next_wave: bool = false
+var is_game_paused: bool = false
 
 func _ready() -> void:
 	RunState.reset_for_new_run(300, 20)
@@ -78,11 +81,18 @@ func _setup_commander() -> void:
 
 func _setup_hud() -> void:
 	hud_instance = HUD_SCENE.instantiate()
+	hud_instance.process_mode = Node.PROCESS_MODE_ALWAYS
 	ui_layer.add_child(hud_instance)
 	if hud_instance.has_signal("build_tower_requested"):
 		hud_instance.build_tower_requested.connect(_toggle_tower_selection)
 	if hud_instance.has_signal("sell_selected_requested"):
 		hud_instance.sell_selected_requested.connect(_try_sell_selected_tower)
+	if hud_instance.has_signal("pause_toggled"):
+		hud_instance.pause_toggled.connect(_set_game_paused)
+	if hud_instance.has_signal("auto_wave_toggled"):
+		hud_instance.auto_wave_toggled.connect(_set_auto_next_wave)
+	if hud_instance.has_signal("next_wave_requested"):
+		hud_instance.next_wave_requested.connect(_start_next_wave_if_ready)
 
 func _setup_wave() -> void:
 	wave_runner = WAVE_RUNNER_SCENE.instantiate()
@@ -150,10 +160,16 @@ func _on_wave_cleared() -> void:
 	RunState.gain_credits(bonus)
 	hud_instance.show_event("Wave cleared +%d" % bonus, Color(0.9, 0.9, 0.4))
 	current_wave_number += 1
-	await get_tree().create_timer(2.0).timeout
-	_start_wave(current_wave_number)
+	if auto_start_next_wave:
+		await get_tree().create_timer(2.0).timeout
+		if auto_start_next_wave:
+			_start_wave(current_wave_number)
+	else:
+		waiting_for_manual_next_wave = true
+		hud_instance.show_event("Wave cleared - click Start Next Wave", Color(0.9, 0.95, 0.55), 2.5)
 
 func _start_wave(wave_number: int) -> void:
+	waiting_for_manual_next_wave = false
 	RunState.current_wave = wave_number
 	wave_runner.enemy_count = 8 + (wave_number * 2)
 	wave_runner.spawn_interval = maxf(0.45, 0.9 - (wave_number - 1) * 0.05)
@@ -273,6 +289,8 @@ func _update_hud_feedback() -> void:
 	hud_instance.set_commander_state(commander_instance)
 	hud_instance.set_selected_build_mode(GameState.selected_tower_id)
 	hud_instance.set_selected_tower(GameState.selected_placed_tower)
+	hud_instance.set_pause_state(is_game_paused)
+	hud_instance.set_wave_flow_state(auto_start_next_wave, waiting_for_manual_next_wave)
 
 func _get_selected_tower_scene() -> PackedScene:
 	match GameState.selected_tower_id:
@@ -306,3 +324,16 @@ func _format_build_reason(reason: String) -> String:
 			return "Blocked: not enough credits"
 		_:
 			return "Blocked"
+
+func _set_game_paused(paused: bool) -> void:
+	is_game_paused = paused
+	get_tree().paused = paused
+
+func _set_auto_next_wave(enabled: bool) -> void:
+	auto_start_next_wave = enabled
+	if enabled and waiting_for_manual_next_wave:
+		_start_wave(current_wave_number)
+
+func _start_next_wave_if_ready() -> void:
+	if waiting_for_manual_next_wave:
+		_start_wave(current_wave_number)

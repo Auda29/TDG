@@ -85,8 +85,9 @@ func _draw() -> void:
 	var base_color := Color(0.2, 1.0, 0.4, 0.06)
 	draw_circle(Vector2.ZERO, attack_range, base_color)
 	if _shot_flash > 0.0:
+		var muzzle_direction: Vector2 = _last_target_local.normalized() if _last_target_local.length() > 0.001 else Vector2.UP
 		draw_line(Vector2.ZERO, _last_target_local, Color(0.3, 1.0, 0.5, 0.95), 3.0)
-		draw_circle(Vector2(0, -18), 7.0, Color(0.3, 1.0, 0.5, 0.85))
+		draw_circle(muzzle_direction * 18.0, 7.0, Color(0.3, 1.0, 0.5, 0.85))
 	if _overwatch_remaining > 0.0:
 		var pulse_scale := 1.0 + (_overwatch_pulse * 0.12)
 		draw_circle(Vector2.ZERO, overwatch_radius * pulse_scale, Color(1.0, 0.85, 0.2, 0.10))
