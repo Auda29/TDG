@@ -1,0 +1,9 @@
+res://scenes/gameplay/enemies/shellback_brute.tscn
+res://scenes/ui/mvp_hud.tscn
+res://scripts/gameplay/game_root.gd
+res://scripts/gameplay/commander/basic_commander.gd
+res://scripts/gameplay/enemies/basic_enemy.gd
+res://scripts/gameplay/map/map_root.gd
+res://scripts/gameplay/towers/basic_tower.gd
+res://scripts/gameplay/wave/wave_runner.gd
+res://scripts/ui/mvp_hud.gd

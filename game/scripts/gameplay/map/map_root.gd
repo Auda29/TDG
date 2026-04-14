@@ -6,6 +6,8 @@ extends Node2D
 
 var _lane_warning_timer: float = 0.0
 var _lane_warning_position: Vector2 = Vector2.ZERO
+var _lane_warning_scale: float = 1.0
+var _lane_warning_color: Color = Color(1.0, 0.66, 0.24, 1.0)
 
 const BUILD_RECT := Rect2(Vector2(120, 140), Vector2(1680, 760))
 const PATH_BLOCK_RADIUS := 80.0
@@ -64,9 +66,11 @@ func _is_too_close_to_path(world_pos: Vector2) -> bool:
 			return true
 	return false
 
-func trigger_lane_warning(world_position: Vector2, duration: float = 1.8) -> void:
+func trigger_lane_warning(world_position: Vector2, duration: float = 1.8, scale: float = 1.0, color: Color = Color(1.0, 0.66, 0.24, 1.0)) -> void:
 	_lane_warning_position = world_position
 	_lane_warning_timer = duration
+	_lane_warning_scale = scale
+	_lane_warning_color = color
 	queue_redraw()
 
 func _draw() -> void:
@@ -74,19 +78,20 @@ func _draw() -> void:
 		return
 	var strength := minf(1.0, _lane_warning_timer / 1.8)
 	var pulse := 0.5 + 0.5 * sin((1.8 - _lane_warning_timer) * 12.0)
-	var core_color := Color(1.0, 0.34, 0.16, 0.18 + pulse * 0.12)
-	var line_color := Color(1.0, 0.66, 0.24, 0.55 + pulse * 0.25)
-	draw_circle(_lane_warning_position, 58.0 + pulse * 8.0, core_color)
-	draw_arc(_lane_warning_position, 74.0 + pulse * 10.0, 0.0, TAU, 40, line_color, 5.0)
-	draw_arc(_lane_warning_position, 96.0 + pulse * 14.0, 0.0, TAU, 48, Color(1.0, 0.44, 0.18, 0.25 * strength), 3.0)
+	var core_color := Color(_lane_warning_color.r, _lane_warning_color.g * 0.55, _lane_warning_color.b * 0.45, 0.18 + pulse * 0.12)
+	var line_color := Color(_lane_warning_color.r, _lane_warning_color.g, _lane_warning_color.b, 0.55 + pulse * 0.25)
+	draw_circle(_lane_warning_position, (58.0 + pulse * 8.0) * _lane_warning_scale, core_color)
+	draw_arc(_lane_warning_position, (74.0 + pulse * 10.0) * _lane_warning_scale, 0.0, TAU, 40, line_color, 5.0)
+	draw_arc(_lane_warning_position, (96.0 + pulse * 14.0) * _lane_warning_scale, 0.0, TAU, 48, Color(_lane_warning_color.r, _lane_warning_color.g * 0.66, _lane_warning_color.b * 0.75, 0.25 * strength), 3.0)
 	for offset in [Vector2(-56, 0), Vector2(56, 0), Vector2(0, -56), Vector2(0, 56)]:
 		var dir := offset.normalized()
-		var tip := _lane_warning_position + offset
-		var side := dir.orthogonal() * 10.0
+		var tip := _lane_warning_position + offset * _lane_warning_scale
+		var side := dir.orthogonal() * 10.0 * _lane_warning_scale
+		var depth := 18.0 * _lane_warning_scale
 		draw_colored_polygon(PackedVector2Array([
 			tip,
-			tip - dir * 18.0 + side,
-			tip - dir * 18.0 - side,
+			tip - dir * depth + side,
+			tip - dir * depth - side,
 		]), line_color)
-	draw_line(_lane_warning_position + Vector2(-10, -22), _lane_warning_position + Vector2(0, -4), Color(0.18, 0.08, 0.04, 0.95), 4.0)
-	draw_circle(_lane_warning_position + Vector2(0, 10), 4.0, Color(0.18, 0.08, 0.04, 0.95))
+	draw_line(_lane_warning_position + Vector2(-10, -22) * _lane_warning_scale, _lane_warning_position + Vector2(0, -4) * _lane_warning_scale, Color(0.18, 0.08, 0.04, 0.95), 4.0)
+	draw_circle(_lane_warning_position + Vector2(0, 10) * _lane_warning_scale, 4.0 * _lane_warning_scale, Color(0.18, 0.08, 0.04, 0.95))

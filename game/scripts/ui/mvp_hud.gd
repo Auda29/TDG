@@ -15,6 +15,9 @@ const UI_COLOR_WARNING := Color(0.96, 0.72, 0.24)
 const UI_COLOR_SUCCESS := Color(0.46, 0.92, 0.68)
 
 @onready var banner_label: Label = $TopBanner/BannerLabel
+@onready var boss_bar: MarginContainer = $BossBar
+@onready var boss_name_label: Label = $BossBar/BossBarPanel/BossBarVBox/BossNameLabel
+@onready var boss_health_bar: ProgressBar = $BossBar/BossBarPanel/BossBarVBox/BossHealthBar
 @onready var bottom_bar: PanelContainer = $BottomBar
 @onready var status_panel: PanelContainer = $BottomBar/Margin/RootHBox/StatusPanel
 @onready var center_panel: PanelContainer = $BottomBar/Margin/RootHBox/CenterPanel
@@ -40,6 +43,7 @@ const UI_COLOR_SUCCESS := Color(0.46, 0.92, 0.68)
 
 var _placement_text: String = "Build off"
 var _banner_timer: float = 0.0
+var _screen_flash_timer: float = 0.0
 var _threat_timer: float = 0.0
 var _threat_text: String = ""
 var _threat_color: Color = UI_COLOR_CARRION_SOFT
@@ -77,6 +81,12 @@ func _process(delta: float) -> void:
 	threat_label.text = _threat_text
 	threat_label.modulate = _threat_color
 	hint_label.text = "1/3 or buttons = build | LMB = place/select | Select commander to move | RMB = cancel | X = sell | 2 = Overwatch"
+	boss_bar.modulate = Color(1, 1, 1, 1)
+	if _screen_flash_timer > 0.0:
+		_screen_flash_timer = maxf(0.0, _screen_flash_timer - delta)
+		var flash_strength := _screen_flash_timer / 0.35
+		boss_bar.modulate = Color(1.0, 1.0, 1.0, 1.0).lerp(Color(1.0, 0.92, 0.68, 1.0), flash_strength * 0.65)
+		banner_label.modulate = banner_label.modulate.lerp(Color(1.0, 0.96, 0.72), flash_strength * 0.5)
 	if _banner_timer > 0.0:
 		_banner_timer = maxf(0.0, _banner_timer - delta)
 		if _banner_timer <= 0.0:
@@ -106,13 +116,25 @@ func show_banner(text: String, color: Color, duration: float = 1.6) -> void:
 	banner_label.modulate = color
 	_banner_timer = duration
 
+func trigger_boss_flash(duration: float = 0.35) -> void:
+	_screen_flash_timer = duration
+
 func show_threat(text: String, color: Color = UI_COLOR_CARRION_SOFT, duration: float = 1.8) -> void:
 	_threat_text = text
 	_threat_color = color
 	_threat_timer = duration
+	threat_label.text = _threat_text
+	threat_label.modulate = _threat_color
 
 func set_commander_state(commander: Node) -> void:
 	_commander = commander
+
+func set_boss_state(active: bool, boss_name: String = "", health_ratio: float = 1.0) -> void:
+	boss_bar.visible = active
+	if not active:
+		return
+	boss_name_label.text = "[BOSS] %s" % boss_name
+	boss_health_bar.value = clampf(health_ratio, 0.0, 1.0) * 100.0
 
 func set_selected_build_mode(tower_id: String) -> void:
 	basic_tower_button.button_pressed = tower_id == "basic_tower"
@@ -168,6 +190,7 @@ func _apply_visual_theme() -> void:
 	event_label.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	threat_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
 	banner_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
+	boss_name_label.add_theme_color_override("font_color", UI_COLOR_WARNING)
 	for button in [basic_tower_button, heavy_battery_button, pause_button, auto_wave_button, next_wave_button, sell_button]:
 		button.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	basic_tower_button.modulate = Color(0.24, 0.34, 0.38, 1.0)
@@ -176,6 +199,8 @@ func _apply_visual_theme() -> void:
 	auto_wave_button.modulate = Color(0.24, 0.28, 0.24, 1.0)
 	next_wave_button.modulate = Color(0.34, 0.18, 0.16, 1.0)
 	sell_button.modulate = Color(0.28, 0.18, 0.16, 1.0)
+	boss_bar.self_modulate = Color(0.92, 0.88, 0.74, 1.0)
+	boss_health_bar.self_modulate = Color(1.0, 0.78, 0.20, 1.0)
 
 func _update_selected_panel() -> void:
 	if _selected_tower == null or not is_instance_valid(_selected_tower):

@@ -5,6 +5,7 @@ const BASIC_TOWER_SCENE := preload("res://scenes/gameplay/towers/basic_tower.tsc
 const HEAVY_BATTERY_SCENE := preload("res://scenes/gameplay/towers/heavy_battery.tscn")
 const BASIC_ENEMY_SCENE := preload("res://scenes/gameplay/enemies/basic_enemy.tscn")
 const SHELLBACK_BRUTE_SCENE := preload("res://scenes/gameplay/enemies/shellback_brute.tscn")
+const SHELLBACK_BOSS_SCENE := preload("res://scenes/gameplay/enemies/shellback_boss.tscn")
 const BASIC_COMMANDER_SCENE := preload("res://scenes/gameplay/commander/basic_commander.tscn")
 const WAVE_RUNNER_SCENE := preload("res://scenes/gameplay/wave/wave_runner.tscn")
 const HUD_SCENE := preload("res://scenes/ui/mvp_hud.tscn")
@@ -25,6 +26,9 @@ var current_wave_number: int = 1
 var auto_start_next_wave: bool = true
 var waiting_for_manual_next_wave: bool = false
 var is_game_paused: bool = false
+var active_boss: Node = null
+var _screen_shake_time: float = 0.0
+var _screen_shake_strength: float = 0.0
 
 func _ready() -> void:
 	RunState.reset_for_new_run(300, 20)
@@ -34,9 +38,11 @@ func _ready() -> void:
 	_setup_hud()
 	_setup_wave()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	_handle_build_input()
 	_update_tower_preview()
+	_update_boss_state()
+	_update_screen_shake(delta)
 	_update_hud_feedback()
 
 func _handle_build_input() -> void:
@@ -159,13 +165,45 @@ func _on_overwatch_activated() -> void:
 func _on_enemy_spawned(enemy: Node) -> void:
 	if enemy == null or not is_instance_valid(enemy):
 		return
-	if enemy.has_method("get_threat_label") and enemy.get_threat_label() == "Elite":
+	if not enemy.has_method("get_threat_label"):
+		return
+	var threat_label: String = enemy.get_threat_label()
+	if threat_label == "Boss":
+		active_boss = enemy
+		if enemy.has_signal("defeated"):
+			enemy.defeated.connect(_on_boss_defeated, CONNECT_ONE_SHOT)
+		if enemy.has_signal("reached_goal"):
+			enemy.reached_goal.connect(_on_boss_reached_goal, CONNECT_ONE_SHOT)
+		hud_instance.show_banner("[!!!] BOSS APPROACHING", Color(1.0, 0.78, 0.22), 2.4)
+		hud_instance.show_event("Siegebreaker-class shellback entering lane", Color(1.0, 0.72, 0.30), 2.4)
+		if hud_instance.has_method("show_threat"):
+			hud_instance.show_threat("[BOSS] Priority target in lane", Color(1.0, 0.84, 0.28), 2.8)
+		if hud_instance.has_method("trigger_boss_flash"):
+			hud_instance.trigger_boss_flash(0.4)
+		_start_screen_shake(0.45, 11.0)
+		if map_instance != null and is_instance_valid(map_instance) and map_instance.has_method("trigger_lane_warning"):
+			map_instance.trigger_lane_warning(enemy.global_position, 2.6, 1.45, Color(1.0, 0.82, 0.24, 1.0))
+		return
+	if threat_label == "Elite":
 		hud_instance.show_banner("[!] ELITE CONTACT", Color(0.98, 0.46, 0.18), 1.8)
 		hud_instance.show_event("Shellback Brute entering lane", Color(0.98, 0.56, 0.24), 1.8)
 		if hud_instance.has_method("show_threat"):
 			hud_instance.show_threat("[BRUTE] Elite pressure detected", Color(1.0, 0.66, 0.24), 2.2)
 		if map_instance != null and is_instance_valid(map_instance) and map_instance.has_method("trigger_lane_warning"):
-			map_instance.trigger_lane_warning(enemy.global_position, 1.8)
+			map_instance.trigger_lane_warning(enemy.global_position, 1.8, 1.0, Color(1.0, 0.66, 0.24, 1.0))
+
+func _on_boss_defeated(enemy: Node) -> void:
+	if active_boss == enemy:
+		active_boss = null
+	hud_instance.show_banner("BOSS TERMINATED", Color(1.0, 0.86, 0.32), 2.0)
+	hud_instance.show_event("Siegebreaker neutralized", Color(1.0, 0.82, 0.32), 1.8)
+	if hud_instance.has_method("show_threat"):
+		hud_instance.show_threat("[CLEAR] Boss signature eliminated", Color(0.62, 1.0, 0.76), 2.0)
+	_start_screen_shake(0.25, 6.0)
+
+func _on_boss_reached_goal(enemy: Node) -> void:
+	if active_boss == enemy:
+		active_boss = null
 
 func _on_wave_cleared() -> void:
 	var bonus: int = 75
@@ -202,6 +240,8 @@ func _build_spawn_queue(wave_number: int) -> Array:
 		queue[max(0, total_count - 2)] = SHELLBACK_BRUTE_SCENE
 	if wave_number >= 3:
 		queue[max(0, total_count - 5)] = SHELLBACK_BRUTE_SCENE
+	if wave_number >= 5:
+		queue[max(0, total_count - 1)] = SHELLBACK_BOSS_SCENE
 	return queue
 
 func _update_tower_preview() -> void:
@@ -284,6 +324,35 @@ func _try_select_commander_at_mouse() -> bool:
 	GameState.is_commander_selected = true
 	hud_instance.show_event("Commander selected", Color(0.6, 0.95, 0.75), 0.8)
 	return true
+
+func _update_boss_state() -> void:
+	if hud_instance == null or not hud_instance.has_method("set_boss_state"):
+		return
+	if active_boss == null or not is_instance_valid(active_boss):
+		hud_instance.set_boss_state(false)
+		active_boss = null
+		return
+	var boss_name := active_boss.get_display_name() if active_boss.has_method("get_display_name") else String(active_boss.name)
+	var boss_health_ratio := active_boss.get_health_ratio() if active_boss.has_method("get_health_ratio") else 1.0
+	hud_instance.set_boss_state(true, boss_name, boss_health_ratio)
+
+func _update_screen_shake(delta: float) -> void:
+	if _screen_shake_time > 0.0:
+		_screen_shake_time = maxf(0.0, _screen_shake_time - delta)
+		var offset := Vector2(randf_range(-_screen_shake_strength, _screen_shake_strength), randf_range(-_screen_shake_strength, _screen_shake_strength))
+		map_layer.position = offset
+		tower_layer.position = offset
+		enemy_layer.position = offset
+		commander_layer.position = offset
+	else:
+		map_layer.position = Vector2.ZERO
+		tower_layer.position = Vector2.ZERO
+		enemy_layer.position = Vector2.ZERO
+		commander_layer.position = Vector2.ZERO
+
+func _start_screen_shake(duration: float, strength: float) -> void:
+	_screen_shake_time = duration
+	_screen_shake_strength = strength
 
 func _update_hud_feedback() -> void:
 	if hud_instance == null:
