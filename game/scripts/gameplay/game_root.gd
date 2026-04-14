@@ -43,12 +43,26 @@ func _handle_build_input() -> void:
 	if Input.is_action_just_pressed("ability_3"):
 		_toggle_tower_selection("heavy_battery")
 		return
+	if Input.is_action_just_pressed("sell_selected"):
+		_try_sell_selected_tower()
+		return
 	if Input.is_action_just_pressed("command_secondary"):
+		_clear_selected_placed_tower()
 		GameState.clear_selection()
 		_clear_preview()
 		return
-	if Input.is_action_just_pressed("command_primary") and _has_selected_tower():
-		_try_place_selected_tower()
+	if Input.is_action_just_pressed("command_primary"):
+		if _is_pointer_over_ui():
+			return
+		if _has_selected_tower():
+			_try_place_selected_tower()
+			return
+		if _try_select_tower_at_mouse():
+			return
+		if _try_select_commander_at_mouse():
+			return
+		if GameState.is_commander_selected:
+			_move_commander_to_mouse()
 
 func _setup_map() -> void:
 	map_instance = MAP_SCENE.instantiate()
@@ -59,10 +73,16 @@ func _setup_commander() -> void:
 	commander_layer.add_child(commander_instance)
 	commander_instance.global_position = map_instance.get_commander_spawn_position()
 	commander_instance.setup(map_instance.get_world_bounds())
+	if commander_instance.has_signal("overwatch_activated"):
+		commander_instance.overwatch_activated.connect(_on_overwatch_activated)
 
 func _setup_hud() -> void:
 	hud_instance = HUD_SCENE.instantiate()
 	ui_layer.add_child(hud_instance)
+	if hud_instance.has_signal("build_tower_requested"):
+		hud_instance.build_tower_requested.connect(_toggle_tower_selection)
+	if hud_instance.has_signal("sell_selected_requested"):
+		hud_instance.sell_selected_requested.connect(_try_sell_selected_tower)
 
 func _setup_wave() -> void:
 	wave_runner = WAVE_RUNNER_SCENE.instantiate()
@@ -74,6 +94,8 @@ func _setup_wave() -> void:
 	_start_wave(current_wave_number)
 
 func _toggle_tower_selection(tower_id: String) -> void:
+	_clear_selected_placed_tower()
+	GameState.is_commander_selected = false
 	GameState.selected_tower_id = "" if GameState.selected_tower_id == tower_id else tower_id
 	if GameState.selected_tower_id == "":
 		_clear_preview()
@@ -101,7 +123,16 @@ func _try_place_selected_tower() -> void:
 	RunState.spend_credits(tower_cost)
 	tower_layer.add_child(tower)
 	tower.global_position = mouse_world
+	_select_placed_tower(tower)
 	hud_instance.show_event("Tower placed", Color(0.5, 1.0, 0.6))
+
+func _move_commander_to_mouse() -> void:
+	if commander_instance != null and is_instance_valid(commander_instance):
+		commander_instance.set_move_target(get_global_mouse_position())
+		hud_instance.show_event("Commander repositioned", Color(0.4, 0.9, 0.6), 0.8)
+
+func _is_pointer_over_ui() -> bool:
+	return get_viewport().gui_get_hovered_control() != null
 
 func _on_enemy_reached_goal(enemy: Node) -> void:
 	RunState.base_hp -= enemy.fortress_damage
@@ -110,6 +141,9 @@ func _on_enemy_reached_goal(enemy: Node) -> void:
 func _on_enemy_defeated(credit_reward: int) -> void:
 	RunState.gain_credits(credit_reward)
 	hud_instance.show_event("+%d credits" % credit_reward, Color(0.6, 1.0, 0.6))
+
+func _on_overwatch_activated() -> void:
+	hud_instance.show_event("Overwatch active", Color(1.0, 0.85, 0.25))
 
 func _on_wave_cleared() -> void:
 	var bonus: int = 75
@@ -123,6 +157,8 @@ func _start_wave(wave_number: int) -> void:
 	RunState.current_wave = wave_number
 	wave_runner.enemy_count = 8 + (wave_number * 2)
 	wave_runner.spawn_interval = maxf(0.45, 0.9 - (wave_number - 1) * 0.05)
+	wave_runner.speed_scale = minf(1.0 + ((wave_number - 1) * 0.04), 1.4)
+	wave_runner.health_scale = 1.0 if wave_number <= 3 else minf(1.0 + ((wave_number - 3) * 0.08), 1.6)
 	wave_runner.spawn_queue = _build_spawn_queue(wave_number)
 	wave_runner.start_wave(enemy_layer, map_instance.get_enemy_curve(), Callable(self, "_on_enemy_reached_goal"))
 
@@ -159,6 +195,62 @@ func _clear_preview() -> void:
 		tower_preview.queue_free()
 	tower_preview = null
 
+func _try_select_tower_at_mouse() -> bool:
+	var mouse_world: Vector2 = get_global_mouse_position()
+	var best_tower: Node = null
+	var best_distance: float = 999999.0
+	for tower in tower_layer.get_children():
+		if not is_instance_valid(tower) or not tower is Node2D:
+			continue
+		var tower_node: Node2D = tower
+		var distance: float = tower_node.global_position.distance_to(mouse_world)
+		if distance <= 36.0 and distance < best_distance:
+			best_distance = distance
+			best_tower = tower
+	if best_tower != null:
+		_select_placed_tower(best_tower)
+		GameState.is_commander_selected = false
+		hud_instance.show_event("Tower selected", Color(0.5, 0.9, 1.0))
+		return true
+	_clear_selected_placed_tower()
+	return false
+
+func _select_placed_tower(tower: Node) -> void:
+	_clear_selected_placed_tower()
+	GameState.selected_placed_tower = tower
+	if tower != null and tower.has_method("set_selected"):
+		tower.set_selected(true)
+
+func _clear_selected_placed_tower() -> void:
+	if GameState.selected_placed_tower != null and is_instance_valid(GameState.selected_placed_tower):
+		if GameState.selected_placed_tower.has_method("set_selected"):
+			GameState.selected_placed_tower.set_selected(false)
+	GameState.selected_placed_tower = null
+
+func _try_sell_selected_tower() -> void:
+	var tower := GameState.selected_placed_tower
+	if tower == null or not is_instance_valid(tower):
+		return
+	var refund: int = tower.get_sell_refund() if tower.has_method("get_sell_refund") else int(round(float(tower.tower_cost) * 0.5))
+	RunState.gain_credits(refund)
+	hud_instance.show_event("Tower sold +%d" % refund, Color(0.6, 1.0, 0.8))
+	_clear_selected_placed_tower()
+	tower.queue_free()
+
+func _try_select_commander_at_mouse() -> bool:
+	if commander_instance == null or not is_instance_valid(commander_instance):
+		return false
+	var mouse_world: Vector2 = get_global_mouse_position()
+	var distance: float = commander_instance.global_position.distance_to(mouse_world)
+	if distance > 32.0:
+		return false
+	_clear_selected_placed_tower()
+	GameState.selected_tower_id = ""
+	_clear_preview()
+	GameState.is_commander_selected = true
+	hud_instance.show_event("Commander selected", Color(0.6, 0.95, 0.75), 0.8)
+	return true
+
 func _update_hud_feedback() -> void:
 	if hud_instance == null:
 		return
@@ -170,8 +262,17 @@ func _update_hud_feedback() -> void:
 			reason = "not_enough_credits"
 		placement_status = _format_build_reason(reason)
 		placement_color = Color(0.5, 1.0, 0.6) if reason == "ready" else Color(1.0, 0.45, 0.45)
+	elif GameState.selected_placed_tower != null and is_instance_valid(GameState.selected_placed_tower):
+		var refund: int = GameState.selected_placed_tower.get_sell_refund() if GameState.selected_placed_tower.has_method("get_sell_refund") else int(round(float(GameState.selected_placed_tower.tower_cost) * 0.5))
+		placement_status = "Selected tower | Sell: X (+%d)" % refund
+		placement_color = Color(0.5, 0.9, 1.0)
+	elif GameState.is_commander_selected:
+		placement_status = "Commander selected | LMB move | 2 Overwatch"
+		placement_color = Color(0.6, 0.95, 0.75)
 	hud_instance.set_placement_status(placement_status, placement_color)
 	hud_instance.set_commander_state(commander_instance)
+	hud_instance.set_selected_build_mode(GameState.selected_tower_id)
+	hud_instance.set_selected_tower(GameState.selected_placed_tower)
 
 func _get_selected_tower_scene() -> PackedScene:
 	match GameState.selected_tower_id:

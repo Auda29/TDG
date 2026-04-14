@@ -11,6 +11,8 @@ var enemy_layer: Node
 var path_curve: Curve2D
 var fortress_callback: Callable
 var spawn_queue: Array = []
+var speed_scale: float = 1.0
+var health_scale: float = 1.0
 var spawned_count: int = 0
 var active_count: int = 0
 var _spawn_timer: float = 0.0
@@ -42,7 +44,7 @@ func _spawn_enemy() -> void:
 	if scene_to_spawn == null or enemy_layer == null or path_curve == null:
 		return
 	var enemy = scene_to_spawn.instantiate()
-	enemy.setup(path_curve)
+	enemy.setup(path_curve, speed_scale, health_scale)
 	enemy.defeated.connect(_on_enemy_removed)
 	enemy.reached_goal.connect(_on_enemy_reached_goal)
 	enemy_layer.add_child(enemy)
