@@ -2,6 +2,8 @@
 
 Developer: **Auda29**
 
+> `TDG40k` is currently a **working title**.
+
 TDG40k is an early-stage **tower defense game project** inspired by the readability, progression, and upgrade depth of games like Bloons TD6, with an **original grim sci-fi warfare theme**.
 
 ## Project status
@@ -25,20 +27,27 @@ The game aims to combine:
 Planned early prototype / MVP direction:
 - singleplayer first
 - top-down or isometric presentation
-- 1 map
-- 1 enemy faction
-- 4–5 tower / defense unit types
-- 1 commander / hero
-- 10–20 waves
-- basic upgrade system
-- 1 boss encounter
+- fortress / outpost defense fantasy
+- high combat readability
+- strong tower roles and upgrade decisions
+
+For the current MVP definition, see:
+- `docs/mvp-scope.md`
 
 ## Repository structure
 - `docs/` — design, brainstorm, scope, and planning documents
 - `AGENTS.md` — project-specific instructions for coding agents
 
 ## Existing documents
-- `docs/projekt-brainstorm.md` — first project brainstorm and concept notes
+- `docs/projekt-brainstorm.md` — first brainstorm and concept notes
+- `docs/game-design-overview.md` — high-level design summary
+- `docs/mvp-scope.md` — MVP / vertical-slice scope
+- `docs/tower-klassen-konzept.md` — tower class design
+- `docs/enemy-faction-konzept.md` — first enemy faction concept
+- `docs/tech-stack-options.md` — engine / stack comparison
+- `docs/inspirations-research.md` — structured inspiration takeaways
+- `docs/ip-do-dont.md` — IP-safety and originality guardrails
+- `docs/art-direction-notes.md` — visual direction for the MVP
 
 ## Roadmap
 Short-term next steps:

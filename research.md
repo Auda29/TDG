@@ -1,0 +1,47 @@
+# Research: Bloons TD 6 als Inspiration für ein neues Tower-Defense-Projekt
+
+## Summary
+Bloons TD 6 ist vor allem deshalb ein starkes Vorbild, weil es einen extrem klaren Core-Loop mit dauerhaftem Entscheidungsdruck verbindet: Geld durch Kills verdienen, Verteidigungslücken lesen, gezielt nachrüsten und für bekannte Spikes in späteren Runden vorausplanen. Für ein neues TD-Projekt sind besonders wertvoll: klar getrennte Tower-Rollen, starke aber gut lesbare Spezialisierungspfade, Maps mit bewusst gesetzten Platzierungs- und Sichtlinienproblemen, viele Modifikatoren auf denselben Kernregeln und eine breite Replayability-Schicht durch Modi, Meta-Fortschritt und Live-/Community-Inhalte — ohne Stil, Figuren, Humor oder konkrete Systeme 1:1 zu kopieren. [Source](https://store.steampowered.com/app/960090/Bloons_TD_6/) [Source](https://bloonswiki.com/Bloons_TD_6)
+
+## Findings
+1. **Der Core-Loop ist einfach, aber eskaliert über saubere Gegenprüfungen.** BTD6 bleibt beim klassischen TD-Grundmuster: Gegner laufen in fest definierten Runden über eine Strecke, Abschüsse erzeugen Geld, dieses fließt direkt in neue Türme oder Upgrades. Die Tiefe entsteht nicht durch komplizierte Grundregeln, sondern durch später eingeführte Gegnereigenschaften wie Camo, Regrow, Fortified, Immunitäten und MOAB-Klassen, die immer wieder neue Antworten verlangen. Für ein neues Projekt heißt das: lieber einen glasklaren Grundloop bauen und Komplexität schrittweise über klar kommunizierte Gegnertypen hinzufügen. [Source](https://bloonswiki.com/Bloons_TD_6) [Source](https://bloonswiki.com/Round)
+
+2. **Progression funktioniert auf drei Ebenen gleichzeitig: Run, Account, Content-Freischaltung.** Innerhalb eines Runs wächst die Power über Geld, Tower-Upgrades und Hero-Level. Darüber liegt Account-Fortschritt durch freischaltbare Türme, Heroes, Monkey Knowledge und Währungen wie Monkey Money/Trophies. Zusätzlich erweitert das Spiel den Langzeitpfad über neue Modi, Events und Community-Inhalte. Die Lehre: kombiniere kurzfristige Run-Spannung mit mittelfristiger Freischaltmotivation und langfristigen Sammler-/Challenge-Zielen, aber halte den kompetitiven oder „puristischen“ Modus von Meta-Boni frei. [Source](https://bloonswiki.com/Bloons_TD_6) [Source](https://bloonswiki.com/CHIMPS) [Source](https://store.steampowered.com/app/960090/Bloons_TD_6/)
+
+3. **Die Tower-Design-Philosophie setzt auf klare Basen + harte Spezialisierung statt auf diffuse Hybridtürme.** Jede Einheit startet mit einer verständlichen Grundrolle; dann verzweigt sie in drei Upgradepfade mit jeweils fünf Stufen, wobei nur ein Pfad bis T5 und ein zweiter nur bis T2 geführt werden darf. Dadurch entstehen lesbare Build-Entscheidungen, Commitment und unterschiedliche Endrollen pro Tower. Für euer Projekt: gebt jedem Turm eine erkennbare Ausgangsidentität und 2–3 starke Spezialisierungen, die echte Verzichtskosten erzeugen. [Source](https://store.steampowered.com/app/960090/Bloons_TD_6/) [Source](https://bloonswiki.com/Bloons_TD_6)
+
+4. **Heroes ergänzen den Tower-Roster durch strategische Vorfestlegung, nicht durch Mengenvielfalt im Run.** Pro Match ist nur ein Hero erlaubt; er levelt automatisch über Runden, bekommt feste Meilenstein-Upgrades und aktive Fähigkeiten. Das erzeugt schon vor Matchstart eine klare Strategieentscheidung und verhindert gleichzeitig UI- und Mikro-Überladung. Übertragbar ist vor allem das Muster „ein Commander/Hero pro Run“, der Synergien vorgibt und Skill-Ausdruck liefert, ohne die Lesbarkeit des Schlachtfelds zu zerstören. [Source](https://bloonswiki.com/Hero) [Source](https://bloonswiki.com/Bloons_TD_6)
+
+5. **Map- und Wave-Design erzeugen Probleme, nicht nur Varianz.** Höhere Kartenschwierigkeiten entstehen laut Map-Difficulty-System typischerweise durch kürzere Wege, mehrere Wege, Sichtblocker, Platzierungshindernisse und entfernbare Objekte. Gleichzeitig sind Runden als definierte Gruppen mit gezielten Timing- und Dichtewechseln gebaut. Das Zusammenspiel aus Kartenproblem und Rundenproblem ist entscheidend: gute TD-Maps sind nicht nur „anders aussehend“, sondern stellen andere Raum-, Sicht- und Timing-Fragen. [Source](https://bloonswiki.com/Map_difficulty) [Source](https://bloonswiki.com/Round) [Source](https://ninjakiwi.com/Games/Mobile/Bloons-TD-6.html)
+
+6. **Replayability kommt aus Regelmodifikationen auf bekannten Inhalten.** BTD6 nutzt viele Modi auf denselben Maps: Easy/Medium/Hard mit Submodi wie Reverse, Half Cash, Alternate Bloons Rounds, Impoppable und CHIMPS. Dazu kommen Boss Events, Odysseys, Quests, Contested Territory, Co-op und der Content Browser für Community-Challenges. Die Lektion: statt ständig komplett neue Kernsysteme zu bauen, sollte ein TD viele „Was-wäre-wenn?“-Varianten auf stabilem Fundament anbieten. [Source](https://bloonswiki.com/CHIMPS) [Source](https://store.steampowered.com/app/960090/Bloons_TD_6/) [Source](https://bloons.fandom.com/wiki/Bloons_TD_6)
+
+7. **Lesbarkeit wird systemisch abgesichert.** Offizielle Beschreibungen betonen festen Top-down-Blick, 3D mit klaren Sichtlinien-Objekten und deutlich unterscheidbare Tower-/Upgrade-Präsentation. Wichtig ist weniger „schöne Effekte“ als die Tatsache, dass Informationen spielrelevant bleiben: Pfad, Sichtlinie, Platzierungsflächen, Immunitäten und aktive Fähigkeiten sind direkt an Entscheidungen gekoppelt. Für euer Projekt: VFX nur dann eskalieren lassen, wenn Track, Zielpriorität, Reichweite und Statuszustände weiterhin eindeutig lesbar sind. [Source](https://ninjakiwi.com/Games/Mobile/Bloons-TD-6.html) [Source](https://bloonswiki.com/Bloons_TD_6)
+
+8. **Die stärkste Inspiration liegt in der Struktur, nicht in der Oberfläche.** Übernehmbar sind: klarer ökonomischer Loop, gestufte Gegner-Gates, ein Held pro Run, starke Spezialisierungspfade, Karten mit Raum-/Sicht-Problemen, viele Modi auf derselben Content-Basis und saubere Progressionsschichten. Nicht kopieren sollte man: Affen/Ballons-Thema, spezifische Gegnertypen und Namen, exakte Upgrade-Struktur, Währungsnamen, CHIMPS als 1:1 Modusname oder konkrete Eventformate. Für TDG wäre die saubere Übertragung: ein originelles Grim-Sci-Fi-Setting mit eigener Feindlogik, aber derselben Disziplin bei Rollen, Eskalation und Lesbarkeit. [Source](https://store.steampowered.com/app/960090/Bloons_TD_6/) [Source](https://bloonswiki.com/Bloons_TD_6)
+
+## Actionable Takeaways für TDG
+- **Baue den MVP um 1 Kernloop:** Gegner töten → Ressourcen gewinnen → Lücken schließen → auf bekannte Power-Spikes vorbereiten.
+- **Definiere 4–5 Tower-Klassen mit klaren Rollen:** z. B. Standard-DPS, Anti-Armor, AoE/Artillerie, Control/Suppression, Support/Buff.
+- **Nutze pro Tower 2–3 harte Spezialisierungen:** kein „alles kann alles“; jede Route sollte Early/Mid/Late anders bedienen.
+- **Führe 1 Commander/Hero ein:** pro Run genau einer, mit Auto-Leveling und 2–3 aktiven Fähigkeiten.
+- **Designe Gegner als Lernkurve:** erst Basis-Gegner, dann Tarnung, Panzerung, Regeneration, Schildträger, Boss/Elite-Klasse.
+- **Gestalte Maps als taktische Fragen:** Engstellen, tote Winkel, erhöhte Positionen, getrennte Pfade, blockierte Sichtlinien, riskante Premium-Slots.
+- **Erzeuge Replayability über Mutatoren:** weniger Geld, spiegelverkehrte Route, Elite-Wellen, eingeschränkte Tower-Kategorien, No-sell-Modus, Hardcore-Modus ohne Meta-Boni.
+- **Schütze Readability aktiv:** klare Projektile, eindeutige Statusfarben/Symbole, starke Silhouetten, wenig Effektspam an Hotspots.
+- **Trenne Meta von „Skill-Modi“:** Upgrades/Meta im Standardspiel okay, aber ein purer Modus ohne Meta schafft Glaubwürdigkeit und Tiefe.
+
+## Sources
+- Kept: Bloons TD 6 on Steam (https://store.steampowered.com/app/960090/Bloons_TD_6/) — offizielle Produktbeschreibung mit Tower-/Hero-Anzahl, Maps, Modi, Updates, Community-Features.
+- Kept: BloonsWiki – Bloons TD 6 (https://bloonswiki.com/Bloons_TD_6) — strukturierter Überblick über Core-Loop, Upgrades, Währungen, Progression und Features.
+- Kept: Ninja Kiwi – Bloons TD 6 (https://ninjakiwi.com/Games/Mobile/Bloons-TD-6.html) — offizielle Kurzbeschreibung zu 3D-Präsentation, Sichtlinien und Upgrade-Philosophie.
+- Kept: BloonsWiki – CHIMPS (https://bloonswiki.com/CHIMPS) — gutes Beispiel für regelverändernde High-Skill-Modi und saubere Trennung von Meta/Skill.
+- Kept: BloonsWiki – Map difficulty (https://bloonswiki.com/Map_difficulty) — hilfreich für Kartenprinzipien und Schwierigkeitsstruktur.
+- Kept: BloonsWiki – Round (https://bloonswiki.com/Round) — erklärt Runden als bewusst komponierte Spawn-Gruppen.
+- Kept: BloonsWiki – Hero (https://bloonswiki.com/Hero) — nützlich für Hero-Rolle, XP-Kurve und Fähigkeitsstruktur.
+- Dropped: Fandom-Wiki-Artikel (https://bloons.fandom.com/wiki/Bloons_TD_6) — brauchbar als Quercheck, aber redundant gegenüber BloonsWiki und weniger fokussiert.
+
+## Gaps
+- Eine belastbare, offizielle Quelle speziell nur zur UI-/HUD-Philosophie war nicht leicht auffindbar; der Abschnitt zu Readability stützt sich daher auf offizielle Feature-Texte plus beobachtbare Struktur des Spiels.
+- Für tiefere Ableitungen zur Moment-to-Moment-Usability wären zusätzliche Quellen wie Entwickler-Interviews, GDC-Talks oder längere UX-Analysen sinnvoll.
+- Nächster sinnvoller Schritt: Aus diesen Learnings ein `docs/btd6-inspirations-for-tdg.md` oder direkt ein `docs/mvp-pillars.md` für TDG ableiten.

@@ -1,9 +1,9 @@
-# Projekt-Brainstorm: TDG40k
+# Projekt-Brainstorm: TDG40k (Arbeitstitel)
 
 ## Kurzbeschreibung
 **TDG40k** ist ein **Tower-Defense-Spiel inspiriert von Bloons TD6**, aber mit einem **grimdark Sci-Fi-Kriegsthema im Stil großer galaktischer Belagerungen**. Der Fokus liegt auf klar lesbarem TD-Gameplay, starken Upgrades, unterschiedlichen Fraktionen/Einheiten und einem düsteren, futuristischen Setting.
 
-> Hinweis: **TDG40k** ist aktuell ein Arbeitstitel. Ziel ist eine **eigene Identität** – also Inspiration bei Spielgefühl, Lesbarkeit und Progression, aber keine direkte Kopie von Fraktionen, Begriffen, Designs oder konkreten Inhalten.
+> Hinweis: **TDG40k** ist aktuell nur ein Arbeitstitel. Ziel ist eine **eigene Identität** – also Inspiration bei Spielgefühl, Lesbarkeit und Progression, aber keine direkte Kopie von Fraktionen, Begriffen, Designs oder konkreten Inhalten.
 
 ---
 
@@ -32,7 +32,7 @@
 ---
 
 ## Setting-Idee
-Ein belagerter imperialer/galaktischer Grenzsektor, in dem menschliche Verteidiger gegen endlose außerirdische, dämonische oder rebellische Wellen kämpfen. 
+Ein belagerter Grenzsektor oder Frontabschnitt, in dem menschliche Verteidiger gegen endlose außerirdische, mutierte oder rebellische Wellen kämpfen.
 
 ### Tonalität
 - düster
@@ -42,7 +42,7 @@ Ein belagerter imperialer/galaktischer Grenzsektor, in dem menschliche Verteidig
 
 ### Visuelle Leitlinien
 - schwere Panzerung
-- gotisch-industrielle Architektur
+- monumental-industrielle Architektur
 - riesige Kanonen, Plasma, Raketen, Flammen
 - Schlamm, Stahl, Rauch, Energieeffekte
 - Klare Silhouetten für gute Lesbarkeit
@@ -98,7 +98,7 @@ Statt klassischer „Türme“ könnten Verteidigungseinheiten als militärische
   - Schildbrecher
   - Kettenblitz / Durchschuss
 
-### 6. Support-/Tech-Schrein
+### 6. Support-/Signal-Relay
 - bufft andere Türme
 - erzeugt Ressourcen
 - heilt/repairt mechanische Einheiten
@@ -113,8 +113,8 @@ Statt klassischer „Türme“ könnten Verteidigungseinheiten als militärische
 - kann Builds stark beeinflussen
 - Beispiele:
   - Frontline Commander
-  - Tech-Priest-ähnlicher Ingenieur
-  - Psyker-/Void-Caster-artige Einheit
+  - Battlefield Engineer
+  - Void Operations Specialist
 
 ---
 
@@ -130,9 +130,9 @@ Statt klassischer „Türme“ könnten Verteidigungseinheiten als militärische
 
 ### Boss-Ideen
 - Belagerungspanzer
-- dämonischer Titan / War Engine
+- kolossale War Engine
 - mutierter Schwarm-Anführer
-- Warp-/Psionik-Boss mit Teleports und Phasenwechsel
+- psionisch geprägter Boss mit Teleports und Phasenwechsel
 
 ---
 
@@ -180,19 +180,19 @@ Kampagne auf einer Sektorkarte:
 
 ### 5. Fraktionsspezifische Spielstile
 Beispielhaft:
-- **Imperiale Verteidiger**: stark in Disziplin, Artillerie, Bunkerbau
-- **Chaotische Invasoren**: aggressive Elite, Dämonik, Risiko-Buffs
+- **Festungsverteidiger**: stark in Disziplin, Artillerie, Bunkerbau
+- **Mutationskulte**: aggressive Elite, Instabilität, Risiko-Buffs
 - **Alien-Schwarm**: Masse, Regeneration, Nahkampfdruck
-- **Technoider Maschinenfeind**: Schilde, Präzision, Drohnen
+- **Maschinenkollektiv**: Schilde, Präzision, Drohnen
 
 ---
 
 ## Kartenideen
-- zerstörte Makro-Stadt
+- zerstörte Megastadt
 - Wüstenplanet mit Raffinerien
 - Fabrikwelt mit Förderbändern
 - Eiswelt mit begrenzten Bauflächen
-- Kathedralenfestung / letzter Außenposten
+- Monumentalfestung / letzter Außenposten
 - Raumschiff-Werft / orbitales Dock
 
 ### Kartenmechaniken
@@ -287,11 +287,12 @@ Das wäre ein guter Mix aus:
 
 ---
 
-## Nächste sinnvolle Dokumente
-Als nächstes könnten erstellt werden:
-1. **Game Design Overview**
-2. **Core Gameplay Loop**
-3. **Tower-Klassen-Konzept**
-4. **Enemy-Faction-Konzept**
-5. **MVP-Scope**
-6. **Art Direction Notes**
+## Verwandte Dokumente
+Bereits ausgearbeitet oder relevant:
+1. **`docs/game-design-overview.md`**
+2. **`docs/mvp-scope.md`**
+3. **`docs/tower-klassen-konzept.md`**
+4. **`docs/enemy-faction-konzept.md`**
+5. **`docs/art-direction-notes.md`**
+6. **`docs/ip-do-dont.md`**
+7. **`docs/inspirations-research.md`**
