@@ -115,6 +115,8 @@ func _setup_hud() -> void:
 		hud_instance.build_tower_requested.connect(_toggle_tower_selection)
 	if hud_instance.has_signal("sell_selected_requested"):
 		hud_instance.sell_selected_requested.connect(_try_sell_selected_tower)
+	if hud_instance.has_signal("cycle_targeting_requested"):
+		hud_instance.cycle_targeting_requested.connect(_try_cycle_selected_tower_targeting)
 	if hud_instance.has_signal("pause_toggled"):
 		hud_instance.pause_toggled.connect(_set_game_paused)
 	if hud_instance.has_signal("auto_wave_toggled"):
@@ -176,6 +178,8 @@ func _is_pointer_over_ui() -> bool:
 func _on_enemy_reached_goal(enemy: Node) -> void:
 	RunState.base_hp -= enemy.fortress_damage
 	hud_instance.show_event("Base hit -%d" % enemy.fortress_damage, Color(1.0, 0.5, 0.4))
+	if hud_instance.has_method("trigger_damage_flash"):
+		hud_instance.trigger_damage_flash(0.45)
 
 func _on_enemy_defeated(credit_reward: int) -> void:
 	RunState.gain_credits(credit_reward)
@@ -416,7 +420,7 @@ func _update_hud_feedback() -> void:
 	elif GameState.selected_placed_tower != null and is_instance_valid(GameState.selected_placed_tower):
 		var refund: int = GameState.selected_placed_tower.get_sell_refund() if GameState.selected_placed_tower.has_method("get_sell_refund") else int(round(float(GameState.selected_placed_tower.tower_cost) * 0.5))
 		var targeting_label: String = GameState.selected_placed_tower.get_targeting_mode_label() if GameState.selected_placed_tower.has_method("get_targeting_mode_label") else "First"
-		placement_status = "Selected tower | T: %s | Sell: X (+%d)" % [targeting_label, refund]
+		placement_status = "Selected tower | Use right panel for targeting and sell"
 		placement_color = Color(0.5, 0.9, 1.0)
 	elif GameState.is_commander_selected:
 		placement_status = "Commander selected | LMB move | 2 Overwatch"

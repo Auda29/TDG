@@ -2,6 +2,7 @@ extends Control
 
 signal build_tower_requested(tower_id: String)
 signal sell_selected_requested
+signal cycle_targeting_requested
 signal pause_toggled(paused: bool)
 signal auto_wave_toggled(enabled: bool)
 signal next_wave_requested
@@ -21,6 +22,7 @@ const TOWER_DISPLAY_DATA := {
 	"heavy_battery": HEAVY_BATTERY_DATA,
 }
 
+@onready var damage_flash: ColorRect = $DamageFlash
 @onready var banner_label: Label = $TopBanner/BannerLabel
 @onready var boss_bar: MarginContainer = $BossBar
 @onready var boss_name_label: Label = $BossBar/BossBarPanel/BossBarVBox/BossNameLabel
@@ -28,7 +30,7 @@ const TOWER_DISPLAY_DATA := {
 @onready var bottom_bar: PanelContainer = $BottomBar
 @onready var status_panel: PanelContainer = $BottomBar/Margin/RootHBox/StatusPanel
 @onready var center_panel: PanelContainer = $BottomBar/Margin/RootHBox/CenterPanel
-@onready var selected_panel: PanelContainer = $BottomBar/Margin/RootHBox/SelectedPanel
+@onready var selected_panel: PanelContainer = $SelectedPanel
 @onready var credits_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/CreditsLabel
 @onready var wave_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/WaveLabel
 @onready var base_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/BaseLabel
@@ -44,12 +46,14 @@ const TOWER_DISPLAY_DATA := {
 @onready var pause_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/PauseButton
 @onready var auto_wave_button: CheckButton = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/AutoWaveButton
 @onready var next_wave_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/NextWaveButton
-@onready var selected_title_label: Label = $BottomBar/Margin/RootHBox/SelectedPanel/SelectedMargin/SelectedVBox/SelectedTitleLabel
-@onready var selected_stats_label: Label = $BottomBar/Margin/RootHBox/SelectedPanel/SelectedMargin/SelectedVBox/SelectedStatsLabel
-@onready var sell_button: Button = $BottomBar/Margin/RootHBox/SelectedPanel/SelectedMargin/SelectedVBox/SellButton
+@onready var selected_title_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/SelectedTitleLabel
+@onready var selected_stats_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/SelectedStatsLabel
+@onready var target_mode_button: Button = $SelectedPanel/SelectedMargin/SelectedVBox/TargetModeButton
+@onready var sell_button: Button = $SelectedPanel/SelectedMargin/SelectedVBox/SellButton
 
 var _placement_text: String = "Build off"
 var _banner_timer: float = 0.0
+var _damage_flash_timer: float = 0.0
 var _screen_flash_timer: float = 0.0
 var _threat_timer: float = 0.0
 var _threat_text: String = ""
@@ -70,6 +74,7 @@ func _ready() -> void:
 	basic_tower_button.pressed.connect(func() -> void: build_tower_requested.emit("basic_tower"))
 	heavy_battery_button.pressed.connect(func() -> void: build_tower_requested.emit("heavy_battery"))
 	sell_button.pressed.connect(func() -> void: sell_selected_requested.emit())
+	target_mode_button.pressed.connect(func() -> void: cycle_targeting_requested.emit())
 	pause_button.pressed.connect(_on_pause_button_pressed)
 	auto_wave_button.toggled.connect(func(enabled: bool) -> void: auto_wave_toggled.emit(enabled))
 	next_wave_button.pressed.connect(func() -> void: next_wave_requested.emit())
@@ -91,7 +96,13 @@ func _process(delta: float) -> void:
 	event_label.modulate = _event_color
 	threat_label.text = _threat_text
 	threat_label.modulate = _threat_color
-	hint_label.text = _run_status_text if _run_over else "1/3 or buttons = build | LMB = place/select | Select commander to move | RMB = cancel | X = sell | T = targeting | 2 = Overwatch"
+	hint_label.text = _run_status_text if _run_over else "1/3 or buttons = build | LMB = place/select | Select commander to move | RMB = cancel | Right panel = tower actions | X/T optional | 2 = Overwatch"
+	if _damage_flash_timer > 0.0:
+		_damage_flash_timer = maxf(0.0, _damage_flash_timer - delta)
+		var flash_alpha: float = (_damage_flash_timer / 0.45) * 0.28
+		damage_flash.color = Color(0.45, 0.02, 0.02, flash_alpha)
+	else:
+		damage_flash.color = Color(0.45, 0.02, 0.02, 0.0)
 	boss_bar.modulate = Color(1, 1, 1, 1)
 	if _screen_flash_timer > 0.0:
 		_screen_flash_timer = maxf(0.0, _screen_flash_timer - delta)
@@ -121,6 +132,9 @@ func show_event(text: String, color: Color = Color(1, 1, 1), duration: float = 1
 	_event_text = text
 	_event_color = color
 	_event_timer = duration
+
+func trigger_damage_flash(duration: float = 0.45) -> void:
+	_damage_flash_timer = duration
 
 func show_banner(text: String, color: Color, duration: float = 1.6) -> void:
 	banner_label.text = text
@@ -193,6 +207,7 @@ func _apply_visual_theme() -> void:
 	status_panel.self_modulate = Color(0.74, 0.82, 0.90, 1.0)
 	center_panel.self_modulate = Color(0.74, 0.82, 0.90, 1.0)
 	selected_panel.self_modulate = Color(0.74, 0.82, 0.90, 1.0)
+	selected_panel.modulate = Color(1, 1, 1, 0.98)
 	for label in [credits_label, wave_label, base_label, mode_label, placement_label, commander_label, hint_label, selected_title_label, selected_stats_label]:
 		label.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	credits_label.add_theme_color_override("font_color", UI_COLOR_DEFENDER)
@@ -204,38 +219,45 @@ func _apply_visual_theme() -> void:
 	threat_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
 	banner_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
 	boss_name_label.add_theme_color_override("font_color", UI_COLOR_WARNING)
-	for button in [basic_tower_button, heavy_battery_button, pause_button, auto_wave_button, next_wave_button, sell_button]:
+	for button in [basic_tower_button, heavy_battery_button, pause_button, auto_wave_button, next_wave_button, target_mode_button, sell_button]:
 		button.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	basic_tower_button.modulate = Color(0.24, 0.34, 0.38, 1.0)
 	heavy_battery_button.modulate = Color(0.34, 0.26, 0.22, 1.0)
 	pause_button.modulate = Color(0.24, 0.24, 0.28, 1.0)
 	auto_wave_button.modulate = Color(0.24, 0.28, 0.24, 1.0)
 	next_wave_button.modulate = Color(0.34, 0.18, 0.16, 1.0)
+	target_mode_button.modulate = Color(0.20, 0.28, 0.34, 1.0)
 	sell_button.modulate = Color(0.28, 0.18, 0.16, 1.0)
 	boss_bar.self_modulate = Color(0.92, 0.88, 0.74, 1.0)
 	boss_health_bar.self_modulate = Color(1.0, 0.78, 0.20, 1.0)
 
 func _update_selected_panel() -> void:
 	if _selected_tower == null or not is_instance_valid(_selected_tower):
+		selected_panel.visible = false
 		selected_title_label.text = "Selected Tower"
 		selected_stats_label.text = "No tower selected"
+		target_mode_button.text = "Targeting"
+		target_mode_button.disabled = true
 		sell_button.disabled = true
 		return
+	selected_panel.visible = true
 	var tower_name: String = _selected_tower.get_ui_display_name() if _selected_tower.has_method("get_ui_display_name") else String(_selected_tower.name)
 	var refund: int = _selected_tower.get_sell_refund() if _selected_tower.has_method("get_sell_refund") else 0
 	var average_dps: float = _selected_tower.get_average_dps() if _selected_tower.has_method("get_average_dps") else 0.0
 	var targeting_label: String = _selected_tower.get_targeting_mode_label() if _selected_tower.has_method("get_targeting_mode_label") else "First"
-	selected_title_label.text = tower_name
-	selected_stats_label.text = "DMG: %.1f | DPS: %.1f\nDone: %.0f | Kills: %d\nRange: %.0f | Fire: %.2f\nTarget: %s | Sell: +%d" % [
+	selected_title_label.text = "%s Control" % tower_name
+	target_mode_button.text = "Targeting: %s" % targeting_label
+	target_mode_button.disabled = false
+	selected_stats_label.text = "Damage: %.1f\nDPS: %.1f\nDamage dealt: %.0f\nKills: %d\nRange: %.0f\nFire rate: %.2f\nSell refund: +%d\n\nUse the buttons below for tower actions.\nHotkeys remain optional: T = targeting, X = sell." % [
 		_selected_tower.damage,
 		average_dps,
 		_selected_tower.total_damage_dealt,
 		_selected_tower.total_kills,
 		_selected_tower.attack_range,
 		_selected_tower.fire_rate,
-		targeting_label,
 		refund,
 	]
+	sell_button.text = "Sell Tower (+%d)" % refund
 	sell_button.disabled = false
 
 func _update_flow_panel() -> void:
