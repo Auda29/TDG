@@ -178,10 +178,21 @@ func _is_pointer_over_ui() -> bool:
 	return get_viewport().gui_get_hovered_control() != null
 
 func _on_enemy_reached_goal(enemy: Node) -> void:
-	RunState.base_hp -= enemy.fortress_damage
-	hud_instance.show_event("Base hit -%d" % enemy.fortress_damage, Color(1.0, 0.5, 0.4))
+	var fortress_damage: int = enemy.fortress_damage if enemy != null else 0
+	_apply_base_damage(fortress_damage)
+
+func _apply_base_damage(amount: int) -> void:
+	if RunState.is_run_over:
+		return
+	var resolved_amount: int = max(0, amount)
+	if resolved_amount <= 0:
+		return
+	RunState.base_hp = max(0, RunState.base_hp - resolved_amount)
+	hud_instance.show_event("Base hit -%d" % resolved_amount, Color(1.0, 0.5, 0.4))
 	if hud_instance.has_method("trigger_damage_flash"):
 		hud_instance.trigger_damage_flash(0.45)
+	if RunState.base_hp <= 0:
+		_trigger_game_over()
 
 func _on_enemy_defeated(credit_reward: int) -> void:
 	RunState.gain_credits(credit_reward)
@@ -434,7 +445,7 @@ func _update_hud_feedback() -> void:
 	hud_instance.set_pause_state(is_game_paused)
 	hud_instance.set_wave_flow_state(auto_start_next_wave, waiting_for_manual_next_wave)
 	if hud_instance.has_method("set_run_state"):
-		hud_instance.set_run_state(RunState.is_run_over, "Run over | Press R to restart")
+		hud_instance.set_run_state(RunState.is_run_over, "Base integrity collapsed")
 
 func _get_selected_tower_scene() -> PackedScene:
 	var tower_def: Dictionary = TOWER_DEFS.get(GameState.selected_tower_id, {})

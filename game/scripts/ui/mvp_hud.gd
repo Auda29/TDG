@@ -32,6 +32,11 @@ const TARGET_ICONS := {
 }
 
 @onready var damage_flash: ColorRect = $DamageFlash
+@onready var game_over_overlay: CenterContainer = $GameOverOverlay
+@onready var game_over_panel: PanelContainer = $GameOverOverlay/GameOverPanel
+@onready var game_over_title_label: Label = $GameOverOverlay/GameOverPanel/GameOverMargin/GameOverVBox/GameOverTitleLabel
+@onready var game_over_status_label: Label = $GameOverOverlay/GameOverPanel/GameOverMargin/GameOverVBox/GameOverStatusLabel
+@onready var game_over_hint_label: Label = $GameOverOverlay/GameOverPanel/GameOverMargin/GameOverVBox/GameOverHintLabel
 @onready var banner_label: Label = $TopBanner/BannerLabel
 @onready var boss_bar: MarginContainer = $BossBar
 @onready var boss_name_label: Label = $BossBar/BossBarPanel/BossBarVBox/BossNameLabel
@@ -234,6 +239,11 @@ func set_wave_flow_state(auto_enabled: bool, can_start_next_wave: bool) -> void:
 func set_run_state(run_over: bool, status_text: String = "") -> void:
 	_run_over = run_over
 	_run_status_text = status_text
+	game_over_overlay.visible = run_over
+	if run_over:
+		game_over_title_label.text = "GAME OVER"
+		game_over_status_label.text = status_text if status_text != "" else "Base integrity collapsed"
+		game_over_hint_label.text = "Press R to restart the run"
 	_update_flow_panel()
 
 func _get_commander_text() -> String:
@@ -296,6 +306,10 @@ func _apply_visual_theme() -> void:
 		upgrade_slot.modulate = Color(0.18, 0.24, 0.30, 0.95)
 	boss_bar.self_modulate = Color(0.92, 0.88, 0.74, 1.0)
 	boss_health_bar.self_modulate = Color(1.0, 0.78, 0.20, 1.0)
+	game_over_panel.self_modulate = Color(0.90, 0.82, 0.78, 0.98)
+	game_over_title_label.add_theme_color_override("font_color", Color(1.0, 0.42, 0.28))
+	game_over_status_label.add_theme_color_override("font_color", UI_COLOR_WARNING)
+	game_over_hint_label.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 
 func _update_selected_panel() -> void:
 	if _selected_tower == null or not is_instance_valid(_selected_tower):
