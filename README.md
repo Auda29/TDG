@@ -36,6 +36,7 @@ For the current MVP definition, see:
 
 ## Repository structure
 - `docs/` — design, brainstorm, scope, and planning documents
+- `docs/index.md` — central documentation overview
 - `AGENTS.md` — project-specific instructions for coding agents
 
 ## Existing documents

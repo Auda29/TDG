@@ -50,15 +50,18 @@ Jeder Tower-Typ braucht im MVP:
 - unterscheidbares visuelles und akustisches Feedback
 
 ### 4. Ein Commander / Held
-- 1 Kommandantenfigur oder globale Kommandantenpräsenz
+- 1 Kommandantenfigur **auf dem Feld**
 - 2 aktive Fähigkeiten reichen für den MVP
 - Fokus auf spielerische Unterstützung statt Systemüberladung
+- der Commander ergänzt Tower-Play, ersetzt es aber nicht
 
 Beispielhafte Rollen:
-- Schadens-Buff
-- Notfall-Artillerieschlag
-- kurze Schutzbarriere
-- Ressourcen-Boost oder Overcharge
+- Zielmarkierung / Fokusfeuer
+- lokale Tower-Verstärkung
+- kurze Schutz- oder Stabilisierungseffekte
+
+Siehe auch:
+- `docs/commander-konzept.md`
 
 ### 5. Wellenstruktur
 - 10 bis 20 Wellen insgesamt
@@ -89,7 +92,9 @@ Empfehlung für MVP:
 ### 8. Kernressourcen
 Empfohlene MVP-Ressourcen:
 - **Credits** für Bau und Upgrades
-- optional **Command Points** für Commander-Fähigkeiten
+
+Für den ersten Prototyp empfohlen:
+- Commander-Fähigkeiten zunächst **cooldown-basiert** statt über eine zusätzliche Spezialressource
 
 Nicht nötig im MVP:
 - komplexe Mehrwährungsökonomie
@@ -185,11 +190,14 @@ Diese Punkte sind nur sinnvoll, wenn der Kern bereits stabil ist:
 
 ---
 
-## Offene Entscheidungen vor Implementierung
-- Welche Engine / welcher Stack wird verwendet?
-- Gibt es freie Platzierung oder feste Build-Slots?
+## Festgelegte Entscheidungen für den aktuellen MVP
+- **Engine:** Godot
+- **Platzierungssystem:** freie Platzierung
+- **Commander:** aktive Einheit auf dem Feld
+- **Wellenstruktur:** detaillierter MVP-Plan in `docs/mvp-wave-plan.md`
+
+Weiterhin offen, aber nicht mehr blocker für den Start:
 - Bleibt es bei einem einzelnen Pfad oder gibt es Verzweigungen?
-- Ist der Commander eine aktive Einheit auf dem Feld oder ein globales Skill-System?
 - Wie tief soll das Upgrade-System im ersten Prototyp wirklich gehen?
 
 ---

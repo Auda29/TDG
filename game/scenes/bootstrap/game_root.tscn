@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[node name="GameRoot" type="Node2D"]
+
+[node name="MapLayer" type="Node2D" parent="."]
+
+[node name="BuildLayer" type="Node2D" parent="."]
+
+[node name="EnemyLayer" type="Node2D" parent="."]
+
+[node name="TowerLayer" type="Node2D" parent="."]
+
+[node name="CommanderLayer" type="Node2D" parent="."]
+
+[node name="ProjectileLayer" type="Node2D" parent="."]
+
+[node name="FxLayer" type="Node2D" parent="."]
+
+[node name="UILayer" type="CanvasLayer" parent="."]

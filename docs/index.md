@@ -37,21 +37,31 @@ Diese Dokumentübersicht sammelt die aktuell wichtigsten Projekt- und Design-Dok
   - erste MVP-Gegnerfraktion
   - Einheitenrollen, Wellenintegration und Bosskonzept
 
+### 6. Commander-Konzept
+- `docs/commander-konzept.md`
+  - Commander als aktive Feld-Einheit
+  - Fähigkeiten, Rollenprofil und MVP-Grenzen
+
+### 7. MVP-Wellenplan
+- `docs/mvp-wave-plan.md`
+  - Eskalationslogik für den Vertical Slice
+  - Lernkurve, Druckspitzen und Boss-Finale
+
 ---
 
 ## Inspirations- und Leitplanken-Dokumente
 
-### 6. Inspirations-Research
+### 8. Inspirations-Research
 - `docs/inspirations-research.md`
   - strukturierte Learnings aus Inspirationsquellen
   - Fokus auf übertragbare Prinzipien statt Kopien
 
-### 7. IP Do / Don't
+### 9. IP Do / Don't
 - `docs/ip-do-dont.md`
   - praktische Leitlinien für Originalität
   - wichtig für Naming, Lore, Visual Design und Konzeptarbeit
 
-### 8. Art Direction
+### 10. Art Direction
 - `docs/art-direction-notes.md`
   - visuelle Leitprinzipien für den MVP
   - Fokus auf Lesbarkeit, Silhouetten, Materialien und Combat Feedback
@@ -60,10 +70,15 @@ Diese Dokumentübersicht sammelt die aktuell wichtigsten Projekt- und Design-Dok
 
 ## Technische Planung
 
-### 9. Tech-Stack-Optionen
+### 11. Tech-Stack-Optionen
 - `docs/tech-stack-options.md`
   - Vergleich möglicher Engines / Stacks
-  - aktuelle Empfehlung für den MVP-Prototyp
+  - ursprüngliche Entscheidungsgrundlage für den MVP-Prototyp
+
+### 12. Godot-Projektstruktur
+- `game/`
+  - initiales Godot-Projektgerüst
+  - Szenen-, Script-, Daten- und Asset-Struktur für den Vertical Slice
 
 ---
 
@@ -71,18 +86,22 @@ Diese Dokumentübersicht sammelt die aktuell wichtigsten Projekt- und Design-Dok
 Wenn man neu ins Projekt einsteigt:
 1. `docs/game-design-overview.md`
 2. `docs/mvp-scope.md`
-3. `docs/tower-klassen-konzept.md`
-4. `docs/enemy-faction-konzept.md`
-5. `docs/inspirations-research.md`
-6. `docs/ip-do-dont.md`
-7. `docs/art-direction-notes.md`
-8. `docs/tech-stack-options.md`
-9. `docs/projekt-brainstorm.md`
+3. `docs/commander-konzept.md`
+4. `docs/mvp-wave-plan.md`
+5. `docs/tower-klassen-konzept.md`
+6. `docs/enemy-faction-konzept.md`
+7. `docs/inspirations-research.md`
+8. `docs/ip-do-dont.md`
+9. `docs/art-direction-notes.md`
+10. `docs/tech-stack-options.md`
+11. `docs/projekt-brainstorm.md`
 
 ---
 
 ## Verantwortlichkeit der Dokumente
 - **`docs/mvp-scope.md`** ist die wichtigste Referenz für Scope-Entscheidungen.
+- **`docs/commander-konzept.md`** ist die wichtigste Referenz für den Feld-Commander.
+- **`docs/mvp-wave-plan.md`** ist die wichtigste Referenz für die MVP-Eskalationsstruktur.
 - **`docs/ip-do-dont.md`** ist die wichtigste Referenz für Originalitäts- und IP-Fragen.
 - **`docs/projekt-brainstorm.md`** dient als Ideenbasis, aber nicht als finale Scope-Quelle.
 
@@ -91,6 +110,6 @@ Wenn man neu ins Projekt einsteigt:
 ## Nächste sinnvolle Dokumente
 Mögliche nächste Ergänzungen:
 - `docs/core-gameplay-loop.md`
-- `docs/wave-design-principles.md`
 - `docs/ui-notes.md`
 - `docs/production-roadmap.md`
+- `docs/godot-implementation-notes.md`

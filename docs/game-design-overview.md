@@ -96,13 +96,16 @@ Geplante Rollen:
 - Bossgegner
 
 ### Commander / Hero Layer
-Ein Commander ergänzt die stationäre Verteidigung durch aktive Entscheidungen.
+Ein Commander ergänzt die stationäre Verteidigung als **aktive Einheit auf dem Feld**.
 
 Mögliche Funktionen:
-- temporäre Buffs
-- globale Schadensskills
+- Zielmarkierung / Fokusfeuer
+- lokale Buffs für Tower
 - defensive Notfallfähigkeiten
 - taktische Eingriffe bei Bosswellen
+
+Siehe auch:
+- `docs/commander-konzept.md`
 
 ### Ressourcen
 Vorgesehene Ressourcenstruktur:
@@ -164,14 +167,14 @@ Verteidigung wirkt wie militärische Infrastruktur, nicht nur wie abstrakte Towe
 ---
 
 ## Zielplattform und Technik
-Noch offen.
+Aktueller Stand:
+- **Godot** ist als Engine für den ersten Prototyp gewählt
+- Fokus auf datengetriebene, MVP-orientierte Struktur
+- freie Platzierung und Feld-Commander sind Kernannahmen des ersten technischen Scopes
 
-Aktuelle Empfehlung:
-- erst Design und Scope schärfen
-- danach Engine und Tech-Stack bewusst wählen
-- Systeme möglichst datengetrieben planen
-
-Bis zur Stack-Entscheidung sollen keine unnötig enginespezifischen Annahmen getroffen werden.
+Siehe auch:
+- `docs/tech-stack-options.md`
+- `game/`
 
 ---
 
@@ -196,8 +199,6 @@ Siehe dazu:
 
 ## Offene Designfragen
 - Welche Perspektive ist final: top-down oder stärker isometrisch?
-- Sind Türme freie Platzierungen oder modulare Bunker-/Slot-Bauten?
-- Wie aktiv ist der Commander im Moment-to-Moment-Gameplay?
 - Wie komplex sollen Upgrade-Pfade im ersten Prototyp sein?
 - Welche Gegnerrolle ist für die erste Fraktion am wichtigsten?
 - Soll das Spiel eher ernst oder leicht stilisiert wirken?
