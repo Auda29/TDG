@@ -35,7 +35,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 text = ""
 
-[node name="GameOverOverlay" type="CenterContainer" parent="."]
+[node name="GameOverOverlay" type="Control" parent="."]
 visible = false
 layout_mode = 0
 anchors_preset = 15
@@ -43,37 +43,124 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
-[node name="GameOverPanel" type="PanelContainer" parent="GameOverOverlay"]
-custom_minimum_size = Vector2(420, 180)
+[node name="GameOverDim" type="ColorRect" parent="GameOverOverlay"]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.01, 0.01, 0.02, 0.72)
+
+[node name="GameOverCenter" type="CenterContainer" parent="GameOverOverlay"]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="GameOverPanel" type="PanelContainer" parent="GameOverOverlay/GameOverCenter"]
+custom_minimum_size = Vector2(520, 320)
 layout_mode = 2
 
-[node name="GameOverMargin" type="MarginContainer" parent="GameOverOverlay/GameOverPanel"]
+[node name="GameOverGlow" type="ColorRect" parent="GameOverOverlay/GameOverCenter/GameOverPanel"]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.82, 0.24, 0.18, 0.08)
+
+[node name="GameOverFrameTop" type="ColorRect" parent="GameOverOverlay/GameOverCenter/GameOverPanel"]
+layout_mode = 0
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 3.0
+mouse_filter = 2
+color = Color(1.0, 0.42, 0.28, 0.90)
+
+[node name="GameOverFrameBottom" type="ColorRect" parent="GameOverOverlay/GameOverCenter/GameOverPanel"]
+layout_mode = 0
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+mouse_filter = 2
+color = Color(1.0, 0.72, 0.24, 0.55)
+
+[node name="GameOverSideLeft" type="ColorRect" parent="GameOverOverlay/GameOverCenter/GameOverPanel"]
+layout_mode = 0
+anchors_preset = 13
+anchor_right = 0.0
+anchor_bottom = 1.0
+offset_right = 3.0
+mouse_filter = 2
+color = Color(0.58, 0.90, 0.96, 0.35)
+
+[node name="GameOverSideRight" type="ColorRect" parent="GameOverOverlay/GameOverCenter/GameOverPanel"]
+layout_mode = 0
+anchors_preset = 15
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -3.0
+mouse_filter = 2
+color = Color(0.96, 0.72, 0.24, 0.35)
+
+[node name="GameOverMargin" type="MarginContainer" parent="GameOverOverlay/GameOverCenter/GameOverPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 18
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 18
 
-[node name="GameOverVBox" type="VBoxContainer" parent="GameOverOverlay/GameOverPanel/GameOverMargin"]
+[node name="GameOverVBox" type="VBoxContainer" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="GameOverTitleLabel" type="Label" parent="GameOverOverlay/GameOverPanel/GameOverMargin/GameOverVBox"]
+[node name="GameOverTitleLabel" type="Label" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox"]
 layout_mode = 2
 horizontal_alignment = 1
 text = "GAME OVER"
 
-[node name="GameOverStatusLabel" type="Label" parent="GameOverOverlay/GameOverPanel/GameOverMargin/GameOverVBox"]
+[node name="GameOverStatusLabel" type="Label" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox"]
 layout_mode = 2
 horizontal_alignment = 1
 text = "Base integrity collapsed"
 autowrap_mode = 3
 
-[node name="GameOverHintLabel" type="Label" parent="GameOverOverlay/GameOverPanel/GameOverMargin/GameOverVBox"]
+[node name="GameOverStatsLabel" type="Label" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox"]
 layout_mode = 2
 horizontal_alignment = 1
-text = "Press R to restart the run"
+text = "Difficulty: Standard\nWave reached: 1\nEnemies defeated: 0\nCredits remaining: 300\nSurvival time: 00:00"
 autowrap_mode = 3
+
+[node name="GameOverHintLabel" type="Label" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "Press R or use the button below to restart"
+autowrap_mode = 3
+
+[node name="GameOverActionRow" type="HBoxContainer" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="GameOverContinueButton" type="Button" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox/GameOverActionRow"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Continue Free Mode"
+
+[node name="GameOverRestartButton" type="Button" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox/GameOverActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Restart Run"
+
+[node name="GameOverMenuButton" type="Button" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox/GameOverActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Return to Menu"
 
 [node name="BossBar" type="MarginContainer" parent="."]
 layout_mode = 0

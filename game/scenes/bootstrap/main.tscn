@@ -1,7 +1,554 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="PackedScene" path="res://scenes/bootstrap/game_root.tscn" id="1"]
+[ext_resource type="Script" path="res://scripts/ui/start_menu.gd" id="1"]
 
-[node name="Main" type="Node"]
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1")
 
-[node name="GameRoot" parent="." instance=ExtResource("1")]
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.03, 0.04, 0.05, 1)
+
+[node name="BackGlow" type="ColorRect" parent="."]
+layout_mode = 0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -520.0
+offset_top = -260.0
+offset_right = 520.0
+offset_bottom = 260.0
+mouse_filter = 2
+color = Color(0.28, 0.44, 0.52, 0.16)
+
+[node name="Gradient" type="ColorRect" parent="."]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.14, 0.08, 0.07, 0.42)
+
+[node name="SweepLine" type="ColorRect" parent="."]
+layout_mode = 0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -220.0
+offset_right = 40.0
+mouse_filter = 2
+color = Color(0.60, 0.90, 1.0, 0.05)
+
+[node name="FrameTop" type="ColorRect" parent="."]
+layout_mode = 0
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 3.0
+mouse_filter = 2
+color = Color(0.56, 0.90, 1.0, 0.6)
+
+[node name="FrameBottom" type="ColorRect" parent="."]
+layout_mode = 0
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+mouse_filter = 2
+color = Color(1.0, 0.72, 0.24, 0.45)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 140.0
+offset_top = 72.0
+offset_right = -140.0
+offset_bottom = -72.0
+mouse_filter = 2
+
+[node name="RootVBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HeaderPanel" type="PanelContainer" parent="Margin/RootVBox"]
+layout_mode = 2
+self_modulate = Color(0.88, 0.90, 0.96, 0.98)
+
+[node name="HeaderMargin" type="MarginContainer" parent="Margin/RootVBox/HeaderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="HeaderVBox" type="VBoxContainer" parent="Margin/RootVBox/HeaderPanel/HeaderMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="Margin/RootVBox/HeaderPanel/HeaderMargin/HeaderVBox"]
+layout_mode = 2
+text = "TDG Prototype"
+
+[node name="SubtitleLabel" type="Label" parent="Margin/RootVBox/HeaderPanel/HeaderMargin/HeaderVBox"]
+layout_mode = 2
+text = "Choose a siege profile, survive to the target wave, and unlock Free Mode after a campaign victory."
+autowrap_mode = 3
+
+[node name="MenuPanel" type="PanelContainer" parent="Margin/RootVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+self_modulate = Color(0.92, 0.94, 0.98, 0.98)
+
+[node name="MenuMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 18
+
+[node name="MenuVBox" type="VBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="TopControlRow" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LanguagePanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+self_modulate = Color(0.84, 0.88, 0.94, 1)
+
+[node name="LanguageMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/LanguagePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="LanguageVBox" type="VBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/LanguagePanel/LanguageMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LanguageTitleLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/LanguagePanel/LanguageMargin/LanguageVBox"]
+layout_mode = 2
+text = "Language"
+
+[node name="LanguageButtons" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/LanguagePanel/LanguageMargin/LanguageVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LanguageEnButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/LanguagePanel/LanguageMargin/LanguageVBox/LanguageButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "English"
+
+[node name="LanguageDeButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/LanguagePanel/LanguageMargin/LanguageVBox/LanguageButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Deutsch"
+
+[node name="ModePanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+self_modulate = Color(0.84, 0.88, 0.94, 1)
+
+[node name="ModeMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/ModePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="ModeVBox" type="VBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/ModePanel/ModeMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ModeTitleLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/ModePanel/ModeMargin/ModeVBox"]
+layout_mode = 2
+text = "Mode"
+
+[node name="ModeButtons" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/ModePanel/ModeMargin/ModeVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ModeCampaignButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/ModePanel/ModeMargin/ModeVBox/ModeButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Campaign"
+
+[node name="ModeEndlessButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/ModePanel/ModeMargin/ModeVBox/ModeButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Endless"
+
+[node name="SettingsPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow"]
+layout_mode = 2
+size_flags_horizontal = 2
+self_modulate = Color(0.84, 0.88, 0.94, 1)
+
+[node name="SettingsMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/SettingsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="SettingsVBox" type="VBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/SettingsPanel/SettingsMargin"]
+layout_mode = 2
+
+[node name="OpenSettingsButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/SettingsPanel/SettingsMargin/SettingsVBox"]
+layout_mode = 2
+text = "Open Settings"
+
+[node name="DifficultyTitleLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
+layout_mode = 2
+text = "Difficulty"
+
+[node name="DifficultyGrid" type="GridContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
+layout_mode = 2
+columns = 3
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+
+[node name="RecruitButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/DifficultyGrid"]
+layout_mode = 2
+toggle_mode = true
+text = "Recruit"
+
+[node name="StandardButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/DifficultyGrid"]
+layout_mode = 2
+toggle_mode = true
+text = "Standard"
+
+[node name="VeteranButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/DifficultyGrid"]
+layout_mode = 2
+toggle_mode = true
+text = "Veteran"
+
+[node name="BrutalButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/DifficultyGrid"]
+layout_mode = 2
+toggle_mode = true
+text = "Brutal"
+
+[node name="NightmareButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/DifficultyGrid"]
+layout_mode = 2
+toggle_mode = true
+text = "Nightmare"
+
+[node name="CustomButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/DifficultyGrid"]
+layout_mode = 2
+toggle_mode = true
+text = "Custom"
+
+[node name="TooltipPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
+layout_mode = 2
+self_modulate = Color(0.20, 0.26, 0.30, 0.95)
+
+[node name="TooltipMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TooltipPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="TooltipLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TooltipPanel/TooltipMargin"]
+layout_mode = 2
+text = "Hover over a difficulty to preview its pressure, economy, and win condition."
+autowrap_mode = 3
+
+[node name="SelectedDifficultyPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
+layout_mode = 2
+self_modulate = Color(0.84, 0.88, 0.94, 1)
+
+[node name="SelectedDifficultyMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedDifficultyPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="SelectedDifficultyVBox" type="VBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedDifficultyPanel/SelectedDifficultyMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="DifficultyNameLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedDifficultyPanel/SelectedDifficultyMargin/SelectedDifficultyVBox"]
+layout_mode = 2
+text = "Standard Difficulty"
+
+[node name="DifficultyDescLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedDifficultyPanel/SelectedDifficultyMargin/SelectedDifficultyVBox"]
+layout_mode = 2
+text = "Baseline prototype experience"
+autowrap_mode = 3
+
+[node name="DifficultyStatsLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedDifficultyPanel/SelectedDifficultyMargin/SelectedDifficultyVBox"]
+layout_mode = 2
+text = "Starting credits: 300\nBase HP: 20\nEnemy speed: 100%\nEnemy health: 100%\nVictory target: Wave 12"
+autowrap_mode = 3
+
+[node name="CustomPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
+visible = false
+layout_mode = 2
+self_modulate = Color(0.86, 0.88, 0.82, 1)
+
+[node name="CustomMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="CustomVBox" type="VBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CustomTitleLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox"]
+layout_mode = 2
+text = "Custom Settings"
+
+[node name="CreditsRow" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CreditsLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/CreditsRow"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Starting Credits"
+
+[node name="CreditsSlider" type="HSlider" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/CreditsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 150.0
+max_value = 600.0
+step = 10.0
+value = 300.0
+
+[node name="CreditsValueLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/CreditsRow"]
+custom_minimum_size = Vector2(52, 0)
+layout_mode = 2
+horizontal_alignment = 2
+text = "300"
+
+[node name="BaseHpRow" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BaseHpLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/BaseHpRow"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Base HP"
+
+[node name="BaseHpSlider" type="HSlider" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/BaseHpRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 8.0
+max_value = 40.0
+step = 1.0
+value = 20.0
+
+[node name="BaseHpValueLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/BaseHpRow"]
+custom_minimum_size = Vector2(52, 0)
+layout_mode = 2
+horizontal_alignment = 2
+text = "20"
+
+[node name="EnemySpeedRow" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="EnemySpeedLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/EnemySpeedRow"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Enemy Speed"
+
+[node name="EnemySpeedSlider" type="HSlider" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/EnemySpeedRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 70.0
+max_value = 140.0
+step = 1.0
+value = 100.0
+
+[node name="EnemySpeedValueLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/EnemySpeedRow"]
+custom_minimum_size = Vector2(52, 0)
+layout_mode = 2
+horizontal_alignment = 2
+text = "100%"
+
+[node name="EnemyHealthRow" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="EnemyHealthLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/EnemyHealthRow"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Enemy Health"
+
+[node name="EnemyHealthSlider" type="HSlider" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/EnemyHealthRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 70.0
+max_value = 150.0
+step = 1.0
+value = 100.0
+
+[node name="EnemyHealthValueLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/EnemyHealthRow"]
+custom_minimum_size = Vector2(52, 0)
+layout_mode = 2
+horizontal_alignment = 2
+text = "100%"
+
+[node name="TargetWaveRow" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TargetWaveLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/TargetWaveRow"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Victory Target"
+
+[node name="TargetWaveSlider" type="HSlider" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/TargetWaveRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 8.0
+max_value = 25.0
+step = 1.0
+value = 12.0
+
+[node name="TargetWaveValueLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/TargetWaveRow"]
+custom_minimum_size = Vector2(52, 0)
+layout_mode = 2
+horizontal_alignment = 2
+text = "12"
+
+[node name="ControlsPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
+layout_mode = 2
+self_modulate = Color(0.84, 0.86, 0.92, 1)
+
+[node name="ControlsMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ControlsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="ControlsLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ControlsPanel/ControlsMargin"]
+layout_mode = 2
+text = "Controls: 1/3 build towers | LMB place/select | RMB cancel | 2 Overwatch | X sell | T targeting | R restart"
+autowrap_mode = 3
+
+[node name="ActionRow" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="StartButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Start Run"
+
+[node name="QuitButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quit"
+
+[node name="SettingsOverlay" type="Control" parent="."]
+visible = false
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="SettingsDim" type="ColorRect" parent="SettingsOverlay"]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.01, 0.01, 0.02, 0.70)
+
+[node name="SettingsCenter" type="CenterContainer" parent="SettingsOverlay"]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="SettingsPopup" type="PanelContainer" parent="SettingsOverlay/SettingsCenter"]
+custom_minimum_size = Vector2(420, 220)
+layout_mode = 2
+self_modulate = Color(0.92, 0.94, 0.98, 0.98)
+
+[node name="SettingsMargin" type="MarginContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="SettingsVBox" type="VBoxContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SettingsTitleLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
+layout_mode = 2
+text = "Settings"
+
+[node name="VolumeRow" type="HBoxContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="VolumeLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/VolumeRow"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Master Volume"
+
+[node name="VolumeSlider" type="HSlider" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/VolumeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="VolumeValueLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/VolumeRow"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+horizontal_alignment = 2
+text = "100%"
+
+[node name="FullscreenButton" type="CheckButton" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
+layout_mode = 2
+text = "Fullscreen"
+
+[node name="SettingsActionRow" type="HBoxContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ApplySettingsButton" type="Button" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SettingsActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Apply Settings"
+
+[node name="CloseSettingsButton" type="Button" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SettingsActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Close Settings"

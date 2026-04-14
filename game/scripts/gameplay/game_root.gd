@@ -9,6 +9,7 @@ const SHELLBACK_BOSS_SCENE := preload("res://scenes/gameplay/enemies/shellback_b
 const BASIC_COMMANDER_SCENE := preload("res://scenes/gameplay/commander/basic_commander.tscn")
 const WAVE_RUNNER_SCENE := preload("res://scenes/gameplay/wave/wave_runner.tscn")
 const HUD_SCENE := preload("res://scenes/ui/mvp_hud.tscn")
+const MAIN_MENU_SCENE := "res://scenes/bootstrap/main.tscn"
 const BASIC_TOWER_DATA := preload("res://data/towers/basic_tower.tres")
 const HEAVY_BATTERY_DATA := preload("res://data/towers/heavy_battery.tres")
 
@@ -39,7 +40,7 @@ var _screen_shake_strength: float = 0.0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	RunState.reset_for_new_run(300, 20)
+	RunState.reset_for_new_run()
 	GameState.clear_selection()
 	_setup_map()
 	_setup_commander()
@@ -49,13 +50,13 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if RunState.is_run_over:
 		if Input.is_action_just_pressed("restart_run"):
-			get_tree().paused = false
-			SceneRouter.goto_scene("res://scenes/bootstrap/main.tscn")
+			_restart_run()
 		_update_hud_feedback()
 		return
 	if is_game_paused:
 		_update_hud_feedback()
 		return
+	RunState.add_elapsed_time(delta)
 	_handle_build_input()
 	_update_tower_preview()
 	_update_boss_state()
@@ -125,6 +126,12 @@ func _setup_hud() -> void:
 		hud_instance.auto_wave_toggled.connect(_set_auto_next_wave)
 	if hud_instance.has_signal("next_wave_requested"):
 		hud_instance.next_wave_requested.connect(_start_next_wave_if_ready)
+	if hud_instance.has_signal("restart_requested"):
+		hud_instance.restart_requested.connect(_restart_run)
+	if hud_instance.has_signal("menu_requested"):
+		hud_instance.menu_requested.connect(_return_to_menu)
+	if hud_instance.has_signal("continue_free_mode_requested"):
+		hud_instance.continue_free_mode_requested.connect(_continue_in_free_mode)
 
 func _setup_wave() -> void:
 	wave_runner = WAVE_RUNNER_SCENE.instantiate()
@@ -160,19 +167,19 @@ func _try_place_selected_tower() -> void:
 		return
 	var tower_cost: int = tower.tower_cost
 	if not RunState.can_afford(tower_cost):
-		hud_instance.show_event("Not enough credits", Color(1.0, 0.4, 0.4))
+		hud_instance.show_event(RunState.t("not_enough_credits"), Color(1.0, 0.4, 0.4))
 		tower.queue_free()
 		return
 	RunState.spend_credits(tower_cost)
 	tower_layer.add_child(tower)
 	tower.global_position = mouse_world
 	_select_placed_tower(tower)
-	hud_instance.show_event("Tower placed", Color(0.5, 1.0, 0.6))
+	hud_instance.show_event(RunState.t("tower_placed"), Color(0.5, 1.0, 0.6))
 
 func _move_commander_to_mouse() -> void:
 	if commander_instance != null and is_instance_valid(commander_instance):
 		commander_instance.set_move_target(get_global_mouse_position())
-		hud_instance.show_event("Commander repositioned", Color(0.4, 0.9, 0.6), 0.8)
+		hud_instance.show_event(RunState.t("commander_repositioned"), Color(0.4, 0.9, 0.6), 0.8)
 
 func _is_pointer_over_ui() -> bool:
 	return get_viewport().gui_get_hovered_control() != null
@@ -188,18 +195,19 @@ func _apply_base_damage(amount: int) -> void:
 	if resolved_amount <= 0:
 		return
 	RunState.base_hp = max(0, RunState.base_hp - resolved_amount)
-	hud_instance.show_event("Base hit -%d" % resolved_amount, Color(1.0, 0.5, 0.4))
+	hud_instance.show_event(RunState.t("base_hit") % resolved_amount, Color(1.0, 0.5, 0.4))
 	if hud_instance.has_method("trigger_damage_flash"):
 		hud_instance.trigger_damage_flash(0.45)
 	if RunState.base_hp <= 0:
 		_trigger_game_over()
 
 func _on_enemy_defeated(credit_reward: int) -> void:
+	RunState.register_enemy_defeat()
 	RunState.gain_credits(credit_reward)
-	hud_instance.show_event("+%d credits" % credit_reward, Color(0.6, 1.0, 0.6))
+	hud_instance.show_event(RunState.t("credits_gain") % credit_reward, Color(0.6, 1.0, 0.6))
 
 func _on_overwatch_activated() -> void:
-	hud_instance.show_event("Overwatch active", Color(1.0, 0.85, 0.25))
+	hud_instance.show_event(RunState.t("overwatch_active"), Color(1.0, 0.85, 0.25))
 
 func _on_enemy_spawned(enemy: Node) -> void:
 	if enemy == null or not is_instance_valid(enemy):
@@ -213,10 +221,10 @@ func _on_enemy_spawned(enemy: Node) -> void:
 			enemy.defeated.connect(_on_boss_defeated, CONNECT_ONE_SHOT)
 		if enemy.has_signal("reached_goal"):
 			enemy.reached_goal.connect(_on_boss_reached_goal, CONNECT_ONE_SHOT)
-		hud_instance.show_banner("[!!!] BOSS APPROACHING", Color(1.0, 0.78, 0.22), 2.4)
-		hud_instance.show_event("Siegebreaker-class shellback entering lane", Color(1.0, 0.72, 0.30), 2.4)
+		hud_instance.show_banner(RunState.t("boss_approaching"), Color(1.0, 0.78, 0.22), 2.4)
+		hud_instance.show_event(RunState.t("boss_enter_lane"), Color(1.0, 0.72, 0.30), 2.4)
 		if hud_instance.has_method("show_threat"):
-			hud_instance.show_threat("[BOSS] Priority target in lane", Color(1.0, 0.84, 0.28), 2.8)
+			hud_instance.show_threat(RunState.t("boss_priority"), Color(1.0, 0.84, 0.28), 2.8)
 		if hud_instance.has_method("trigger_boss_flash"):
 			hud_instance.trigger_boss_flash(0.4)
 		_start_screen_shake(0.45, 11.0)
@@ -224,20 +232,20 @@ func _on_enemy_spawned(enemy: Node) -> void:
 			map_instance.trigger_lane_warning(enemy.global_position, 2.6, 1.45, Color(1.0, 0.82, 0.24, 1.0))
 		return
 	if threat_label == "Elite":
-		hud_instance.show_banner("[!] ELITE CONTACT", Color(0.98, 0.46, 0.18), 1.8)
-		hud_instance.show_event("Shellback Brute entering lane", Color(0.98, 0.56, 0.24), 1.8)
+		hud_instance.show_banner(RunState.t("elite_contact"), Color(0.98, 0.46, 0.18), 1.8)
+		hud_instance.show_event(RunState.t("elite_enter_lane"), Color(0.98, 0.56, 0.24), 1.8)
 		if hud_instance.has_method("show_threat"):
-			hud_instance.show_threat("[BRUTE] Elite pressure detected", Color(1.0, 0.66, 0.24), 2.2)
+			hud_instance.show_threat(RunState.t("elite_pressure"), Color(1.0, 0.66, 0.24), 2.2)
 		if map_instance != null and is_instance_valid(map_instance) and map_instance.has_method("trigger_lane_warning"):
 			map_instance.trigger_lane_warning(enemy.global_position, 1.8, 1.0, Color(1.0, 0.66, 0.24, 1.0))
 
 func _on_boss_defeated(enemy: Node) -> void:
 	if active_boss == enemy:
 		active_boss = null
-	hud_instance.show_banner("BOSS TERMINATED", Color(1.0, 0.86, 0.32), 2.0)
-	hud_instance.show_event("Siegebreaker neutralized", Color(1.0, 0.82, 0.32), 1.8)
+	hud_instance.show_banner(RunState.t("boss_terminated"), Color(1.0, 0.86, 0.32), 2.0)
+	hud_instance.show_event(RunState.t("boss_neutralized"), Color(1.0, 0.82, 0.32), 1.8)
 	if hud_instance.has_method("show_threat"):
-		hud_instance.show_threat("[CLEAR] Boss signature eliminated", Color(0.62, 1.0, 0.76), 2.0)
+		hud_instance.show_threat(RunState.t("boss_clear"), Color(0.62, 1.0, 0.76), 2.0)
 	_start_screen_shake(0.25, 6.0)
 
 func _on_boss_reached_goal(enemy: Node) -> void:
@@ -245,43 +253,59 @@ func _on_boss_reached_goal(enemy: Node) -> void:
 		active_boss = null
 
 func _trigger_game_over() -> void:
-	RunState.is_run_over = true
+	RunState.mark_defeat()
 	waiting_for_manual_next_wave = false
 	auto_start_next_wave = false
 	_clear_preview()
 	_clear_selected_placed_tower()
 	GameState.clear_selection()
-	hud_instance.show_banner("FORTRESS LOST", Color(1.0, 0.42, 0.28), 99.0)
-	hud_instance.show_event("Run over - press R to restart", Color(1.0, 0.68, 0.30), 99.0)
+	hud_instance.show_banner(RunState.t("fortress_lost"), Color(1.0, 0.42, 0.28), 99.0)
+	hud_instance.show_event(RunState.t("run_over_restart"), Color(1.0, 0.68, 0.30), 99.0)
 	if hud_instance.has_method("show_threat"):
-		hud_instance.show_threat("[FAILURE] Base integrity collapsed", Color(1.0, 0.56, 0.30), 99.0)
+		hud_instance.show_threat(RunState.t("failure_base"), Color(1.0, 0.56, 0.30), 99.0)
+	get_tree().paused = true
+
+func _trigger_victory(cleared_wave: int) -> void:
+	RunState.mark_victory()
+	waiting_for_manual_next_wave = false
+	_clear_preview()
+	_clear_selected_placed_tower()
+	GameState.clear_selection()
+	hud_instance.show_banner(RunState.t("objective_secured"), Color(0.46, 0.92, 0.68), 99.0)
+	hud_instance.show_event(RunState.t("target_wave_cleared") % cleared_wave, Color(0.72, 1.0, 0.78), 99.0)
+	if hud_instance.has_method("show_threat"):
+		hud_instance.show_threat(RunState.t("victory_continue"), Color(0.62, 1.0, 0.76), 99.0)
 	get_tree().paused = true
 
 func _on_wave_cleared() -> void:
 	if RunState.is_run_over:
 		return
 	var bonus: int = 75
+	var cleared_wave: int = current_wave_number
 	RunState.gain_credits(bonus)
-	hud_instance.show_event("Wave cleared +%d" % bonus, Color(0.9, 0.9, 0.4))
+	hud_instance.show_event(RunState.t("wave_cleared_bonus") % bonus, Color(0.9, 0.9, 0.4))
 	current_wave_number += 1
+	if RunState.is_target_wave_reached(cleared_wave):
+		_trigger_victory(cleared_wave)
+		return
 	if auto_start_next_wave:
 		await get_tree().create_timer(2.0).timeout
 		if auto_start_next_wave:
 			_start_wave(current_wave_number)
 	else:
 		waiting_for_manual_next_wave = true
-		hud_instance.show_event("Wave cleared - click Start Next Wave", Color(0.9, 0.95, 0.55), 2.5)
+		hud_instance.show_event(RunState.t("wave_cleared_manual"), Color(0.9, 0.95, 0.55), 2.5)
 
 func _start_wave(wave_number: int) -> void:
 	waiting_for_manual_next_wave = false
 	RunState.current_wave = wave_number
-	hud_instance.show_banner("WAVE %d" % wave_number, Color(0.96, 0.62, 0.28), 1.5)
+	hud_instance.show_banner(RunState.t("wave_banner") % wave_number, Color(0.96, 0.62, 0.28), 1.5)
 	if wave_number >= 2:
-		hud_instance.show_event("Carrion pressure rising", Color(0.94, 0.52, 0.24), 1.2)
+		hud_instance.show_event(RunState.t("pressure_rising"), Color(0.94, 0.52, 0.24), 1.2)
 	wave_runner.enemy_count = 8 + (wave_number * 2)
 	wave_runner.spawn_interval = maxf(0.45, 0.9 - (wave_number - 1) * 0.05)
-	wave_runner.speed_scale = minf(1.0 + ((wave_number - 1) * 0.04), 1.4)
-	wave_runner.health_scale = 1.0 if wave_number <= 3 else minf(1.0 + ((wave_number - 3) * 0.08), 1.6)
+	wave_runner.speed_scale = minf(1.0 + ((wave_number - 1) * 0.04), 1.4) * RunState.enemy_speed_multiplier
+	wave_runner.health_scale = (1.0 if wave_number <= 3 else minf(1.0 + ((wave_number - 3) * 0.08), 1.6)) * RunState.enemy_health_multiplier
 	wave_runner.spawn_queue = _build_spawn_queue(wave_number)
 	wave_runner.start_wave(enemy_layer, map_instance.get_enemy_curve(), Callable(self, "_on_enemy_reached_goal"))
 
@@ -339,7 +363,7 @@ func _try_select_tower_at_mouse() -> bool:
 	if best_tower != null:
 		_select_placed_tower(best_tower)
 		GameState.is_commander_selected = false
-		hud_instance.show_event("Tower selected", Color(0.5, 0.9, 1.0))
+		hud_instance.show_event(RunState.t("tower_selected"), Color(0.5, 0.9, 1.0))
 		return true
 	_clear_selected_placed_tower()
 	return false
@@ -364,7 +388,7 @@ func _try_cycle_selected_tower_targeting(step: int = 1) -> void:
 		return
 	tower.cycle_targeting_mode(step)
 	var target_mode_label: String = tower.get_targeting_mode_label() if tower.has_method("get_targeting_mode_label") else "Targeting"
-	hud_instance.show_event("Targeting: %s" % target_mode_label, Color(0.6, 0.9, 1.0), 0.9)
+	hud_instance.show_event(RunState.t("targeting_mode") % target_mode_label, Color(0.6, 0.9, 1.0), 0.9)
 
 func _try_sell_selected_tower() -> void:
 	var tower := GameState.selected_placed_tower
@@ -372,7 +396,7 @@ func _try_sell_selected_tower() -> void:
 		return
 	var refund: int = tower.get_sell_refund() if tower.has_method("get_sell_refund") else int(round(float(tower.tower_cost) * 0.5))
 	RunState.gain_credits(refund)
-	hud_instance.show_event("Tower sold +%d" % refund, Color(0.6, 1.0, 0.8))
+	hud_instance.show_event(RunState.t("tower_sold") % refund, Color(0.6, 1.0, 0.8))
 	_clear_selected_placed_tower()
 	tower.queue_free()
 
@@ -387,7 +411,7 @@ func _try_select_commander_at_mouse() -> bool:
 	GameState.selected_tower_id = ""
 	_clear_preview()
 	GameState.is_commander_selected = true
-	hud_instance.show_event("Commander selected", Color(0.6, 0.95, 0.75), 0.8)
+	hud_instance.show_event(RunState.t("commander_selected"), Color(0.6, 0.95, 0.75), 0.8)
 	return true
 
 func _update_boss_state() -> void:
@@ -433,10 +457,10 @@ func _update_hud_feedback() -> void:
 	elif GameState.selected_placed_tower != null and is_instance_valid(GameState.selected_placed_tower):
 		var refund: int = GameState.selected_placed_tower.get_sell_refund() if GameState.selected_placed_tower.has_method("get_sell_refund") else int(round(float(GameState.selected_placed_tower.tower_cost) * 0.5))
 		var targeting_label: String = GameState.selected_placed_tower.get_targeting_mode_label() if GameState.selected_placed_tower.has_method("get_targeting_mode_label") else "First"
-		placement_status = "Selected tower | Use right panel for targeting and sell"
+		placement_status = RunState.t("selected_tower_status")
 		placement_color = Color(0.5, 0.9, 1.0)
 	elif GameState.is_commander_selected:
-		placement_status = "Commander selected | LMB move | 2 Overwatch"
+		placement_status = RunState.t("commander_selected_status")
 		placement_color = Color(0.6, 0.95, 0.75)
 	hud_instance.set_placement_status(placement_status, placement_color)
 	hud_instance.set_commander_state(commander_instance)
@@ -444,8 +468,13 @@ func _update_hud_feedback() -> void:
 	hud_instance.set_selected_tower(GameState.selected_placed_tower)
 	hud_instance.set_pause_state(is_game_paused)
 	hud_instance.set_wave_flow_state(auto_start_next_wave, waiting_for_manual_next_wave)
-	if hud_instance.has_method("set_run_state"):
-		hud_instance.set_run_state(RunState.is_run_over, "Base integrity collapsed")
+	if hud_instance.has_method("set_end_state"):
+		if RunState.end_state == "victory":
+			hud_instance.set_end_state("victory", (RunState.t("objective_target_wave") % RunState.target_wave) + " | " + RunState.difficulty_name, RunState.t("victory_hint"), true)
+		elif RunState.end_state == "defeat":
+			hud_instance.set_end_state("defeat", RunState.t("base_integrity_collapsed"), RunState.t("defeat_hint"), false)
+		else:
+			hud_instance.set_end_state("", "", "", false)
 
 func _get_selected_tower_scene() -> PackedScene:
 	var tower_def: Dictionary = TOWER_DEFS.get(GameState.selected_tower_id, {})
@@ -460,17 +489,17 @@ func _get_selected_tower_cost() -> int:
 func _format_build_reason(reason: String) -> String:
 	match reason:
 		"ready":
-			return "Ready"
+			return RunState.t("ready")
 		"out_of_bounds":
-			return "Blocked: outside build zone"
+			return RunState.t("blocked_outside_build_zone")
 		"path_blocked":
-			return "Blocked: too close to lane"
+			return RunState.t("blocked_lane")
 		"too_close_to_tower":
-			return "Blocked: too close to tower"
+			return RunState.t("blocked_tower")
 		"not_enough_credits":
-			return "Blocked: not enough credits"
+			return RunState.t("blocked_credits")
 		_:
-			return "Blocked"
+			return RunState.t("blocked")
 
 func _set_game_paused(paused: bool) -> void:
 	is_game_paused = paused
@@ -484,3 +513,24 @@ func _set_auto_next_wave(enabled: bool) -> void:
 func _start_next_wave_if_ready() -> void:
 	if waiting_for_manual_next_wave:
 		_start_wave(current_wave_number)
+
+func _restart_run() -> void:
+	get_tree().paused = false
+	SceneRouter.goto_scene("res://scenes/bootstrap/game_root.tscn")
+
+func _return_to_menu() -> void:
+	get_tree().paused = false
+	SceneRouter.goto_scene(MAIN_MENU_SCENE)
+
+func _continue_in_free_mode() -> void:
+	if RunState.end_state != "victory":
+		return
+	RunState.resume_free_mode()
+	get_tree().paused = false
+	hud_instance.show_banner(RunState.t("free_mode_banner"), Color(0.62, 1.0, 0.76), 2.0)
+	hud_instance.show_event(RunState.t("free_mode_continue"), Color(0.72, 1.0, 0.78), 2.6)
+	if auto_start_next_wave:
+		_start_wave(current_wave_number)
+	else:
+		waiting_for_manual_next_wave = true
+		hud_instance.show_event(RunState.t("free_mode_manual"), Color(0.72, 1.0, 0.78), 2.8)

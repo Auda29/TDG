@@ -7,6 +7,9 @@ signal cycle_targeting_next_requested
 signal pause_toggled(paused: bool)
 signal auto_wave_toggled(enabled: bool)
 signal next_wave_requested
+signal restart_requested
+signal menu_requested
+signal continue_free_mode_requested
 
 const UI_COLOR_DEFENDER := Color(0.36, 0.88, 0.96)
 const UI_COLOR_DEFENDER_SOFT := Color(0.58, 0.90, 0.96)
@@ -32,11 +35,20 @@ const TARGET_ICONS := {
 }
 
 @onready var damage_flash: ColorRect = $DamageFlash
-@onready var game_over_overlay: CenterContainer = $GameOverOverlay
-@onready var game_over_panel: PanelContainer = $GameOverOverlay/GameOverPanel
-@onready var game_over_title_label: Label = $GameOverOverlay/GameOverPanel/GameOverMargin/GameOverVBox/GameOverTitleLabel
-@onready var game_over_status_label: Label = $GameOverOverlay/GameOverPanel/GameOverMargin/GameOverVBox/GameOverStatusLabel
-@onready var game_over_hint_label: Label = $GameOverOverlay/GameOverPanel/GameOverMargin/GameOverVBox/GameOverHintLabel
+@onready var game_over_overlay: Control = $GameOverOverlay
+@onready var game_over_panel: PanelContainer = $GameOverOverlay/GameOverCenter/GameOverPanel
+@onready var game_over_glow: ColorRect = $GameOverOverlay/GameOverCenter/GameOverPanel/GameOverGlow
+@onready var game_over_frame_top: ColorRect = $GameOverOverlay/GameOverCenter/GameOverPanel/GameOverFrameTop
+@onready var game_over_frame_bottom: ColorRect = $GameOverOverlay/GameOverCenter/GameOverPanel/GameOverFrameBottom
+@onready var game_over_side_left: ColorRect = $GameOverOverlay/GameOverCenter/GameOverPanel/GameOverSideLeft
+@onready var game_over_side_right: ColorRect = $GameOverOverlay/GameOverCenter/GameOverPanel/GameOverSideRight
+@onready var game_over_title_label: Label = $GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox/GameOverTitleLabel
+@onready var game_over_status_label: Label = $GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox/GameOverStatusLabel
+@onready var game_over_stats_label: Label = $GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox/GameOverStatsLabel
+@onready var game_over_hint_label: Label = $GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox/GameOverHintLabel
+@onready var game_over_restart_button: Button = $GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox/GameOverActionRow/GameOverRestartButton
+@onready var game_over_menu_button: Button = $GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox/GameOverActionRow/GameOverMenuButton
+@onready var game_over_continue_button: Button = $GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox/GameOverActionRow/GameOverContinueButton
 @onready var banner_label: Label = $TopBanner/BannerLabel
 @onready var boss_bar: MarginContainer = $BossBar
 @onready var boss_name_label: Label = $BossBar/BossBarPanel/BossBarVBox/BossNameLabel
@@ -107,6 +119,7 @@ var _header_pulse_time: float = 0.0
 var _current_header_base_color: Color = Color(0.26, 0.42, 0.48, 1.0)
 var _current_silhouette_base_color: Color = Color(0.16, 0.22, 0.26, 1.0)
 var _current_accent_color: Color = UI_COLOR_DEFENDER_SOFT
+var _end_screen_pulse_time: float = 0.0
 
 func _ready() -> void:
 	basic_tower_button.pressed.connect(func() -> void: build_tower_requested.emit("basic_tower"))
@@ -125,6 +138,9 @@ func _ready() -> void:
 	pause_button.pressed.connect(_on_pause_button_pressed)
 	auto_wave_button.toggled.connect(func(enabled: bool) -> void: auto_wave_toggled.emit(enabled))
 	next_wave_button.pressed.connect(func() -> void: next_wave_requested.emit())
+	game_over_restart_button.pressed.connect(func() -> void: restart_requested.emit())
+	game_over_menu_button.pressed.connect(func() -> void: menu_requested.emit())
+	game_over_continue_button.pressed.connect(func() -> void: continue_free_mode_requested.emit())
 	basic_tower_button.text = "%s (%d)" % [BASIC_TOWER_DATA.display_name, BASIC_TOWER_DATA.tower_cost]
 	heavy_battery_button.text = "%s (%d)" % [HEAVY_BATTERY_DATA.display_name, HEAVY_BATTERY_DATA.tower_cost]
 	_apply_visual_theme()
@@ -143,7 +159,7 @@ func _process(delta: float) -> void:
 	event_label.modulate = _event_color
 	threat_label.text = _threat_text
 	threat_label.modulate = _threat_color
-	hint_label.text = _run_status_text if _run_over else "1/3 or buttons = build | LMB = place/select | Select commander to move | RMB = cancel | Right panel = tower actions | X/T optional | 2 = Overwatch"
+	hint_label.text = _run_status_text if _run_over else RunState.t("hint_gameplay")
 	_header_pulse_time += delta
 	if selected_panel.visible:
 		var pulse_strength: float = 0.08 + 0.04 * sin(_header_pulse_time * 2.2)
@@ -165,6 +181,14 @@ func _process(delta: float) -> void:
 		var flash_strength := _screen_flash_timer / 0.35
 		boss_bar.modulate = Color(1.0, 1.0, 1.0, 1.0).lerp(Color(1.0, 0.92, 0.68, 1.0), flash_strength * 0.65)
 		banner_label.modulate = banner_label.modulate.lerp(Color(1.0, 0.96, 0.72), flash_strength * 0.5)
+	if _run_over:
+		_end_screen_pulse_time += delta
+		var end_pulse := 0.5 + sin(_end_screen_pulse_time * 2.0) * 0.5
+		game_over_glow.color.a = 0.08 + end_pulse * 0.08
+		game_over_frame_top.color.a = 0.72 + end_pulse * 0.20
+		game_over_frame_bottom.color.a = 0.40 + end_pulse * 0.18
+		game_over_side_left.color.a = 0.22 + end_pulse * 0.16
+		game_over_side_right.color.a = 0.22 + end_pulse * 0.16
 	if _banner_timer > 0.0:
 		_banner_timer = maxf(0.0, _banner_timer - delta)
 		if _banner_timer <= 0.0:
@@ -236,31 +260,46 @@ func set_wave_flow_state(auto_enabled: bool, can_start_next_wave: bool) -> void:
 	_can_start_next_wave = can_start_next_wave
 	_update_flow_panel()
 
-func set_run_state(run_over: bool, status_text: String = "") -> void:
-	_run_over = run_over
+func set_end_state(end_state: String, status_text: String = "", hint_text: String = "", show_continue: bool = false) -> void:
+	_run_over = end_state != ""
 	_run_status_text = status_text
-	game_over_overlay.visible = run_over
-	if run_over:
-		game_over_title_label.text = "GAME OVER"
-		game_over_status_label.text = status_text if status_text != "" else "Base integrity collapsed"
-		game_over_hint_label.text = "Press R to restart the run"
+	game_over_overlay.visible = _run_over
+	if _run_over:
+		var is_victory: bool = end_state == "victory"
+		game_over_title_label.text = RunState.t("victory") if is_victory else RunState.t("game_over")
+		game_over_status_label.text = status_text if status_text != "" else (RunState.t("target_secured") if is_victory else RunState.t("base_integrity_collapsed"))
+		game_over_stats_label.text = RunState.get_run_stats_text()
+		game_over_hint_label.text = hint_text if hint_text != "" else (RunState.t("victory_hint") if is_victory else RunState.t("defeat_hint"))
+		game_over_continue_button.visible = show_continue
+		game_over_continue_button.disabled = not show_continue
+		game_over_restart_button.text = RunState.t("restart_run")
+		game_over_menu_button.text = RunState.t("return_to_menu")
+		game_over_continue_button.text = RunState.t("continue_free_mode")
+		game_over_panel.self_modulate = Color(0.78, 0.90, 0.82, 0.98) if is_victory else Color(0.90, 0.82, 0.78, 0.98)
+		game_over_glow.color = Color(0.32, 0.92, 0.58, 0.10) if is_victory else Color(0.82, 0.24, 0.18, 0.10)
+		game_over_frame_top.color = Color(0.46, 0.92, 0.68, 0.88) if is_victory else Color(1.0, 0.42, 0.28, 0.88)
+		game_over_frame_bottom.color = Color(0.58, 0.90, 0.96, 0.55) if is_victory else Color(1.0, 0.72, 0.24, 0.55)
+		game_over_side_left.color = Color(0.58, 0.90, 0.96, 0.32)
+		game_over_side_right.color = Color(0.46, 0.92, 0.68, 0.32) if is_victory else Color(1.0, 0.72, 0.24, 0.32)
+		game_over_title_label.add_theme_color_override("font_color", UI_COLOR_SUCCESS if is_victory else Color(1.0, 0.42, 0.28))
+		game_over_status_label.add_theme_color_override("font_color", UI_COLOR_SUCCESS if is_victory else UI_COLOR_WARNING)
 	_update_flow_panel()
 
 func _get_commander_text() -> String:
 	if _commander == null or not is_instance_valid(_commander):
-		return "Commander: offline"
+		return RunState.t("commander_offline")
 	if not _commander.has_method("get_overwatch_cooldown_remaining"):
-		return "Commander: active"
+		return RunState.t("commander_active")
 	if _commander.has_method("is_overwatch_active") and _commander.is_overwatch_active():
-		return "Commander: Overwatch ACTIVE %.1fs" % _commander.get_overwatch_remaining()
+		return RunState.t("commander_active_timer") % _commander.get_overwatch_remaining()
 	if _commander.is_overwatch_ready():
-		return "Commander: Overwatch READY"
-	return "Commander: Overwatch %.1fs" % _commander.get_overwatch_cooldown_remaining()
+		return RunState.t("commander_ready")
+	return RunState.t("commander_cooldown") % _commander.get_overwatch_cooldown_remaining()
 
 func _get_build_mode_text() -> String:
 	var tower_data = TOWER_DISPLAY_DATA.get(GameState.selected_tower_id)
 	if tower_data == null:
-		return "Off"
+		return RunState.t("build_mode_off")
 	return "%s (%d)" % [tower_data.display_name, tower_data.tower_cost]
 
 func _apply_visual_theme() -> void:
@@ -292,7 +331,7 @@ func _apply_visual_theme() -> void:
 	threat_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
 	banner_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
 	boss_name_label.add_theme_color_override("font_color", UI_COLOR_WARNING)
-	for button in [basic_tower_button, heavy_battery_button, pause_button, auto_wave_button, next_wave_button, target_prev_button, target_next_button, sell_button, upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
+	for button in [basic_tower_button, heavy_battery_button, pause_button, auto_wave_button, next_wave_button, target_prev_button, target_next_button, sell_button, upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d, game_over_restart_button, game_over_menu_button, game_over_continue_button]:
 		button.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	basic_tower_button.modulate = Color(0.24, 0.34, 0.38, 1.0)
 	heavy_battery_button.modulate = Color(0.34, 0.26, 0.22, 1.0)
@@ -309,17 +348,21 @@ func _apply_visual_theme() -> void:
 	game_over_panel.self_modulate = Color(0.90, 0.82, 0.78, 0.98)
 	game_over_title_label.add_theme_color_override("font_color", Color(1.0, 0.42, 0.28))
 	game_over_status_label.add_theme_color_override("font_color", UI_COLOR_WARNING)
+	game_over_stats_label.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	game_over_hint_label.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
+	game_over_restart_button.modulate = Color(0.50, 0.24, 0.20, 1.0)
+	game_over_menu_button.modulate = Color(0.22, 0.28, 0.34, 1.0)
+	game_over_continue_button.modulate = Color(0.22, 0.38, 0.28, 1.0)
 
 func _update_selected_panel() -> void:
 	if _selected_tower == null or not is_instance_valid(_selected_tower):
 		selected_panel.visible = false
-		selected_title_label.text = "Selected Tower"
-		selected_subtitle_label.text = "Defense Unit"
+		selected_title_label.text = RunState.t("selected_tower")
+		selected_subtitle_label.text = RunState.t("defense_unit")
 		silhouette_label.text = "⬢"
 		_apply_selected_visual_identity("")
-		selected_stats_label.text = "No tower selected"
-		target_mode_label.text = "◎ Targeting"
+		selected_stats_label.text = RunState.t("no_tower_selected")
+		target_mode_label.text = RunState.t("targeting")
 		target_prev_button.disabled = true
 		target_next_button.disabled = true
 		_set_arrow_button_visual(target_prev_button, "disabled")
@@ -331,7 +374,7 @@ func _update_selected_panel() -> void:
 	var refund: int = _selected_tower.get_sell_refund() if _selected_tower.has_method("get_sell_refund") else 0
 	var average_dps: float = _selected_tower.get_average_dps() if _selected_tower.has_method("get_average_dps") else 0.0
 	var targeting_label: String = _selected_tower.get_targeting_mode_label() if _selected_tower.has_method("get_targeting_mode_label") else "First"
-	selected_title_label.text = "%s Control" % tower_name
+	selected_title_label.text = RunState.t("tower_control") % tower_name
 	var icon: String = TARGET_ICONS.get(targeting_label, "◎")
 	target_mode_label.text = "%s %s" % [icon, targeting_label]
 	target_prev_button.disabled = false
@@ -339,7 +382,7 @@ func _update_selected_panel() -> void:
 	_set_arrow_button_visual(target_prev_button, "normal")
 	_set_arrow_button_visual(target_next_button, "normal")
 	_apply_selected_visual_identity(tower_name)
-	selected_stats_label.text = "Damage: %.1f\nDPS: %.1f\nDamage dealt: %.0f\nKills: %d\nRange: %.0f\nFire rate: %.2f\nSell refund: +%d" % [
+	selected_stats_label.text = RunState.t("tower_stats") % [
 		_selected_tower.damage,
 		average_dps,
 		_selected_tower.total_damage_dealt,
@@ -348,7 +391,7 @@ func _update_selected_panel() -> void:
 		_selected_tower.fire_rate,
 		refund,
 	]
-	sell_button.text = "Sell Tower (+%d)" % refund
+	sell_button.text = RunState.t("sell_tower") % refund
 	sell_button.disabled = false
 
 func _apply_selected_visual_identity(tower_name: String) -> void:
@@ -357,7 +400,7 @@ func _apply_selected_visual_identity(tower_name: String) -> void:
 		_current_silhouette_base_color = Color(0.22, 0.16, 0.12, 1.0)
 		_current_accent_color = Color(1.0, 0.74, 0.34, 0.95)
 		silhouette_label.text = "▉"
-		selected_subtitle_label.text = "Siege Battery"
+		selected_subtitle_label.text = RunState.t("siege_battery")
 		selected_subtitle_label.add_theme_color_override("font_color", Color(1.0, 0.74, 0.34))
 		for upgrade_slot in [upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
 			upgrade_slot.modulate = Color(0.34, 0.22, 0.16, 0.95)
@@ -366,7 +409,7 @@ func _apply_selected_visual_identity(tower_name: String) -> void:
 		_current_silhouette_base_color = Color(0.16, 0.22, 0.26, 1.0)
 		_current_accent_color = Color(0.58, 0.90, 0.96, 0.95)
 		silhouette_label.text = "⬢"
-		selected_subtitle_label.text = "Line Defense" if tower_name != "" else "Defense Unit"
+		selected_subtitle_label.text = RunState.t("line_defense") if tower_name != "" else RunState.t("defense_unit")
 		selected_subtitle_label.add_theme_color_override("font_color", UI_COLOR_DEFENDER_SOFT)
 		for upgrade_slot in [upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
 			upgrade_slot.modulate = Color(0.18, 0.24, 0.30, 0.95)
@@ -393,7 +436,7 @@ func _set_arrow_button_visual(button: Button, state: String) -> void:
 			button.scale = Vector2.ONE
 
 func _update_flow_panel() -> void:
-	pause_button.text = "Resume" if _is_paused else "Pause"
+	pause_button.text = RunState.t("resume") if _is_paused else RunState.t("pause")
 	auto_wave_button.set_pressed_no_signal(_auto_wave_enabled)
 	next_wave_button.disabled = _run_over or _auto_wave_enabled or not _can_start_next_wave
 	next_wave_button.modulate = Color(0.48, 0.22, 0.18, 1.0) if not next_wave_button.disabled else Color(0.22, 0.18, 0.18, 0.9)
