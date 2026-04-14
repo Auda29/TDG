@@ -83,11 +83,11 @@ func _draw() -> void:
 	draw_circle(_lane_warning_position, (58.0 + pulse * 8.0) * _lane_warning_scale, core_color)
 	draw_arc(_lane_warning_position, (74.0 + pulse * 10.0) * _lane_warning_scale, 0.0, TAU, 40, line_color, 5.0)
 	draw_arc(_lane_warning_position, (96.0 + pulse * 14.0) * _lane_warning_scale, 0.0, TAU, 48, Color(_lane_warning_color.r, _lane_warning_color.g * 0.66, _lane_warning_color.b * 0.75, 0.25 * strength), 3.0)
-	for offset in [Vector2(-56, 0), Vector2(56, 0), Vector2(0, -56), Vector2(0, 56)]:
-		var dir := offset.normalized()
-		var tip := _lane_warning_position + offset * _lane_warning_scale
-		var side := dir.orthogonal() * 10.0 * _lane_warning_scale
-		var depth := 18.0 * _lane_warning_scale
+	for offset: Vector2 in [Vector2(-56, 0), Vector2(56, 0), Vector2(0, -56), Vector2(0, 56)]:
+		var dir: Vector2 = offset.normalized()
+		var tip: Vector2 = _lane_warning_position + offset * _lane_warning_scale
+		var side: Vector2 = dir.orthogonal() * 10.0 * _lane_warning_scale
+		var depth: float = 18.0 * _lane_warning_scale
 		draw_colored_polygon(PackedVector2Array([
 			tip,
 			tip - dir * depth + side,

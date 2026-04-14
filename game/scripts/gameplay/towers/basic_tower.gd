@@ -76,8 +76,8 @@ func _draw() -> void:
 		decal_color = Color(0.14, 0.12, 0.10, 0.48)
 	draw_circle(Vector2.ZERO, 28.0 if name == "HeavyBattery" else 22.0, decal_color)
 	draw_arc(Vector2.ZERO, 34.0 if name == "HeavyBattery" else 26.0, 0.0, TAU, 48, Color(0.34, 0.40, 0.44, 0.22), 2.0)
-	for offset in [Vector2(-20, 0), Vector2(20, 0), Vector2(0, -20), Vector2(0, 20)]:
-		var inner := offset * 0.65
+	for offset: Vector2 in [Vector2(-20, 0), Vector2(20, 0), Vector2(0, -20), Vector2(0, 20)]:
+		var inner: Vector2 = offset * 0.65
 		draw_line(inner, offset, Color(0.42, 0.46, 0.48, 0.25), 2.0)
 	if _is_preview or _is_selected:
 		var ring_color := Color(0.18, 0.26, 0.30, 0.10)
@@ -92,8 +92,8 @@ func _draw() -> void:
 		if _is_preview:
 			pad_color = Color(0.38, 0.74, 0.58, 0.55) if _preview_is_valid else Color(0.74, 0.26, 0.20, 0.58)
 		draw_arc(Vector2.ZERO, 38.0 if name == "HeavyBattery" else 30.0, 0.0, TAU, 40, pad_color, 3.0)
-		for angle in [0.0, PI * 0.5, PI, PI * 1.5]:
-			var dir := Vector2.RIGHT.rotated(angle)
+		for angle: float in [0.0, PI * 0.5, PI, PI * 1.5]:
+			var dir: Vector2 = Vector2.RIGHT.rotated(angle)
 			draw_line(dir * 42.0, dir * 54.0, pad_color, 3.0)
 	if _is_selected and not _is_preview:
 		draw_arc(Vector2.ZERO, 32.0, 0.0, TAU, 40, Color(0.18, 0.74, 0.86, 0.72), 3.0)

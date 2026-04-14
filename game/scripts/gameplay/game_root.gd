@@ -332,14 +332,14 @@ func _update_boss_state() -> void:
 		hud_instance.set_boss_state(false)
 		active_boss = null
 		return
-	var boss_name := active_boss.get_display_name() if active_boss.has_method("get_display_name") else String(active_boss.name)
-	var boss_health_ratio := active_boss.get_health_ratio() if active_boss.has_method("get_health_ratio") else 1.0
+	var boss_name: String = active_boss.get_display_name() if active_boss.has_method("get_display_name") else String(active_boss.name)
+	var boss_health_ratio: float = active_boss.get_health_ratio() if active_boss.has_method("get_health_ratio") else 1.0
 	hud_instance.set_boss_state(true, boss_name, boss_health_ratio)
 
 func _update_screen_shake(delta: float) -> void:
 	if _screen_shake_time > 0.0:
 		_screen_shake_time = maxf(0.0, _screen_shake_time - delta)
-		var offset := Vector2(randf_range(-_screen_shake_strength, _screen_shake_strength), randf_range(-_screen_shake_strength, _screen_shake_strength))
+		var offset: Vector2 = Vector2(randf_range(-_screen_shake_strength, _screen_shake_strength), randf_range(-_screen_shake_strength, _screen_shake_strength))
 		map_layer.position = offset
 		tower_layer.position = offset
 		enemy_layer.position = offset
