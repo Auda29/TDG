@@ -2,6 +2,7 @@ extends Node
 
 signal wave_cleared
 signal enemy_defeated(credit_reward: int)
+signal enemy_spawned(enemy: Node)
 
 @export var enemy_scene: PackedScene
 @export var enemy_count: int = 8
@@ -48,6 +49,7 @@ func _spawn_enemy() -> void:
 	enemy.defeated.connect(_on_enemy_removed)
 	enemy.reached_goal.connect(_on_enemy_reached_goal)
 	enemy_layer.add_child(enemy)
+	enemy_spawned.emit(enemy)
 	spawned_count += 1
 	active_count += 1
 

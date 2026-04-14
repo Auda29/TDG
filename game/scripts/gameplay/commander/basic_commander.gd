@@ -65,7 +65,7 @@ func _handle_attack(delta: float) -> void:
 	_last_target_local = to_local(target.global_position)
 	_shot_flash = 1.0
 	rotation = _last_target_local.angle() + PI / 2.0
-	target.apply_damage(damage)
+	target.apply_damage(damage, global_position)
 	_cooldown = 1.0 / fire_rate
 
 func _get_target() -> Node:
@@ -82,15 +82,19 @@ func _get_target() -> Node:
 	return best_target
 
 func _draw() -> void:
-	var base_color := Color(0.2, 1.0, 0.4, 0.06)
+	var base_color := Color(0.16, 0.42, 0.36, 0.05)
 	draw_circle(Vector2.ZERO, attack_range, base_color)
+	draw_arc(Vector2.ZERO, 22.0, 0.0, TAU, 40, Color(0.16, 0.52, 0.56, 0.35), 2.0)
 	if _shot_flash > 0.0:
 		var muzzle_direction: Vector2 = _last_target_local.normalized() if _last_target_local.length() > 0.001 else Vector2.UP
-		draw_line(Vector2.ZERO, _last_target_local, Color(0.3, 1.0, 0.5, 0.95), 3.0)
-		draw_circle(muzzle_direction * 18.0, 7.0, Color(0.3, 1.0, 0.5, 0.85))
+		var muzzle_pos := muzzle_direction * 18.0
+		draw_line(muzzle_pos, _last_target_local, Color(0.16, 1.0, 0.64, 0.22 * _shot_flash), 7.0)
+		draw_line(muzzle_pos, _last_target_local, Color(0.3, 1.0, 0.5, 0.95), 3.0)
+		draw_circle(muzzle_pos, 7.0, Color(0.3, 1.0, 0.5, 0.85))
+		draw_arc(_last_target_local, 10.0, 0.0, TAU, 20, Color(0.45, 1.0, 0.72, 0.55 * _shot_flash), 2.0)
 	if _overwatch_remaining > 0.0:
 		var pulse_scale := 1.0 + (_overwatch_pulse * 0.12)
-		draw_circle(Vector2.ZERO, overwatch_radius * pulse_scale, Color(1.0, 0.85, 0.2, 0.10))
+		draw_circle(Vector2.ZERO, overwatch_radius * pulse_scale, Color(1.0, 0.85, 0.2, 0.08))
 		draw_arc(Vector2.ZERO, overwatch_radius, 0.0, TAU, 64, Color(1.0, 0.85, 0.2, 0.8), 4.0)
 		draw_circle(Vector2.ZERO, 16.0, Color(1.0, 0.85, 0.2, 0.35))
 		if body != null:

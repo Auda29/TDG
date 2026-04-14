@@ -9,6 +9,7 @@ move_speed = 70.0
 fortress_damage = 2
 credit_reward = 30
 armor = 4.0
+is_elite = true
 
 [node name="Body" type="Polygon2D" parent="."]
 color = Color(0.19, 0.08, 0.08, 1)

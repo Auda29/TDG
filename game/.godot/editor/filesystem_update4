@@ -1,7 +1,0 @@
-res://scripts/core/game_state.gd
-res://scripts/gameplay/game_root.gd
-res://scenes/ui/mvp_hud.tscn
-res://scripts/gameplay/commander/basic_commander.gd
-res://scripts/gameplay/towers/basic_tower.gd
-res://scripts/ui/mvp_hud.gd
-res://scripts/gameplay/enemies/basic_enemy.gd

@@ -100,6 +100,7 @@ func _setup_wave() -> void:
 	wave_runner.spawn_interval = 0.9
 	wave_runner.wave_cleared.connect(_on_wave_cleared)
 	wave_runner.enemy_defeated.connect(_on_enemy_defeated)
+	wave_runner.enemy_spawned.connect(_on_enemy_spawned)
 	add_child(wave_runner)
 	_start_wave(current_wave_number)
 
@@ -155,6 +156,17 @@ func _on_enemy_defeated(credit_reward: int) -> void:
 func _on_overwatch_activated() -> void:
 	hud_instance.show_event("Overwatch active", Color(1.0, 0.85, 0.25))
 
+func _on_enemy_spawned(enemy: Node) -> void:
+	if enemy == null or not is_instance_valid(enemy):
+		return
+	if enemy.has_method("get_threat_label") and enemy.get_threat_label() == "Elite":
+		hud_instance.show_banner("[!] ELITE CONTACT", Color(0.98, 0.46, 0.18), 1.8)
+		hud_instance.show_event("Shellback Brute entering lane", Color(0.98, 0.56, 0.24), 1.8)
+		if hud_instance.has_method("show_threat"):
+			hud_instance.show_threat("[BRUTE] Elite pressure detected", Color(1.0, 0.66, 0.24), 2.2)
+		if map_instance != null and is_instance_valid(map_instance) and map_instance.has_method("trigger_lane_warning"):
+			map_instance.trigger_lane_warning(enemy.global_position, 1.8)
+
 func _on_wave_cleared() -> void:
 	var bonus: int = 75
 	RunState.gain_credits(bonus)
@@ -171,6 +183,9 @@ func _on_wave_cleared() -> void:
 func _start_wave(wave_number: int) -> void:
 	waiting_for_manual_next_wave = false
 	RunState.current_wave = wave_number
+	hud_instance.show_banner("WAVE %d" % wave_number, Color(0.96, 0.62, 0.28), 1.5)
+	if wave_number >= 2:
+		hud_instance.show_event("Carrion pressure rising", Color(0.94, 0.52, 0.24), 1.2)
 	wave_runner.enemy_count = 8 + (wave_number * 2)
 	wave_runner.spawn_interval = maxf(0.45, 0.9 - (wave_number - 1) * 0.05)
 	wave_runner.speed_scale = minf(1.0 + ((wave_number - 1) * 0.04), 1.4)
@@ -204,7 +219,10 @@ func _update_tower_preview() -> void:
 	tower_preview.global_position = mouse_world
 	var validation_reason: String = map_instance.get_build_validation_reason(mouse_world, tower_layer.get_children())
 	var affordable: bool = RunState.can_afford(tower_preview.tower_cost)
-	tower_preview.modulate = Color(0.5, 1.0, 0.6, 0.75) if validation_reason == "ready" and affordable else Color(1.0, 0.35, 0.35, 0.75)
+	var preview_is_valid := validation_reason == "ready" and affordable
+	tower_preview.modulate = Color(0.5, 1.0, 0.6, 0.75) if preview_is_valid else Color(1.0, 0.35, 0.35, 0.75)
+	if tower_preview.has_method("set_preview_valid"):
+		tower_preview.set_preview_valid(preview_is_valid)
 
 func _clear_preview() -> void:
 	if tower_preview != null and is_instance_valid(tower_preview):
