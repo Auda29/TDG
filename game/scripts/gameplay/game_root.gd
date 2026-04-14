@@ -74,7 +74,7 @@ func _try_place_basic_tower() -> void:
 	var tower = BASIC_TOWER_SCENE.instantiate()
 	var mouse_world := get_global_mouse_position()
 	var existing_towers: Array = tower_layer.get_children()
-	var validation_reason := map_instance.get_build_validation_reason(mouse_world, existing_towers)
+	var validation_reason: String = map_instance.get_build_validation_reason(mouse_world, existing_towers)
 	if validation_reason != "ready":
 		hud_instance.show_event(_format_build_reason(validation_reason), Color(1.0, 0.4, 0.4))
 		tower.queue_free()
@@ -120,7 +120,7 @@ func _update_tower_preview() -> void:
 		build_layer.add_child(tower_preview)
 	var mouse_world := get_global_mouse_position()
 	tower_preview.global_position = mouse_world
-	var validation_reason := map_instance.get_build_validation_reason(mouse_world, tower_layer.get_children())
+	var validation_reason: String = map_instance.get_build_validation_reason(mouse_world, tower_layer.get_children())
 	var affordable := RunState.can_afford(tower_preview.tower_cost)
 	tower_preview.modulate = Color(0.5, 1.0, 0.6, 0.75) if validation_reason == "ready" and affordable else Color(1.0, 0.35, 0.35, 0.75)
 
@@ -135,7 +135,7 @@ func _update_hud_feedback() -> void:
 	var placement_status := "Build off"
 	var placement_color := Color(0.7, 0.7, 0.7)
 	if GameState.selected_tower_id == "basic_tower":
-		var reason := map_instance.get_build_validation_reason(get_global_mouse_position(), tower_layer.get_children())
+		var reason: String = map_instance.get_build_validation_reason(get_global_mouse_position(), tower_layer.get_children())
 		if not RunState.can_afford(100):
 			reason = "not_enough_credits"
 		placement_status = _format_build_reason(reason)

@@ -3,33 +3,46 @@
 > `TDG40k` is currently a working title.
 
 ## Zweck des Dokuments
-Dieses Dokument definiert die visuelle Richtung für den ersten spielbaren Prototyp von **TDG40k**. Es ist bewusst **kein vollständiges Art Bible**, sondern eine praktische Leitlinie für Stil, Lesbarkeit und Prioritäten im MVP.
+Dieses Dokument definiert die visuelle Richtung für den ersten spielbaren
+Prototyp von **TDG40k**. Es ist bewusst **kein vollständiges Art Bible**,
+sondern eine praktische Leitlinie für Stil, Lesbarkeit und Prioritäten im MVP.
 
 ---
 
 ## Art Direction Summary
-**TDG40k** soll wie eine düstere, militaristische Sci-Fi-Belagerung wirken: schwere Verteidigungsanlagen, industrielle Kriegsumgebung, aggressive organische Invasoren und ein Battlefield, das trotz Effekten und Druck jederzeit gut lesbar bleibt.
+
+**TDG40k** soll wie eine düstere, militaristische Sci-Fi-Belagerung wirken:
+schwere Verteidigungsanlagen, industrielle Kriegsumgebung, aggressive
+organische Invasoren und ein Battlefield, das trotz Effekten und Druck
+jederzeit gut lesbar bleibt.
 
 ---
 
 ## Visuelle Leitprinzipien
 
 ### 1. Readability first
+
 - Gameplay-Lesbarkeit hat Vorrang vor Detailreichtum.
-- Tower, Gegner, Elites, Boss und wichtige Effekte müssen auf einen Blick unterscheidbar sein.
+- Tower, Gegner, Elites, Boss und wichtige Effekte müssen auf einen Blick
+  unterscheidbar sein.
 - Der Pfad und relevante Bedrohungen dürfen nie von VFX überdeckt werden.
 
 ### 2. Fortress under siege
-- Die Welt soll sich wie ein verteidigter Außenposten oder eine belagerte Festung anfühlen.
+
+- Die Welt soll sich wie ein verteidigter Außenposten oder eine belagerte
+  Festung anfühlen.
 - Architektur und Platzierung sollen militärische Verteidigung signalisieren.
 - Die Karte soll nach Kriegsgebiet wirken, nicht nach neutralem Testfeld.
 
 ### 3. Industrial military sci-fi
-- Materialien: Stahl, Beton, Kabel, Rohre, Lüftung, Warnmarkierungen, Hitzeverfärbung
+
+- Materialien: Stahl, Beton, Kabel, Rohre, Lüftung, Warnmarkierungen,
+  Hitzeverfärbung
 - Waffensysteme wirken schwer, verankert und zweckmäßig.
 - Alles sollte funktional und belastet wirken, nicht elegant oder verspielt.
 
 ### 4. Original shape language
+
 - Kein direktes Nachbauen ikonischer Franchise-Formen.
 - Verteidiger und Gegner brauchen eine eigene Silhouettenlogik.
 - Stil darf grim und monumental sein, muss aber eigenständig bleiben.
