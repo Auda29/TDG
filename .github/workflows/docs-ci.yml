@@ -43,8 +43,8 @@ jobs:
             --offline
             --no-progress
             --include-fragments
-            --fail-if-empty=false
             README.md
             docs/**/*.md
             game/README.md
           fail: true
+          failIfEmpty: false
