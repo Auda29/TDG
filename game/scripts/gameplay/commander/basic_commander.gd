@@ -11,6 +11,7 @@ signal overwatch_activated
 @export var overwatch_duration: float = 4.0
 @export var overwatch_cooldown: float = 10.0
 @export var overwatch_fire_rate_multiplier: float = 1.5
+@export var turn_speed: float = 9.0
 
 var _cooldown: float = 0.0
 var _world_bounds: Rect2 = Rect2(Vector2.ZERO, Vector2(1920, 1080))
@@ -21,6 +22,9 @@ var _last_target_local: Vector2 = Vector2.ZERO
 var _overwatch_pulse: float = 0.0
 var _move_target: Vector2 = Vector2.ZERO
 var _has_move_target: bool = false
+var _current_target: Node = null
+var _step_bob: float = 0.0
+var _body_kick: float = 0.0
 
 @onready var body: Node2D = $Body
 @onready var helmet: Node2D = $Helmet
@@ -35,25 +39,30 @@ func setup(world_bounds: Rect2) -> void:
 
 func _process(delta: float) -> void:
 	_shot_flash = maxf(0.0, _shot_flash - delta * 4.0)
+	_body_kick = maxf(0.0, _body_kick - delta * 4.5)
 	_overwatch_pulse = maxf(0.0, _overwatch_pulse - delta * 2.5)
 	_handle_movement(delta)
 	_handle_attack(delta)
+	_animate_visuals(delta)
 	_handle_overwatch(delta)
 	queue_redraw()
 
 func _handle_movement(delta: float) -> void:
 	if not _has_move_target:
 		return
+	if _get_target() != null:
+		return
 	var to_target: Vector2 = _move_target - global_position
 	if to_target.length() <= 6.0:
 		_has_move_target = false
 		return
-	var direction := to_target.normalized()
+	var direction: Vector2 = to_target.normalized()
 	global_position += direction * move_speed * delta
 	global_position.x = clampf(global_position.x, _world_bounds.position.x, _world_bounds.end.x)
 	global_position.y = clampf(global_position.y, _world_bounds.position.y, _world_bounds.end.y)
-	if _get_target() == null:
-		rotation = direction.angle() + PI / 2.0
+	_step_bob += delta * 11.0
+	var move_rotation: float = direction.angle() + PI / 2.0
+	rotation = lerp_angle(rotation, move_rotation, clampf(delta * turn_speed, 0.0, 1.0))
 
 func _handle_attack(delta: float) -> void:
 	_cooldown = maxf(0.0, _cooldown - delta)
@@ -64,22 +73,45 @@ func _handle_attack(delta: float) -> void:
 		return
 	_last_target_local = to_local(target.global_position)
 	_shot_flash = 1.0
-	rotation = _last_target_local.angle() + PI / 2.0
+	_body_kick = 1.0
+	var aim_rotation: float = _last_target_local.angle() + PI / 2.0
+	rotation = lerp_angle(rotation, aim_rotation, clampf(delta * (turn_speed + 3.0), 0.0, 1.0))
 	target.apply_damage(damage, global_position)
 	_cooldown = 1.0 / fire_rate
 
 func _get_target() -> Node:
+	if _current_target != null and is_instance_valid(_current_target):
+		var current_distance: float = global_position.distance_to(_current_target.global_position)
+		if current_distance <= attack_range:
+			return _current_target
 	var enemies := get_tree().get_nodes_in_group("enemies")
 	var best_target: Node = null
-	var best_distance := INF
+	var best_progress: float = -1.0
+	var best_distance: float = INF
 	for enemy in enemies:
 		if not is_instance_valid(enemy):
 			continue
-		var distance := global_position.distance_to(enemy.global_position)
-		if distance <= attack_range and distance < best_distance:
+		var distance: float = global_position.distance_to(enemy.global_position)
+		if distance > attack_range:
+			continue
+		var enemy_progress: float = float(enemy.get("progress"))
+		if enemy_progress > best_progress or (is_equal_approx(enemy_progress, best_progress) and distance < best_distance):
+			best_progress = enemy_progress
 			best_distance = distance
 			best_target = enemy
+	_current_target = best_target
 	return best_target
+
+func _animate_visuals(delta: float) -> void:
+	var bob_offset: float = sin(_step_bob) * 1.4
+	if body != null:
+		body.position = Vector2(0.0, bob_offset + _body_kick * 2.0)
+		body.scale = Vector2.ONE * (1.0 + _shot_flash * 0.04)
+	if helmet != null:
+		helmet.position = Vector2(0.0, bob_offset * 1.2 + _body_kick * 3.0)
+		helmet.scale = Vector2.ONE * (1.0 + _shot_flash * 0.05)
+	if not _has_move_target and _current_target == null:
+		_step_bob = lerpf(_step_bob, 0.0, clampf(delta * 3.0, 0.0, 1.0))
 
 func _draw() -> void:
 	var base_color := Color(0.16, 0.42, 0.36, 0.05)

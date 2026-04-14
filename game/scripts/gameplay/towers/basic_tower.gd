@@ -4,6 +4,7 @@ extends Node2D
 @export var attack_range: float = 180.0
 @export var fire_rate: float = 1.2
 @export var damage: float = 8.0
+@export var turn_speed: float = 10.0
 
 var _cooldown: float = 0.0
 var _is_preview: bool = false
@@ -11,11 +12,16 @@ var _preview_is_valid: bool = true
 var _shot_flash: float = 0.0
 var _last_target_local: Vector2 = Vector2.ZERO
 var _is_selected: bool = false
+var _barrel_recoil: float = 0.0
+var _idle_sway: float = 0.0
 var total_damage_dealt: float = 0.0
 var total_kills: int = 0
 var active_time: float = 0.0
 
 @onready var barrel: Node2D = $Barrel
+@onready var base: Node2D = get_node_or_null("Base")
+@onready var base_top: Node2D = get_node_or_null("BaseTop")
+@onready var base_inner: Node2D = get_node_or_null("BaseInner")
 
 func set_preview_mode(enabled: bool) -> void:
 	_is_preview = enabled
@@ -36,17 +42,19 @@ func _process(delta: float) -> void:
 		queue_redraw()
 		return
 	active_time += delta
+	_idle_sway += delta * (2.0 if name == "HeavyBattery" else 2.8)
 	_shot_flash = maxf(0.0, _shot_flash - delta * 4.0)
+	_barrel_recoil = maxf(0.0, _barrel_recoil - delta * (2.8 if name == "HeavyBattery" else 5.0))
 	_cooldown = maxf(0.0, _cooldown - delta)
-	if _cooldown > 0.0:
-		queue_redraw()
-		return
 	var target := _get_target()
 	if target != null:
 		_last_target_local = to_local(target.global_position)
-		_shot_flash = 1.0
 		if barrel != null:
-			barrel.rotation = _last_target_local.angle() + PI / 2.0
+			var target_rotation: float = _last_target_local.angle() + PI / 2.0
+			barrel.rotation = lerp_angle(barrel.rotation, target_rotation, clampf(delta * turn_speed, 0.0, 1.0))
+	if _cooldown <= 0.0 and target != null:
+		_shot_flash = 1.0
+		_barrel_recoil = 1.0
 		var target_health_before: float = target.health
 		var dealt_damage: float = target.apply_damage(damage, global_position)
 		total_damage_dealt += dealt_damage
@@ -54,6 +62,7 @@ func _process(delta: float) -> void:
 			total_kills += 1
 		var effective_fire_rate := fire_rate * _get_overwatch_multiplier()
 		_cooldown = 1.0 / maxf(0.1, effective_fire_rate)
+	_animate_visuals()
 	queue_redraw()
 
 func _get_target() -> Node:
@@ -68,6 +77,19 @@ func _get_target() -> Node:
 			best_distance = distance
 			best_target = enemy
 	return best_target
+
+func _animate_visuals() -> void:
+	var sway_offset := sin(_idle_sway) * (0.8 if name == "HeavyBattery" else 1.2)
+	if barrel != null:
+		barrel.position = Vector2(0.0, _barrel_recoil * (10.0 if name == "HeavyBattery" else 6.0) + sway_offset)
+	if base_top != null:
+		base_top.position = Vector2(0.0, sin(_idle_sway * 0.8) * 0.8)
+		base_top.scale = Vector2.ONE * (1.0 + _shot_flash * 0.03)
+	if base_inner != null:
+		base_inner.position = Vector2(0.0, sin(_idle_sway * 0.7) * 0.6)
+		base_inner.scale = Vector2.ONE * (1.0 + _shot_flash * 0.02)
+	if base != null:
+		base.scale = Vector2.ONE * (1.0 + _shot_flash * 0.015)
 
 func _draw() -> void:
 	var overwatch_multiplier := _get_overwatch_multiplier()
