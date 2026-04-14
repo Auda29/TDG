@@ -67,19 +67,26 @@ func _get_target() -> Node:
 func _draw() -> void:
 	var overwatch_multiplier := _get_overwatch_multiplier()
 	if _is_preview or _is_selected:
-		var ring_color := Color(0.3, 0.7, 1.0, 0.08)
+		var ring_color := Color(0.2, 0.3, 0.4, 0.1)
 		if _is_preview:
-			ring_color = Color(0.8, 0.8, 1.0, 0.12)
+			ring_color = Color(0.5, 1.0, 0.6, 0.15)
 		elif overwatch_multiplier > 1.0:
-			ring_color = Color(1.0, 0.82, 0.25, 0.16)
+			ring_color = Color(0.9, 0.7, 0.1, 0.15)
 		draw_circle(Vector2.ZERO, attack_range, ring_color)
 		if overwatch_multiplier > 1.0 and not _is_preview:
-			draw_arc(Vector2.ZERO, attack_range, 0.0, TAU, 48, Color(1.0, 0.82, 0.25, 0.75), 3.0)
+			draw_arc(Vector2.ZERO, attack_range, 0.0, TAU, 48, Color(0.8, 0.6, 0.1, 0.6), 2.0)
 	if _is_selected and not _is_preview:
-		draw_arc(Vector2.ZERO, 32.0, 0.0, TAU, 40, Color(0.4, 1.0, 0.55, 0.95), 4.0)
+		draw_arc(Vector2.ZERO, 32.0, 0.0, TAU, 40, Color(0.3, 0.8, 0.9, 0.8), 3.0)
 	if _shot_flash > 0.0:
-		draw_line(Vector2.ZERO, _last_target_local, Color(1.0, 0.9, 0.3, 0.9), 3.0)
-		draw_circle(Vector2(0, -20), 8.0, Color(1.0, 0.75, 0.25, 0.8))
+		var laser_color = Color(1.0, 0.9, 0.2, 0.9)
+		var laser_width = 2.0
+		var flash_size = 6.0
+		if name == "HeavyBattery":
+			laser_color = Color(1.0, 0.4, 0.1, 0.95)
+			laser_width = 4.0
+			flash_size = 12.0
+		draw_line(Vector2.ZERO, _last_target_local, laser_color, laser_width)
+		draw_circle(Vector2(0, -20), flash_size, laser_color)
 
 func _get_overwatch_multiplier() -> float:
 	var commander = GameState.selected_commander

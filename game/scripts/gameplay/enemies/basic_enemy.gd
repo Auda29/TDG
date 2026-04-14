@@ -59,6 +59,6 @@ func _draw() -> void:
 	var bar_height := 5.0
 	var bar_pos := Vector2(-bar_width * 0.5, -28.0)
 	draw_rect(Rect2(bar_pos, Vector2(bar_width, bar_height)), Color(0.08, 0.08, 0.08, 0.9), true)
-	draw_rect(Rect2(bar_pos, Vector2(bar_width * health_ratio, bar_height)), Color(0.25, 0.9, 0.35, 0.95), true)
+	draw_rect(Rect2(bar_pos, Vector2(bar_width * health_ratio, bar_height)), Color(0.85, 0.2, 0.1, 0.9), true)
 	if _hit_flash > 0.0:
-		draw_circle(Vector2.ZERO, 18.0, Color(1.0, 1.0, 1.0, 0.10 * _hit_flash))
+		draw_circle(Vector2.ZERO, 18.0, Color(1.0, 0.5, 0.2, 0.15 * _hit_flash))
