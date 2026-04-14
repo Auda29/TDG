@@ -1,15 +1,15 @@
-# Projekt-Brainstorm: Tower Defense Game
+# Projekt-Brainstorm: TDG40k
 
 ## Kurzbeschreibung
-Ein **Tower-Defense-Spiel inspiriert von Bloons TD6**, aber mit einem **Warhammer-40k-inspirierten Sci-Fi-Kriegsthema**. Der Fokus liegt auf klar lesbarem TD-Gameplay, starken Upgrades, unterschiedlichen Fraktionen/Einheiten und einem düsteren, futuristischen Setting.
+**TDG40k** ist ein **Tower-Defense-Spiel inspiriert von Bloons TD6**, aber mit einem **grimdark Sci-Fi-Kriegsthema im Stil großer galaktischer Belagerungen**. Der Fokus liegt auf klar lesbarem TD-Gameplay, starken Upgrades, unterschiedlichen Fraktionen/Einheiten und einem düsteren, futuristischen Setting.
 
-> Hinweis: Ziel sollte eine **eigene Identität** sein – also Inspiration bei Spielgefühl, Lesbarkeit und Progression, aber keine direkte Kopie von Fraktionen, Begriffen, Designs oder konkreten Inhalten.
+> Hinweis: **TDG40k** ist aktuell ein Arbeitstitel. Ziel ist eine **eigene Identität** – also Inspiration bei Spielgefühl, Lesbarkeit und Progression, aber keine direkte Kopie von Fraktionen, Begriffen, Designs oder konkreten Inhalten.
 
 ---
 
 ## Core Vision
-- Zugängliches, befriedigendes Tower-Defense-Gameplay
-- Starkes Theme: dunkler futuristischer Total War
+- Zugängliches, befriedigendes Tower-Defense-Gameplay für **TDG40k**
+- Starkes Theme: dunkler futuristischer Festungs- und Belagerungskrieg
 - Viele Upgrade-Pfade und Build-Experimente
 - Hoher Wiederspielwert durch unterschiedliche Karten, Gegnerwellen und Kommandanten
 - Klare visuelle Lesbarkeit trotz detailreichem Setting
@@ -154,7 +154,7 @@ Ein zentraler Reiz könnte sein, dass jede Einheit **3 Upgrade-Pfade** besitzt, 
 ---
 
 ## Alleinstellungsmerkmale
-Damit das Spiel nicht nur wie „Bloons TD mit Reskin“ wirkt, könnten folgende Punkte helfen:
+Damit **TDG40k** nicht nur wie „Bloons TD mit Reskin“ wirkt, könnten folgende Punkte helfen:
 
 ### 1. Frontlinien-System
 Bestimmte Einheiten erzeugen eine „Frontlinie“ oder Zone, in der Gegner verlangsamt oder gebunden werden.
@@ -269,7 +269,7 @@ Für Version 1 sollte der Scope klein bleiben:
 ---
 
 ## Erste konkrete Richtungsentscheidung (Empfehlung)
-Für einen starken Start:
+Für einen starken Start von **TDG40k**:
 
 - **Singleplayer first**
 - **Top-down / isometric TD**
