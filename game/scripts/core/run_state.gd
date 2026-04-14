@@ -16,3 +16,6 @@ func can_afford(amount: int) -> bool:
 
 func spend_credits(amount: int) -> void:
 	credits = max(0, credits - amount)
+
+func gain_credits(amount: int) -> void:
+	credits += max(0, amount)

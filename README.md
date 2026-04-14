@@ -61,5 +61,12 @@ Short-term next steps:
 ## Contributing
 This project is not yet set up for external contribution workflows, but repository structure and documentation are being prepared.
 
+## CI
+A minimal GitHub Actions setup is included for the current repository state:
+- `docs-ci` checks markdown formatting and local markdown links
+- `godot-ci` runs a lightweight Godot 4.4 headless smoke check for the `game/` project
+
+The current CI is intentionally lightweight and does not yet include exports or gameplay tests.
+
 ## License
 This repository is licensed under the MIT License. See `LICENSE` for details.

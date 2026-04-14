@@ -1,6 +1,7 @@
 extends Node
 
 signal wave_cleared
+signal enemy_defeated(credit_reward: int)
 
 @export var enemy_scene: PackedScene
 @export var enemy_count: int = 8
@@ -22,7 +23,6 @@ func start_wave(target_enemy_layer: Node, target_curve: Curve2D, on_enemy_reache
 	active_count = 0
 	_spawn_timer = 0.0
 	_started = true
-	RunState.current_wave = 1
 
 func _process(delta: float) -> void:
 	if not _started:
@@ -47,8 +47,10 @@ func _spawn_enemy() -> void:
 	spawned_count += 1
 	active_count += 1
 
-func _on_enemy_removed(_enemy: Node) -> void:
+func _on_enemy_removed(enemy: Node) -> void:
 	active_count = max(0, active_count - 1)
+	if is_instance_valid(enemy):
+		enemy_defeated.emit(enemy.credit_reward)
 
 func _on_enemy_reached_goal(enemy: Node) -> void:
 	active_count = max(0, active_count - 1)

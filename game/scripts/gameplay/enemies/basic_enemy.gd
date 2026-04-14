@@ -6,6 +6,7 @@ signal reached_goal(enemy: Node)
 @export var max_health: float = 30.0
 @export var move_speed: float = 110.0
 @export var fortress_damage: int = 1
+@export var credit_reward: int = 15
 
 var health: float
 var progress: float = 0.0

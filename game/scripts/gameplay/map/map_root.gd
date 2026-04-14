@@ -34,16 +34,19 @@ func get_world_bounds() -> Rect2:
 	return BUILD_RECT
 
 func is_build_position_valid(world_pos: Vector2, towers: Array) -> bool:
+	return get_build_validation_reason(world_pos, towers) == "ready"
+
+func get_build_validation_reason(world_pos: Vector2, towers: Array) -> String:
 	if not BUILD_RECT.has_point(world_pos):
-		return false
+		return "out_of_bounds"
 	if _is_too_close_to_path(world_pos):
-		return false
+		return "path_blocked"
 	for tower in towers:
 		if not is_instance_valid(tower):
 			continue
 		if tower.global_position.distance_to(world_pos) < 96.0:
-			return false
-	return true
+			return "too_close_to_tower"
+	return "ready"
 
 func _is_too_close_to_path(world_pos: Vector2) -> bool:
 	var points := path.curve.get_baked_points()

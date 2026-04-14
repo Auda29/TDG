@@ -5,9 +5,15 @@ extends Node2D
 @export var fire_rate: float = 1.5
 @export var damage: float = 6.0
 @export var max_health: float = 100.0
+@export var overwatch_radius: float = 220.0
+@export var overwatch_duration: float = 4.0
+@export var overwatch_cooldown: float = 10.0
+@export var overwatch_fire_rate_multiplier: float = 1.5
 
 var _cooldown: float = 0.0
 var _world_bounds: Rect2 = Rect2(Vector2.ZERO, Vector2(1920, 1080))
+var _overwatch_remaining: float = 0.0
+var _overwatch_cooldown_remaining: float = 0.0
 
 func _ready() -> void:
 	GameState.selected_commander = self
@@ -18,6 +24,7 @@ func setup(world_bounds: Rect2) -> void:
 func _process(delta: float) -> void:
 	_handle_movement(delta)
 	_handle_attack(delta)
+	_handle_overwatch(delta)
 	queue_redraw()
 
 func _handle_movement(delta: float) -> void:
@@ -53,3 +60,25 @@ func _get_target() -> Node:
 
 func _draw() -> void:
 	draw_circle(Vector2.ZERO, attack_range, Color(0.2, 1.0, 0.4, 0.06))
+	if _overwatch_remaining > 0.0:
+		draw_circle(Vector2.ZERO, overwatch_radius, Color(1.0, 0.85, 0.2, 0.10))
+
+func _handle_overwatch(delta: float) -> void:
+	_overwatch_cooldown_remaining = maxf(0.0, _overwatch_cooldown_remaining - delta)
+	_overwatch_remaining = maxf(0.0, _overwatch_remaining - delta)
+	if Input.is_action_just_pressed("ability_2") and _overwatch_cooldown_remaining <= 0.0:
+		_overwatch_remaining = overwatch_duration
+		_overwatch_cooldown_remaining = overwatch_cooldown
+
+func get_overwatch_multiplier_for_position(world_position: Vector2) -> float:
+	if _overwatch_remaining <= 0.0:
+		return 1.0
+	if global_position.distance_to(world_position) > overwatch_radius:
+		return 1.0
+	return overwatch_fire_rate_multiplier
+
+func get_overwatch_cooldown_remaining() -> float:
+	return _overwatch_cooldown_remaining
+
+func is_overwatch_ready() -> bool:
+	return _overwatch_cooldown_remaining <= 0.0
