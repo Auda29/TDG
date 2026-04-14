@@ -1,0 +1,9 @@
+[gd_resource type="Theme" load_steps=2 format=3]
+
+[sub_resource type="SystemFont" id="SystemFont_ui"]
+font_names = PackedStringArray("Segoe UI", "Inter", "Noto Sans", "DejaVu Sans", "Arial")
+font_weight = 500
+
+[resource]
+default_font = SubResource("SystemFont_ui")
+default_font_size = 18

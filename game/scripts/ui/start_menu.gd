@@ -29,6 +29,8 @@ const TEXTS := {
 		"close_settings": "Close Settings",
 		"apply_settings": "Apply Settings",
 		"master_volume": "Master Volume",
+		"music_volume": "Music Volume",
+		"sfx_volume": "SFX Volume",
 		"fullscreen": "Fullscreen",
 	},
 	"de": {
@@ -57,6 +59,8 @@ const TEXTS := {
 		"close_settings": "Einstellungen schließen",
 		"apply_settings": "Einstellungen anwenden",
 		"master_volume": "Master-Lautstärke",
+		"music_volume": "Musik-Lautstärke",
+		"sfx_volume": "SFX-Lautstärke",
 		"fullscreen": "Vollbild",
 	},
 }
@@ -239,10 +243,10 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_pulse_time += delta
-	var pulse := 0.5 + sin(_pulse_time * 1.5) * 0.5
-	back_glow.modulate = Color(0.28, 0.44, 0.52, 0.14 + pulse * 0.10)
-	sweep_line.position.x = -220.0 + fmod(_pulse_time * 180.0, size.x + 440.0)
-	menu_panel.scale = Vector2.ONE * (1.0 + sin(_pulse_time * 1.3) * 0.01)
+	var glow_alpha := 0.14 + sin(_pulse_time * 0.35) * 0.015
+	back_glow.modulate = Color(0.28, 0.44, 0.52, glow_alpha)
+	sweep_line.position.x = -260.0 + fmod(_pulse_time * 38.0, size.x + 520.0)
+	menu_panel.scale = Vector2.ONE
 
 func _set_language(language: String) -> void:
 	_current_language = language
@@ -251,6 +255,7 @@ func _set_language(language: String) -> void:
 	language_de_button.button_pressed = language == "de"
 	language_en_button.modulate = Color(0.24, 0.38, 0.46, 1.0) if language == "en" else Color(0.18, 0.22, 0.26, 1.0)
 	language_de_button.modulate = Color(0.24, 0.38, 0.46, 1.0) if language == "de" else Color(0.18, 0.22, 0.26, 1.0)
+	RunState.persist_profile()
 	_apply_language()
 	_select_difficulty(_selected_difficulty_index)
 
@@ -262,6 +267,7 @@ func _set_mode(mode: String) -> void:
 	mode_campaign_button.modulate = Color(0.24, 0.34, 0.48, 1.0) if mode == "campaign" else Color(0.18, 0.22, 0.26, 1.0)
 	mode_endless_button.modulate = Color(0.24, 0.40, 0.30, 1.0) if mode == "endless" else Color(0.18, 0.22, 0.26, 1.0)
 	custom_panel.visible = _is_custom_selected() and _current_mode == "campaign"
+	RunState.persist_profile()
 	_select_difficulty(_selected_difficulty_index)
 
 func _toggle_settings() -> void:
@@ -303,7 +309,11 @@ func _apply_language() -> void:
 	start_button.text = _text("start")
 	quit_button.text = _text("quit")
 	for i in range(DIFFICULTIES.size()):
-		_difficulty_buttons[i].text = _localized_value(DIFFICULTIES[i].get("name", ""))
+		var difficulty_id: String = String(DIFFICULTIES[i].get("id", ""))
+		var label_text: String = _localized_value(DIFFICULTIES[i].get("name", ""))
+		if not RunState.can_select_difficulty(difficulty_id):
+			label_text = "🔒 " + label_text
+		_difficulty_buttons[i].text = label_text
 	if _tooltip_locked_to_selection:
 		_restore_selected_tooltip()
 
@@ -318,9 +328,11 @@ func _select_difficulty(index: int) -> void:
 	for i in range(_difficulty_buttons.size()):
 		var button := _difficulty_buttons[i]
 		var difficulty_id: String = String(DIFFICULTIES[i].get("id", ""))
-		button.button_pressed = i == _selected_difficulty_index and RunState.can_select_difficulty(difficulty_id)
-		button.modulate = _get_button_color(i, i == _selected_difficulty_index and RunState.can_select_difficulty(difficulty_id))
-		button.disabled = not RunState.can_select_difficulty(difficulty_id)
+		var unlocked: bool = RunState.can_select_difficulty(difficulty_id)
+		button.button_pressed = i == _selected_difficulty_index and unlocked
+		button.modulate = _get_button_color(i, i == _selected_difficulty_index and unlocked, not unlocked)
+		button.disabled = false
+		button.tooltip_text = "" if unlocked else "🔒"
 	custom_panel.visible = _is_custom_selected() and _current_mode == "campaign"
 	difficulty_name_label.text = "%s %s" % [_localized_value(config.get("name", "")), _text("selected_suffix")]
 	difficulty_desc_label.text = _localized_value(config.get("subtitle", ""))
@@ -354,7 +366,9 @@ func _restore_selected_tooltip() -> void:
 	else:
 		tooltip_label.text = _text("tooltip_default")
 
-func _get_button_color(index: int, active: bool) -> Color:
+func _get_button_color(index: int, active: bool, locked: bool = false) -> Color:
+	if locked:
+		return Color(0.14, 0.16, 0.18, 0.88)
 	match index:
 		0:
 			return Color(0.24, 0.40, 0.32, 1.0) if active else Color(0.18, 0.24, 0.22, 0.92)

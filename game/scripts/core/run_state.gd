@@ -6,6 +6,8 @@ const DEFAULT_TARGET_WAVE := 12
 const DEFAULT_GAME_MODE := "campaign"
 const DEFAULT_LANGUAGE := "en"
 const SAVE_PATH := "user://profile.cfg"
+const PROFILE_VERSION := 2
+const DEFAULT_UNLOCKED_DIFFICULTIES: Array[String] = ["recruit", "standard", "custom"]
 
 const DIFFICULTY_UNLOCKS := {
 	"recruit": "",
@@ -23,6 +25,7 @@ const TEXTS := {
 		"build_mode_off": "Off", "placement_build_off": "Build off", "hint_gameplay": "1/3 or buttons = build | LMB = place/select | Select commander to move | RMB = cancel | Right panel = tower actions | X/T optional | 2 = Overwatch",
 		"commander_offline": "Commander: offline", "commander_active": "Commander: active", "commander_ready": "Commander: Overwatch READY", "commander_active_timer": "Commander: Overwatch ACTIVE %.1fs", "commander_cooldown": "Commander: Overwatch %.1fs",
 		"selected_tower": "Selected Tower", "defense_unit": "Defense Unit", "no_tower_selected": "No tower selected", "targeting": "◎ Targeting",
+		"build": "Build", "wave_control": "Wave Control", "tower_actions": "Tower Actions", "upgrade_slots": "Upgrade Slots", "build_mode": "Build Mode: %s", "placement": "Placement: %s", "boss_name": "[BOSS] %s", "auto_next_wave": "Auto Next Wave", "start_next_wave": "Start Next Wave",
 		"credits": "Credits: %d", "wave": "Wave: %d", "base_hp": "Base HP: %d", "resume": "Resume", "pause": "Pause", "restart_run": "Restart Run", "return_to_menu": "Return to Menu", "continue_free_mode": "Continue Free Mode",
 		"victory": "VICTORY", "game_over": "GAME OVER", "target_secured": "Target secured", "base_integrity_collapsed": "Base integrity collapsed", "victory_hint": "Continue into Free Mode, restart, or return to menu", "defeat_hint": "Press R, restart, or return to menu",
 		"ready": "Ready", "blocked_outside_build_zone": "Blocked: outside build zone", "blocked_lane": "Blocked: too close to lane", "blocked_tower": "Blocked: too close to tower", "blocked_credits": "Blocked: not enough credits", "blocked": "Blocked",
@@ -41,6 +44,7 @@ const TEXTS := {
 		"build_mode_off": "Aus", "placement_build_off": "Bauen aus", "hint_gameplay": "1/3 oder Buttons = bauen | LMB = platzieren/auswählen | Commander auswählen zum Bewegen | RMB = abbrechen | Rechtes Panel = Turmaktionen | X/T optional | 2 = Overwatch",
 		"commander_offline": "Commander: offline", "commander_active": "Commander: aktiv", "commander_ready": "Commander: Overwatch BEREIT", "commander_active_timer": "Commander: Overwatch AKTIV %.1fs", "commander_cooldown": "Commander: Overwatch %.1fs",
 		"selected_tower": "Ausgewählter Turm", "defense_unit": "Verteidigungseinheit", "no_tower_selected": "Kein Turm ausgewählt", "targeting": "◎ Zielmodus",
+		"build": "Bauen", "wave_control": "Wellensteuerung", "tower_actions": "Turmaktionen", "upgrade_slots": "Upgrade-Slots", "build_mode": "Bau-Modus: %s", "placement": "Platzierung: %s", "boss_name": "[BOSS] %s", "auto_next_wave": "Nächste Welle automatisch", "start_next_wave": "Nächste Welle starten",
 		"credits": "Credits: %d", "wave": "Welle: %d", "base_hp": "Basis-HP: %d", "resume": "Fortsetzen", "pause": "Pause", "restart_run": "Run neu starten", "return_to_menu": "Zurück zum Menü", "continue_free_mode": "Freien Modus fortsetzen",
 		"victory": "SIEG", "game_over": "GAME OVER", "target_secured": "Ziel gesichert", "base_integrity_collapsed": "Basisintegrität zusammengebrochen", "victory_hint": "Freien Modus fortsetzen, neu starten oder zum Menü zurückkehren", "defeat_hint": "Drücke R, starte neu oder kehre zum Menü zurück",
 		"ready": "Bereit", "blocked_outside_build_zone": "Blockiert: außerhalb der Bauzone", "blocked_lane": "Blockiert: zu nah an der Lane", "blocked_tower": "Blockiert: zu nah an einem Turm", "blocked_credits": "Blockiert: nicht genug Credits", "blocked": "Blockiert",
@@ -169,6 +173,9 @@ func apply_settings(master: float, music: float, sfx: float, fullscreen: bool) -
 	fullscreen_enabled = fullscreen
 	_save_profile()
 
+func persist_profile() -> void:
+	_save_profile()
+
 func can_afford(amount: int) -> bool:
 	return credits >= amount
 
@@ -182,31 +189,52 @@ func _unlock_next_difficulty() -> void:
 	for difficulty_id_to_check in DIFFICULTY_UNLOCKS.keys():
 		if DIFFICULTY_UNLOCKS[difficulty_id_to_check] == difficulty_id and not unlocked_difficulties.has(difficulty_id_to_check):
 			unlocked_difficulties.append(difficulty_id_to_check)
+	_normalize_unlocked_difficulties()
 
 func _save_profile() -> void:
+	_normalize_unlocked_difficulties()
 	var config := ConfigFile.new()
+	config.set_value("meta", "version", PROFILE_VERSION)
 	config.set_value("profile", "language", menu_language)
 	config.set_value("profile", "game_mode", game_mode)
-	config.set_value("profile", "master_volume", master_volume)
-	config.set_value("profile", "music_volume", music_volume)
-	config.set_value("profile", "sfx_volume", sfx_volume)
-	config.set_value("profile", "fullscreen_enabled", fullscreen_enabled)
-	config.set_value("profile", "unlocked_difficulties", unlocked_difficulties)
+	config.set_value("audio", "master_volume", master_volume)
+	config.set_value("audio", "music_volume", music_volume)
+	config.set_value("audio", "sfx_volume", sfx_volume)
+	config.set_value("video", "fullscreen_enabled", fullscreen_enabled)
+	config.set_value("progression", "unlocked_difficulties", unlocked_difficulties)
 	config.save(SAVE_PATH)
 
 func _load_profile() -> void:
 	var config := ConfigFile.new()
 	if config.load(SAVE_PATH) != OK:
+		_normalize_unlocked_difficulties()
 		return
+	var profile_version: int = int(config.get_value("meta", "version", 1))
 	menu_language = String(config.get_value("profile", "language", menu_language))
 	game_mode = String(config.get_value("profile", "game_mode", game_mode))
-	master_volume = float(config.get_value("profile", "master_volume", master_volume))
-	music_volume = float(config.get_value("profile", "music_volume", music_volume))
-	sfx_volume = float(config.get_value("profile", "sfx_volume", sfx_volume))
-	fullscreen_enabled = bool(config.get_value("profile", "fullscreen_enabled", fullscreen_enabled))
-	var loaded_unlocks: Array = config.get_value("profile", "unlocked_difficulties", unlocked_difficulties)
+	if profile_version >= 2:
+		master_volume = float(config.get_value("audio", "master_volume", master_volume))
+		music_volume = float(config.get_value("audio", "music_volume", music_volume))
+		sfx_volume = float(config.get_value("audio", "sfx_volume", sfx_volume))
+		fullscreen_enabled = bool(config.get_value("video", "fullscreen_enabled", fullscreen_enabled))
+		_set_unlocked_difficulties(config.get_value("progression", "unlocked_difficulties", DEFAULT_UNLOCKED_DIFFICULTIES))
+	else:
+		master_volume = float(config.get_value("profile", "master_volume", master_volume))
+		music_volume = float(config.get_value("profile", "music_volume", music_volume))
+		sfx_volume = float(config.get_value("profile", "sfx_volume", sfx_volume))
+		fullscreen_enabled = bool(config.get_value("profile", "fullscreen_enabled", fullscreen_enabled))
+		_set_unlocked_difficulties(config.get_value("profile", "unlocked_difficulties", DEFAULT_UNLOCKED_DIFFICULTIES))
+	_normalize_unlocked_difficulties()
+	if profile_version < PROFILE_VERSION:
+		_save_profile()
+
+func _set_unlocked_difficulties(values: Variant) -> void:
 	unlocked_difficulties = []
-	for value in loaded_unlocks:
-		unlocked_difficulties.append(String(value))
-	if unlocked_difficulties.is_empty():
-		unlocked_difficulties = ["recruit", "standard", "custom"]
+	if values is Array:
+		for value in values:
+			unlocked_difficulties.append(String(value))
+
+func _normalize_unlocked_difficulties() -> void:
+	for base_id in DEFAULT_UNLOCKED_DIFFICULTIES:
+		if not unlocked_difficulties.has(base_id):
+			unlocked_difficulties.append(base_id)

@@ -10,7 +10,7 @@ signal next_wave_requested
 signal restart_requested
 signal menu_requested
 signal continue_free_mode_requested
-signal settings_requested
+signal settings_overlay_toggled(visible: bool)
 
 const UI_COLOR_DEFENDER := Color(0.36, 0.88, 0.96)
 const UI_COLOR_DEFENDER_SOFT := Color(0.58, 0.90, 0.96)
@@ -51,6 +51,20 @@ const TARGET_ICONS := {
 @onready var game_over_menu_button: Button = $GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox/GameOverActionRow/GameOverMenuButton
 @onready var game_over_continue_button: Button = $GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox/GameOverActionRow/GameOverContinueButton
 @onready var banner_label: Label = $TopBanner/BannerLabel
+@onready var settings_overlay: Control = $SettingsOverlay
+@onready var settings_title_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SettingsTitleLabel
+@onready var settings_master_volume_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MasterVolumeRow/MasterVolumeLabel
+@onready var settings_master_volume_slider: HSlider = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MasterVolumeRow/MasterVolumeSlider
+@onready var settings_master_volume_value_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MasterVolumeRow/MasterVolumeValueLabel
+@onready var settings_music_volume_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MusicVolumeRow/MusicVolumeLabel
+@onready var settings_music_volume_slider: HSlider = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MusicVolumeRow/MusicVolumeSlider
+@onready var settings_music_volume_value_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MusicVolumeRow/MusicVolumeValueLabel
+@onready var settings_sfx_volume_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SfxVolumeRow/SfxVolumeLabel
+@onready var settings_sfx_volume_slider: HSlider = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SfxVolumeRow/SfxVolumeSlider
+@onready var settings_sfx_volume_value_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SfxVolumeRow/SfxVolumeValueLabel
+@onready var settings_fullscreen_button: CheckButton = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/FullscreenButton
+@onready var settings_apply_button: Button = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SettingsActionRow/ApplySettingsButton
+@onready var settings_close_button: Button = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SettingsActionRow/CloseSettingsButton
 @onready var boss_bar: MarginContainer = $BossBar
 @onready var boss_name_label: Label = $BossBar/BossBarPanel/BossBarVBox/BossNameLabel
 @onready var boss_health_bar: ProgressBar = $BossBar/BossBarPanel/BossBarVBox/BossHealthBar
@@ -72,8 +86,10 @@ const TARGET_ICONS := {
 @onready var threat_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/ThreatLabel
 @onready var hint_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/HintLabel
 
+@onready var build_title_label: Label = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/BuildTitleLabel
 @onready var basic_tower_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/BasicTowerButton
 @onready var heavy_battery_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/HeavyBatteryButton
+@onready var flow_title_label: Label = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/FlowTitleLabel
 @onready var pause_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/PauseButton
 @onready var auto_wave_button: CheckButton = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/AutoWaveButton
 @onready var next_wave_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/NextWaveButton
@@ -89,11 +105,13 @@ const TARGET_ICONS := {
 @onready var selected_stats_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/StatsPanel/StatsMargin/SelectedStatsLabel
 @onready var actions_panel: PanelContainer = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel
 @onready var actions_divider: ColorRect = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsDivider
+@onready var actions_title_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/ActionsTitleLabel
 @onready var target_prev_button: Button = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow/TargetPrevButton
 @onready var target_mode_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow/TargetModeLabel
 @onready var target_next_button: Button = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow/TargetNextButton
 @onready var sell_button: Button = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/SellButton
 @onready var upgrades_panel: PanelContainer = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel
+@onready var upgrades_title_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradesTitleLabel
 @onready var upgrade_slot_a: Button = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotA
 @onready var upgrade_slot_b: Button = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotB
 @onready var upgrade_slot_c: Button = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotC
@@ -122,6 +140,7 @@ var _current_header_base_color: Color = Color(0.26, 0.42, 0.48, 1.0)
 var _current_silhouette_base_color: Color = Color(0.16, 0.22, 0.26, 1.0)
 var _current_accent_color: Color = UI_COLOR_DEFENDER_SOFT
 var _end_screen_pulse_time: float = 0.0
+var _settings_open: bool = false
 
 func _ready() -> void:
 	basic_tower_button.pressed.connect(func() -> void: build_tower_requested.emit("basic_tower"))
@@ -140,22 +159,33 @@ func _ready() -> void:
 	pause_button.pressed.connect(_on_pause_button_pressed)
 	auto_wave_button.toggled.connect(func(enabled: bool) -> void: auto_wave_toggled.emit(enabled))
 	next_wave_button.pressed.connect(func() -> void: next_wave_requested.emit())
-	settings_button.pressed.connect(func() -> void: settings_requested.emit())
+	settings_button.pressed.connect(_toggle_settings_overlay)
+	settings_master_volume_slider.value_changed.connect(func(value: float) -> void: settings_master_volume_value_label.text = "%d%%" % int(round(value * 100.0)))
+	settings_music_volume_slider.value_changed.connect(func(value: float) -> void: settings_music_volume_value_label.text = "%d%%" % int(round(value * 100.0)))
+	settings_sfx_volume_slider.value_changed.connect(func(value: float) -> void: settings_sfx_volume_value_label.text = "%d%%" % int(round(value * 100.0)))
+	settings_apply_button.pressed.connect(_apply_settings)
+	settings_close_button.pressed.connect(_toggle_settings_overlay)
 	game_over_restart_button.pressed.connect(func() -> void: restart_requested.emit())
 	game_over_menu_button.pressed.connect(func() -> void: menu_requested.emit())
 	game_over_continue_button.pressed.connect(func() -> void: continue_free_mode_requested.emit())
+	settings_master_volume_slider.value = RunState.master_volume
+	settings_music_volume_slider.value = RunState.music_volume
+	settings_sfx_volume_slider.value = RunState.sfx_volume
+	settings_fullscreen_button.button_pressed = RunState.fullscreen_enabled
+	_placement_text = RunState.t("placement_build_off")
 	basic_tower_button.text = "%s (%d)" % [BASIC_TOWER_DATA.get_localized_display_name(), BASIC_TOWER_DATA.tower_cost]
 	heavy_battery_button.text = "%s (%d)" % [HEAVY_BATTERY_DATA.get_localized_display_name(), HEAVY_BATTERY_DATA.tower_cost]
 	_apply_visual_theme()
+	_apply_localized_ui()
 	_update_selected_panel()
 	_update_flow_panel()
 
 func _process(delta: float) -> void:
-	credits_label.text = "Credits: %d" % RunState.credits
-	wave_label.text = "Wave: %d" % RunState.current_wave
-	base_label.text = "Base HP: %d" % RunState.base_hp
-	mode_label.text = "Build Mode: %s" % _get_build_mode_text()
-	placement_label.text = "Placement: %s" % _placement_text
+	credits_label.text = RunState.t("credits") % RunState.credits
+	wave_label.text = RunState.t("wave") % RunState.current_wave
+	base_label.text = RunState.t("base_hp") % RunState.base_hp
+	mode_label.text = RunState.t("build_mode") % _get_build_mode_text()
+	placement_label.text = RunState.t("placement") % _placement_text
 	placement_label.modulate = _placement_color
 	commander_label.text = _get_commander_text()
 	event_label.text = _event_text
@@ -241,7 +271,7 @@ func set_boss_state(active: bool, boss_name: String = "", health_ratio: float = 
 	boss_bar.visible = active
 	if not active:
 		return
-	boss_name_label.text = "[BOSS] %s" % boss_name
+	boss_name_label.text = RunState.t("boss_name") % boss_name
 	boss_health_bar.value = clampf(health_ratio, 0.0, 1.0) * 100.0
 
 func set_selected_build_mode(tower_id: String) -> void:
@@ -273,19 +303,28 @@ func set_end_state(end_state: String, status_text: String = "", hint_text: Strin
 		game_over_status_label.text = status_text if status_text != "" else (RunState.t("target_secured") if is_victory else RunState.t("base_integrity_collapsed"))
 		game_over_stats_label.text = RunState.get_run_stats_text()
 		game_over_hint_label.text = hint_text if hint_text != "" else (RunState.t("victory_hint") if is_victory else RunState.t("defeat_hint"))
+		game_over_title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		game_over_status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		game_over_stats_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		game_over_hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 		game_over_continue_button.visible = show_continue
 		game_over_continue_button.disabled = not show_continue
 		game_over_restart_button.text = RunState.t("restart_run")
 		game_over_menu_button.text = RunState.t("return_to_menu")
 		game_over_continue_button.text = RunState.t("continue_free_mode")
-		game_over_panel.self_modulate = Color(0.78, 0.90, 0.82, 0.98) if is_victory else Color(0.90, 0.82, 0.78, 0.98)
-		game_over_glow.color = Color(0.32, 0.92, 0.58, 0.10) if is_victory else Color(0.82, 0.24, 0.18, 0.10)
-		game_over_frame_top.color = Color(0.46, 0.92, 0.68, 0.88) if is_victory else Color(1.0, 0.42, 0.28, 0.88)
-		game_over_frame_bottom.color = Color(0.58, 0.90, 0.96, 0.55) if is_victory else Color(1.0, 0.72, 0.24, 0.55)
-		game_over_side_left.color = Color(0.58, 0.90, 0.96, 0.32)
-		game_over_side_right.color = Color(0.46, 0.92, 0.68, 0.32) if is_victory else Color(1.0, 0.72, 0.24, 0.32)
-		game_over_title_label.add_theme_color_override("font_color", UI_COLOR_SUCCESS if is_victory else Color(1.0, 0.42, 0.28))
-		game_over_status_label.add_theme_color_override("font_color", UI_COLOR_SUCCESS if is_victory else UI_COLOR_WARNING)
+		game_over_panel.self_modulate = Color(0.16, 0.22, 0.20, 0.995) if is_victory else Color(0.22, 0.16, 0.14, 0.995)
+		game_over_glow.color = Color(0.10, 0.42, 0.24, 0.16) if is_victory else Color(0.46, 0.10, 0.08, 0.14)
+		game_over_frame_top.color = Color(0.42, 0.92, 0.66, 0.96) if is_victory else Color(1.0, 0.42, 0.28, 0.88)
+		game_over_frame_bottom.color = Color(0.18, 0.42, 0.32, 0.82) if is_victory else Color(0.58, 0.24, 0.18, 0.68)
+		game_over_side_left.color = Color(0.22, 0.62, 0.46, 0.44) if is_victory else Color(0.52, 0.22, 0.18, 0.34)
+		game_over_side_right.color = Color(0.20, 0.72, 0.52, 0.44) if is_victory else Color(0.72, 0.32, 0.22, 0.34)
+		game_over_title_label.add_theme_color_override("font_color", Color(0.86, 1.0, 0.92) if is_victory else Color(1.0, 0.42, 0.28))
+		game_over_status_label.add_theme_color_override("font_color", Color(0.70, 1.0, 0.82) if is_victory else UI_COLOR_WARNING)
+		game_over_stats_label.add_theme_color_override("font_color", Color(0.92, 0.96, 0.94) if is_victory else UI_COLOR_NEUTRAL)
+		game_over_hint_label.add_theme_color_override("font_color", Color(0.82, 0.92, 0.86) if is_victory else UI_COLOR_NEUTRAL)
+		game_over_restart_button.modulate = Color(0.18, 0.36, 0.28, 1.0) if is_victory else Color(0.50, 0.24, 0.20, 1.0)
+		game_over_menu_button.modulate = Color(0.18, 0.26, 0.24, 1.0) if is_victory else Color(0.22, 0.28, 0.34, 1.0)
+		game_over_continue_button.modulate = Color(0.20, 0.46, 0.30, 1.0) if is_victory else Color(0.22, 0.38, 0.28, 1.0)
 	_update_flow_panel()
 
 func _get_commander_text() -> String:
@@ -311,6 +350,7 @@ func _apply_visual_theme() -> void:
 	center_panel.self_modulate = Color(0.74, 0.82, 0.90, 1.0)
 	selected_panel.self_modulate = Color(0.74, 0.82, 0.90, 1.0)
 	selected_panel.modulate = Color(1, 1, 1, 0.98)
+	selected_panel.custom_minimum_size = Vector2(320, 0)
 	header_panel.self_modulate = Color(0.72, 0.82, 0.90, 1.0)
 	silhouette_panel.self_modulate = Color(0.18, 0.24, 0.28, 1.0)
 	stats_panel.self_modulate = Color(0.86, 0.90, 0.96, 1.0)
@@ -367,6 +407,8 @@ func _update_selected_panel() -> void:
 		_apply_selected_visual_identity("")
 		selected_stats_label.text = RunState.t("no_tower_selected")
 		target_mode_label.text = RunState.t("targeting")
+		for upgrade_slot in [upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
+			upgrade_slot.text = "—"
 		target_prev_button.disabled = true
 		target_next_button.disabled = true
 		_set_arrow_button_visual(target_prev_button, "disabled")
@@ -396,6 +438,8 @@ func _update_selected_panel() -> void:
 		refund,
 	]
 	sell_button.text = RunState.t("sell_tower") % refund
+	for upgrade_slot in [upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
+		upgrade_slot.text = "—"
 	sell_button.disabled = false
 
 func _apply_selected_visual_identity(tower_name: String) -> void:
@@ -446,8 +490,54 @@ func _update_flow_panel() -> void:
 	next_wave_button.modulate = Color(0.48, 0.22, 0.18, 1.0) if not next_wave_button.disabled else Color(0.22, 0.18, 0.18, 0.9)
 	auto_wave_button.modulate = Color(0.22, 0.34, 0.24, 1.0) if _auto_wave_enabled and not _run_over else Color(0.28, 0.22, 0.20, 1.0)
 	pause_button.disabled = _run_over
-	auto_wave_button.disabled = _run_over
-	settings_button.text = RunState.t("settings")
+	auto_wave_button.disabled = _run_over or _settings_open
+	pause_button.disabled = _run_over or _settings_open
+	settings_button.text = RunState.t("close") if _settings_open else RunState.t("settings")
+	auto_wave_button.text = RunState.t("auto_next_wave")
+	next_wave_button.text = RunState.t("start_next_wave")
 
 func _on_pause_button_pressed() -> void:
 	pause_toggled.emit(not _is_paused)
+
+func _toggle_settings_overlay() -> void:
+	_set_settings_overlay_visible(not _settings_open)
+
+func _set_settings_overlay_visible(visible: bool) -> void:
+	_settings_open = visible
+	settings_overlay.visible = visible
+	if visible:
+		settings_master_volume_slider.value = RunState.master_volume
+		settings_music_volume_slider.value = RunState.music_volume
+		settings_sfx_volume_slider.value = RunState.sfx_volume
+		settings_fullscreen_button.button_pressed = RunState.fullscreen_enabled
+	settings_overlay_toggled.emit(visible)
+	_update_flow_panel()
+
+func _apply_settings() -> void:
+	RunState.apply_settings(settings_master_volume_slider.value, settings_music_volume_slider.value, settings_sfx_volume_slider.value, settings_fullscreen_button.button_pressed)
+	AudioManager.set_master_volume(RunState.master_volume)
+	AudioManager.set_music_volume(RunState.music_volume)
+	AudioManager.set_sfx_volume(RunState.sfx_volume)
+	AudioManager.set_fullscreen(RunState.fullscreen_enabled)
+	_set_settings_overlay_visible(false)
+	_apply_localized_ui()
+
+func _apply_localized_ui() -> void:
+	build_title_label.text = RunState.t("build")
+	flow_title_label.text = RunState.t("wave_control")
+	actions_title_label.text = RunState.t("tower_actions")
+	upgrades_title_label.text = RunState.t("upgrade_slots")
+	settings_title_label.text = RunState.t("settings")
+	settings_master_volume_label.text = RunState.t("master_volume")
+	settings_music_volume_label.text = RunState.t("music_volume")
+	settings_sfx_volume_label.text = RunState.t("sfx_volume")
+	settings_fullscreen_button.text = RunState.t("fullscreen")
+	settings_apply_button.text = RunState.t("apply")
+	settings_close_button.text = RunState.t("close")
+	settings_master_volume_value_label.text = "%d%%" % int(round(RunState.master_volume * 100.0))
+	settings_music_volume_value_label.text = "%d%%" % int(round(RunState.music_volume * 100.0))
+	settings_sfx_volume_value_label.text = "%d%%" % int(round(RunState.sfx_volume * 100.0))
+	basic_tower_button.text = "%s (%d)" % [BASIC_TOWER_DATA.get_localized_display_name(), BASIC_TOWER_DATA.tower_cost]
+	heavy_battery_button.text = "%s (%d)" % [HEAVY_BATTERY_DATA.get_localized_display_name(), HEAVY_BATTERY_DATA.tower_cost]
+	_update_selected_panel()
+	_update_flow_panel()

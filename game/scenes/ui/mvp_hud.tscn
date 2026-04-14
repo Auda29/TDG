@@ -9,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource("1")
+theme_override_font_sizes/font_size = 18
 
 [node name="DamageFlash" type="ColorRect" parent="."]
 layout_mode = 0
@@ -59,7 +60,7 @@ anchor_bottom = 1.0
 mouse_filter = 2
 
 [node name="GameOverPanel" type="PanelContainer" parent="GameOverOverlay/GameOverCenter"]
-custom_minimum_size = Vector2(520, 320)
+custom_minimum_size = Vector2(620, 360)
 layout_mode = 2
 
 [node name="GameOverGlow" type="ColorRect" parent="GameOverOverlay/GameOverCenter/GameOverPanel"]
@@ -122,24 +123,28 @@ theme_override_constants/separation = 10
 [node name="GameOverTitleLabel" type="Label" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox"]
 layout_mode = 2
 horizontal_alignment = 1
-text = "GAME OVER"
+theme_override_font_sizes/font_size = 30
+text = ""
 
 [node name="GameOverStatusLabel" type="Label" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox"]
 layout_mode = 2
 horizontal_alignment = 1
-text = "Base integrity collapsed"
+theme_override_font_sizes/font_size = 20
+text = ""
 autowrap_mode = 3
 
 [node name="GameOverStatsLabel" type="Label" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox"]
 layout_mode = 2
 horizontal_alignment = 1
-text = "Difficulty: Standard\nWave reached: 1\nEnemies defeated: 0\nCredits remaining: 300\nSurvival time: 00:00"
+theme_override_font_sizes/font_size = 17
+text = ""
 autowrap_mode = 3
 
 [node name="GameOverHintLabel" type="Label" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox"]
 layout_mode = 2
 horizontal_alignment = 1
-text = "Press R or use the button below to restart"
+theme_override_font_sizes/font_size = 16
+text = ""
 autowrap_mode = 3
 
 [node name="GameOverActionRow" type="HBoxContainer" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox"]
@@ -150,17 +155,145 @@ theme_override_constants/separation = 8
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Continue Free Mode"
+text = ""
 
 [node name="GameOverRestartButton" type="Button" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox/GameOverActionRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Restart Run"
+text = ""
 
 [node name="GameOverMenuButton" type="Button" parent="GameOverOverlay/GameOverCenter/GameOverPanel/GameOverMargin/GameOverVBox/GameOverActionRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Return to Menu"
+text = ""
+
+[node name="SettingsOverlay" type="Control" parent="."]
+visible = false
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="SettingsDim" type="ColorRect" parent="SettingsOverlay"]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.01, 0.01, 0.02, 0.72)
+
+[node name="SettingsCenter" type="CenterContainer" parent="SettingsOverlay"]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="SettingsPopup" type="PanelContainer" parent="SettingsOverlay/SettingsCenter"]
+custom_minimum_size = Vector2(420, 240)
+layout_mode = 2
+self_modulate = Color(0.92, 0.94, 0.98, 0.98)
+
+[node name="SettingsMargin" type="MarginContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="SettingsVBox" type="VBoxContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SettingsTitleLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = ""
+
+[node name="MasterVolumeRow" type="HBoxContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="MasterVolumeLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MasterVolumeRow"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = ""
+
+[node name="MasterVolumeSlider" type="HSlider" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MasterVolumeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="MasterVolumeValueLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MasterVolumeRow"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+horizontal_alignment = 2
+text = "100%"
+
+[node name="MusicVolumeRow" type="HBoxContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="MusicVolumeLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MusicVolumeRow"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = ""
+
+[node name="MusicVolumeSlider" type="HSlider" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MusicVolumeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="MusicVolumeValueLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MusicVolumeRow"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+horizontal_alignment = 2
+text = "100%"
+
+[node name="SfxVolumeRow" type="HBoxContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SfxVolumeLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SfxVolumeRow"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = ""
+
+[node name="SfxVolumeSlider" type="HSlider" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SfxVolumeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="SfxVolumeValueLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SfxVolumeRow"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+horizontal_alignment = 2
+text = "100%"
+
+[node name="FullscreenButton" type="CheckButton" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
+layout_mode = 2
+text = ""
+
+[node name="SettingsActionRow" type="HBoxContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ApplySettingsButton" type="Button" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SettingsActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+
+[node name="CloseSettingsButton" type="Button" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SettingsActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
 
 [node name="BossBar" type="MarginContainer" parent="."]
 layout_mode = 0
@@ -189,7 +322,7 @@ theme_override_constants/separation = 4
 [node name="BossNameLabel" type="Label" parent="BossBar/BossBarPanel/BossBarVBox"]
 layout_mode = 2
 horizontal_alignment = 1
-text = "BOSS"
+text = ""
 
 [node name="BossHealthBar" type="ProgressBar" parent="BossBar/BossBarPanel/BossBarVBox"]
 layout_mode = 2
@@ -201,13 +334,13 @@ show_percentage = false
 layout_mode = 0
 anchors_preset = 9
 anchor_left = 1.0
-anchor_top = 0.5
+anchor_top = 0.18
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -320.0
-offset_top = -220.0
+anchor_bottom = 1.0
+offset_left = -340.0
+offset_top = 0.0
 offset_right = -20.0
-offset_bottom = 220.0
+offset_bottom = -184.0
 mouse_filter = 1
 visible = false
 
@@ -290,11 +423,11 @@ theme_override_constants/separation = 4
 
 [node name="SelectedTitleLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/HeaderTextVBox"]
 layout_mode = 2
-text = "Selected Tower"
+text = ""
 
 [node name="SelectedSubtitleLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/HeaderTextVBox"]
 layout_mode = 2
-text = "Defense Unit"
+text = ""
 
 [node name="HeaderDivider" type="ColorRect" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
 custom_minimum_size = Vector2(0, 2)
@@ -314,7 +447,7 @@ theme_override_constants/margin_bottom = 8
 
 [node name="SelectedStatsLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/StatsPanel/StatsMargin"]
 layout_mode = 2
-text = "No tower selected"
+text = ""
 autowrap_mode = 3
 
 [node name="StatsDivider" type="ColorRect" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
@@ -339,7 +472,7 @@ theme_override_constants/separation = 8
 
 [node name="ActionsTitleLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox"]
 layout_mode = 2
-text = "Tower Actions"
+text = ""
 
 [node name="TargetingRow" type="HBoxContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox"]
 layout_mode = 2
@@ -355,7 +488,7 @@ disabled = true
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_alignment = 1
-text = "◎ First"
+text = ""
 
 [node name="TargetNextButton" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow"]
 custom_minimum_size = Vector2(40, 0)
@@ -365,7 +498,7 @@ disabled = true
 
 [node name="SellButton" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox"]
 layout_mode = 2
-text = "Sell Tower"
+text = ""
 disabled = true
 
 [node name="ActionsDivider" type="ColorRect" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
@@ -390,7 +523,7 @@ theme_override_constants/separation = 8
 
 [node name="UpgradesTitleLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox"]
 layout_mode = 2
-text = "Upgrade Slots"
+text = ""
 
 [node name="UpgradeSlots" type="GridContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox"]
 layout_mode = 2
@@ -400,22 +533,22 @@ theme_override_constants/v_separation = 6
 
 [node name="UpgradeSlotA" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
 layout_mode = 2
-text = "Slot A\nLocked"
+text = ""
 disabled = true
 
 [node name="UpgradeSlotB" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
 layout_mode = 2
-text = "Slot B\nLocked"
+text = ""
 disabled = true
 
 [node name="UpgradeSlotC" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
 layout_mode = 2
-text = "Slot C\nLocked"
+text = ""
 disabled = true
 
 [node name="UpgradeSlotD" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
 layout_mode = 2
-text = "Slot D\nLocked"
+text = ""
 disabled = true
 
 [node name="BottomBar" type="PanelContainer" parent="."]
@@ -463,27 +596,27 @@ theme_override_constants/v_separation = 4
 
 [node name="CreditsLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid"]
 layout_mode = 2
-text = "Credits: 0"
+text = ""
 
 [node name="WaveLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid"]
 layout_mode = 2
-text = "Wave: 0"
+text = ""
 
 [node name="BaseLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid"]
 layout_mode = 2
-text = "Base HP: 0"
+text = ""
 
 [node name="ModeLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid"]
 layout_mode = 2
-text = "Build Mode: Off"
+text = ""
 
 [node name="PlacementLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid"]
 layout_mode = 2
-text = "Placement: Build off"
+text = ""
 
 [node name="CommanderLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid"]
 layout_mode = 2
-text = "Commander: active"
+text = ""
 
 [node name="EventLabel" type="Label" parent="BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox"]
 layout_mode = 2
@@ -521,17 +654,17 @@ theme_override_constants/separation = 6
 
 [node name="BuildTitleLabel" type="Label" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
 layout_mode = 2
-text = "Build"
+text = ""
 
 [node name="BasicTowerButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
 layout_mode = 2
 toggle_mode = true
-text = "Basic Tower (100)"
+text = ""
 
 [node name="HeavyBatteryButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
 layout_mode = 2
 toggle_mode = true
-text = "Heavy Battery (175)"
+text = ""
 
 [node name="FlowPanel" type="VBoxContainer" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox"]
 custom_minimum_size = Vector2(190, 0)
@@ -541,23 +674,23 @@ theme_override_constants/separation = 6
 
 [node name="FlowTitleLabel" type="Label" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel"]
 layout_mode = 2
-text = "Wave Control"
+text = ""
 
 [node name="PauseButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel"]
 layout_mode = 2
-text = "Pause"
+text = ""
 
 [node name="AutoWaveButton" type="CheckButton" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel"]
 layout_mode = 2
 button_pressed = true
-text = "Auto Next Wave"
+text = ""
 
 [node name="NextWaveButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel"]
 layout_mode = 2
-text = "Start Next Wave"
+text = ""
 disabled = true
 
 [node name="SettingsButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel"]
 layout_mode = 2
-text = "Settings"
+text = ""
 

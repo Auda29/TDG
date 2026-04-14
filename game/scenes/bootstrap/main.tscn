@@ -9,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource("1")
+theme_override_font_sizes/font_size = 18
 
 [node name="Backdrop" type="ColorRect" parent="."]
 layout_mode = 0
@@ -102,11 +103,13 @@ theme_override_constants/separation = 8
 
 [node name="TitleLabel" type="Label" parent="Margin/RootVBox/HeaderPanel/HeaderMargin/HeaderVBox"]
 layout_mode = 2
-text = "TDG Prototype"
+theme_override_font_sizes/font_size = 34
+text = ""
 
 [node name="SubtitleLabel" type="Label" parent="Margin/RootVBox/HeaderPanel/HeaderMargin/HeaderVBox"]
 layout_mode = 2
-text = "Choose a siege profile, survive to the target wave, and unlock Free Mode after a campaign victory."
+theme_override_font_sizes/font_size = 18
+text = ""
 autowrap_mode = 3
 
 [node name="MenuPanel" type="PanelContainer" parent="Margin/RootVBox"]
@@ -147,7 +150,7 @@ theme_override_constants/separation = 8
 
 [node name="LanguageTitleLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/LanguagePanel/LanguageMargin/LanguageVBox"]
 layout_mode = 2
-text = "Language"
+text = ""
 
 [node name="LanguageButtons" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/LanguagePanel/LanguageMargin/LanguageVBox"]
 layout_mode = 2
@@ -183,7 +186,7 @@ theme_override_constants/separation = 8
 
 [node name="ModeTitleLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/ModePanel/ModeMargin/ModeVBox"]
 layout_mode = 2
-text = "Mode"
+text = ""
 
 [node name="ModeButtons" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/ModePanel/ModeMargin/ModeVBox"]
 layout_mode = 2
@@ -193,13 +196,13 @@ theme_override_constants/separation = 8
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
-text = "Campaign"
+text = ""
 
 [node name="ModeEndlessButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/ModePanel/ModeMargin/ModeVBox/ModeButtons"]
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
-text = "Endless"
+text = ""
 
 [node name="SettingsPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow"]
 layout_mode = 2
@@ -218,11 +221,11 @@ layout_mode = 2
 
 [node name="OpenSettingsButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/SettingsPanel/SettingsMargin/SettingsVBox"]
 layout_mode = 2
-text = "Open Settings"
+text = ""
 
 [node name="DifficultyTitleLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
 layout_mode = 2
-text = "Difficulty"
+text = ""
 
 [node name="DifficultyGrid" type="GridContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
 layout_mode = 2
@@ -233,32 +236,32 @@ theme_override_constants/v_separation = 10
 [node name="RecruitButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/DifficultyGrid"]
 layout_mode = 2
 toggle_mode = true
-text = "Recruit"
+text = ""
 
 [node name="StandardButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/DifficultyGrid"]
 layout_mode = 2
 toggle_mode = true
-text = "Standard"
+text = ""
 
 [node name="VeteranButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/DifficultyGrid"]
 layout_mode = 2
 toggle_mode = true
-text = "Veteran"
+text = ""
 
 [node name="BrutalButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/DifficultyGrid"]
 layout_mode = 2
 toggle_mode = true
-text = "Brutal"
+text = ""
 
 [node name="NightmareButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/DifficultyGrid"]
 layout_mode = 2
 toggle_mode = true
-text = "Nightmare"
+text = ""
 
 [node name="CustomButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/DifficultyGrid"]
 layout_mode = 2
 toggle_mode = true
-text = "Custom"
+text = ""
 
 [node name="TooltipPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
 layout_mode = 2
@@ -273,7 +276,7 @@ theme_override_constants/margin_bottom = 12
 
 [node name="TooltipLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TooltipPanel/TooltipMargin"]
 layout_mode = 2
-text = "Hover over a difficulty to preview its pressure, economy, and win condition."
+text = ""
 autowrap_mode = 3
 
 [node name="SelectedDifficultyPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
@@ -293,16 +296,16 @@ theme_override_constants/separation = 8
 
 [node name="DifficultyNameLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedDifficultyPanel/SelectedDifficultyMargin/SelectedDifficultyVBox"]
 layout_mode = 2
-text = "Standard Difficulty"
+text = ""
 
 [node name="DifficultyDescLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedDifficultyPanel/SelectedDifficultyMargin/SelectedDifficultyVBox"]
 layout_mode = 2
-text = "Baseline prototype experience"
+text = ""
 autowrap_mode = 3
 
 [node name="DifficultyStatsLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedDifficultyPanel/SelectedDifficultyMargin/SelectedDifficultyVBox"]
 layout_mode = 2
-text = "Starting credits: 300\nBase HP: 20\nEnemy speed: 100%\nEnemy health: 100%\nVictory target: Wave 12"
+text = ""
 autowrap_mode = 3
 
 [node name="CustomPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
@@ -323,7 +326,7 @@ theme_override_constants/separation = 10
 
 [node name="CustomTitleLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox"]
 layout_mode = 2
-text = "Custom Settings"
+text = ""
 
 [node name="CreditsRow" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox"]
 layout_mode = 2
@@ -332,7 +335,7 @@ theme_override_constants/separation = 10
 [node name="CreditsLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/CreditsRow"]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-text = "Starting Credits"
+text = ""
 
 [node name="CreditsSlider" type="HSlider" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/CreditsRow"]
 layout_mode = 2
@@ -355,7 +358,7 @@ theme_override_constants/separation = 10
 [node name="BaseHpLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/BaseHpRow"]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-text = "Base HP"
+text = ""
 
 [node name="BaseHpSlider" type="HSlider" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/BaseHpRow"]
 layout_mode = 2
@@ -378,7 +381,7 @@ theme_override_constants/separation = 10
 [node name="EnemySpeedLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/EnemySpeedRow"]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-text = "Enemy Speed"
+text = ""
 
 [node name="EnemySpeedSlider" type="HSlider" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/EnemySpeedRow"]
 layout_mode = 2
@@ -401,7 +404,7 @@ theme_override_constants/separation = 10
 [node name="EnemyHealthLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/EnemyHealthRow"]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-text = "Enemy Health"
+text = ""
 
 [node name="EnemyHealthSlider" type="HSlider" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/EnemyHealthRow"]
 layout_mode = 2
@@ -424,7 +427,7 @@ theme_override_constants/separation = 10
 [node name="TargetWaveLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/TargetWaveRow"]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-text = "Victory Target"
+text = ""
 
 [node name="TargetWaveSlider" type="HSlider" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/TargetWaveRow"]
 layout_mode = 2
@@ -453,7 +456,7 @@ theme_override_constants/margin_bottom = 12
 
 [node name="ControlsLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ControlsPanel/ControlsMargin"]
 layout_mode = 2
-text = "Controls: 1/3 build towers | LMB place/select | RMB cancel | 2 Overwatch | X sell | T targeting | R restart"
+text = ""
 autowrap_mode = 3
 
 [node name="ActionRow" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
@@ -463,12 +466,12 @@ theme_override_constants/separation = 10
 [node name="StartButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ActionRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Start Run"
+text = ""
 
 [node name="QuitButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ActionRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Quit"
+text = ""
 
 [node name="SettingsOverlay" type="Control" parent="."]
 visible = false
@@ -511,7 +514,7 @@ theme_override_constants/separation = 12
 
 [node name="SettingsTitleLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
 layout_mode = 2
-text = "Settings"
+text = ""
 
 [node name="MasterVolumeRow" type="HBoxContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
 layout_mode = 2
@@ -520,7 +523,7 @@ theme_override_constants/separation = 10
 [node name="VolumeLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MasterVolumeRow"]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-text = "Master Volume"
+text = ""
 
 [node name="VolumeSlider" type="HSlider" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MasterVolumeRow"]
 layout_mode = 2
@@ -542,7 +545,7 @@ theme_override_constants/separation = 10
 [node name="MusicLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MusicVolumeRow"]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-text = "Music Volume"
+text = ""
 
 [node name="MusicSlider" type="HSlider" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MusicVolumeRow"]
 layout_mode = 2
@@ -564,7 +567,7 @@ theme_override_constants/separation = 10
 [node name="SfxLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SfxVolumeRow"]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
-text = "SFX Volume"
+text = ""
 
 [node name="SfxSlider" type="HSlider" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SfxVolumeRow"]
 layout_mode = 2
@@ -581,7 +584,7 @@ text = "100%"
 
 [node name="FullscreenButton" type="CheckButton" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
 layout_mode = 2
-text = "Fullscreen"
+text = ""
 
 [node name="SettingsActionRow" type="HBoxContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
 layout_mode = 2
@@ -590,9 +593,9 @@ theme_override_constants/separation = 10
 [node name="ApplySettingsButton" type="Button" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SettingsActionRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Apply Settings"
+text = ""
 
 [node name="CloseSettingsButton" type="Button" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SettingsActionRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Close Settings"
+text = ""

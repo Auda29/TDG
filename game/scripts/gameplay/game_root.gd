@@ -37,6 +37,7 @@ var is_game_paused: bool = false
 var active_boss: Node = null
 var _screen_shake_time: float = 0.0
 var _screen_shake_strength: float = 0.0
+var _pause_before_settings: bool = false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -132,8 +133,8 @@ func _setup_hud() -> void:
 		hud_instance.menu_requested.connect(_return_to_menu)
 	if hud_instance.has_signal("continue_free_mode_requested"):
 		hud_instance.continue_free_mode_requested.connect(_continue_in_free_mode)
-	if hud_instance.has_signal("settings_requested"):
-		hud_instance.settings_requested.connect(_return_to_menu)
+	if hud_instance.has_signal("settings_overlay_toggled"):
+		hud_instance.settings_overlay_toggled.connect(_on_settings_overlay_toggled)
 
 func _setup_wave() -> void:
 	wave_runner = WAVE_RUNNER_SCENE.instantiate()
@@ -506,6 +507,13 @@ func _format_build_reason(reason: String) -> String:
 func _set_game_paused(paused: bool) -> void:
 	is_game_paused = paused
 	get_tree().paused = paused
+
+func _on_settings_overlay_toggled(visible: bool) -> void:
+	if visible:
+		_pause_before_settings = get_tree().paused
+		_set_game_paused(true)
+	else:
+		_set_game_paused(_pause_before_settings)
 
 func _set_auto_next_wave(enabled: bool) -> void:
 	auto_start_next_wave = enabled
