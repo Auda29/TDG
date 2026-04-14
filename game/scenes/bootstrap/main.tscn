@@ -513,23 +513,67 @@ theme_override_constants/separation = 12
 layout_mode = 2
 text = "Settings"
 
-[node name="VolumeRow" type="HBoxContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
+[node name="MasterVolumeRow" type="HBoxContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="VolumeLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/VolumeRow"]
+[node name="VolumeLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MasterVolumeRow"]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "Master Volume"
 
-[node name="VolumeSlider" type="HSlider" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/VolumeRow"]
+[node name="VolumeSlider" type="HSlider" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MasterVolumeRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="VolumeValueLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/VolumeRow"]
+[node name="VolumeValueLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MasterVolumeRow"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+horizontal_alignment = 2
+text = "100%"
+
+[node name="MusicVolumeRow" type="HBoxContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="MusicLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MusicVolumeRow"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Music Volume"
+
+[node name="MusicSlider" type="HSlider" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MusicVolumeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="MusicValueLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MusicVolumeRow"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+horizontal_alignment = 2
+text = "100%"
+
+[node name="SfxVolumeRow" type="HBoxContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SfxLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SfxVolumeRow"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "SFX Volume"
+
+[node name="SfxSlider" type="HSlider" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SfxVolumeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="SfxValueLabel" type="Label" parent="SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SfxVolumeRow"]
 custom_minimum_size = Vector2(56, 0)
 layout_mode = 2
 horizontal_alignment = 2

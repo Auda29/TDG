@@ -5,6 +5,7 @@ const DEFAULT_DIFFICULTY_NAME := "Standard"
 const DEFAULT_TARGET_WAVE := 12
 const DEFAULT_GAME_MODE := "campaign"
 const DEFAULT_LANGUAGE := "en"
+const SAVE_PATH := "user://profile.cfg"
 
 const DIFFICULTY_UNLOCKS := {
 	"recruit": "",
@@ -17,186 +18,40 @@ const DIFFICULTY_UNLOCKS := {
 
 const TEXTS := {
 	"en": {
-		"difficulty": "Difficulty",
-		"objective": "Objective",
-		"wave_reached": "Wave reached",
-		"enemies_defeated": "Enemies defeated",
-		"credits_remaining": "Credits remaining",
-		"survival_time": "Survival time",
-		"objective_endless": "Endless",
-		"objective_free_mode": "Free Mode",
-		"objective_target_wave": "Target wave: %d",
-		"build_mode_off": "Off",
-		"placement_build_off": "Build off",
-		"hint_gameplay": "1/3 or buttons = build | LMB = place/select | Select commander to move | RMB = cancel | Right panel = tower actions | X/T optional | 2 = Overwatch",
-		"commander_offline": "Commander: offline",
-		"commander_active": "Commander: active",
-		"commander_ready": "Commander: Overwatch READY",
-		"commander_active_timer": "Commander: Overwatch ACTIVE %.1fs",
-		"commander_cooldown": "Commander: Overwatch %.1fs",
-		"selected_tower": "Selected Tower",
-		"defense_unit": "Defense Unit",
-		"no_tower_selected": "No tower selected",
-		"targeting": "◎ Targeting",
-		"build_mode": "Build Mode: %s",
-		"placement": "Placement: %s",
-		"credits": "Credits: %d",
-		"wave": "Wave: %d",
-		"base_hp": "Base HP: %d",
-		"resume": "Resume",
-		"pause": "Pause",
-		"restart_run": "Restart Run",
-		"return_to_menu": "Return to Menu",
-		"continue_free_mode": "Continue Free Mode",
-		"victory": "VICTORY",
-		"game_over": "GAME OVER",
-		"target_secured": "Target secured",
-		"base_integrity_collapsed": "Base integrity collapsed",
-		"victory_hint": "Continue into Free Mode, restart, or return to menu",
-		"defeat_hint": "Press R, restart, or return to menu",
-		"run_over_hint": "Run over | Press R to restart",
-		"ready": "Ready",
-		"blocked_outside_build_zone": "Blocked: outside build zone",
-		"blocked_lane": "Blocked: too close to lane",
-		"blocked_tower": "Blocked: too close to tower",
-		"blocked_credits": "Blocked: not enough credits",
-		"blocked": "Blocked",
-		"not_enough_credits": "Not enough credits",
-		"tower_placed": "Tower placed",
-		"commander_repositioned": "Commander repositioned",
-		"base_hit": "Base hit -%d",
-		"credits_gain": "+%d credits",
-		"overwatch_active": "Overwatch active",
-		"boss_approaching": "[!!!] BOSS APPROACHING",
-		"boss_enter_lane": "Siegebreaker-class shellback entering lane",
-		"boss_priority": "[BOSS] Priority target in lane",
-		"elite_contact": "[!] ELITE CONTACT",
-		"elite_enter_lane": "Shellback Brute entering lane",
-		"elite_pressure": "[BRUTE] Elite pressure detected",
-		"boss_terminated": "BOSS TERMINATED",
-		"boss_neutralized": "Siegebreaker neutralized",
-		"boss_clear": "[CLEAR] Boss signature eliminated",
-		"fortress_lost": "FORTRESS LOST",
-		"run_over_restart": "Run over - press R to restart",
-		"failure_base": "[FAILURE] Base integrity collapsed",
-		"objective_secured": "OBJECTIVE SECURED",
-		"target_wave_cleared": "Target wave %d cleared - Free Mode unlocked",
-		"victory_continue": "[VICTORY] Continue or return to command",
-		"wave_cleared_bonus": "Wave cleared +%d",
-		"wave_cleared_manual": "Wave cleared - click Start Next Wave",
-		"wave_banner": "WAVE %d",
-		"pressure_rising": "Carrion pressure rising",
-		"tower_selected": "Tower selected",
-		"targeting_mode": "Targeting: %s",
-		"tower_sold": "Tower sold +%d",
-		"commander_selected": "Commander selected",
-		"selected_tower_status": "Selected tower | Use right panel for targeting and sell",
-		"commander_selected_status": "Commander selected | LMB move | 2 Overwatch",
-		"free_mode_banner": "FREE MODE",
-		"free_mode_continue": "Objective complete - survival can continue indefinitely",
-		"free_mode_manual": "Objective complete - start the next wave when ready",
-		"line_defense": "Line Defense",
-		"siege_battery": "Siege Battery",
-		"tower_control": "%s Control",
-		"sell_tower": "Sell Tower (+%d)",
-		"tower_stats": "Damage: %.1f\nDPS: %.1f\nDamage dealt: %.0f\nKills: %d\nRange: %.0f\nFire rate: %.2f\nSell refund: +%d",
-		"settings": "Settings",
-		"master_volume": "Master Volume",
-		"fullscreen": "Fullscreen",
-		"apply": "Apply",
-		"close": "Close",
-		"locked_requires": "Locked: requires victory on %s",
+		"difficulty": "Difficulty", "objective": "Objective", "wave_reached": "Wave reached", "enemies_defeated": "Enemies defeated", "credits_remaining": "Credits remaining", "survival_time": "Survival time",
+		"objective_endless": "Endless", "objective_free_mode": "Free Mode", "objective_target_wave": "Target wave: %d",
+		"build_mode_off": "Off", "placement_build_off": "Build off", "hint_gameplay": "1/3 or buttons = build | LMB = place/select | Select commander to move | RMB = cancel | Right panel = tower actions | X/T optional | 2 = Overwatch",
+		"commander_offline": "Commander: offline", "commander_active": "Commander: active", "commander_ready": "Commander: Overwatch READY", "commander_active_timer": "Commander: Overwatch ACTIVE %.1fs", "commander_cooldown": "Commander: Overwatch %.1fs",
+		"selected_tower": "Selected Tower", "defense_unit": "Defense Unit", "no_tower_selected": "No tower selected", "targeting": "◎ Targeting",
+		"credits": "Credits: %d", "wave": "Wave: %d", "base_hp": "Base HP: %d", "resume": "Resume", "pause": "Pause", "restart_run": "Restart Run", "return_to_menu": "Return to Menu", "continue_free_mode": "Continue Free Mode",
+		"victory": "VICTORY", "game_over": "GAME OVER", "target_secured": "Target secured", "base_integrity_collapsed": "Base integrity collapsed", "victory_hint": "Continue into Free Mode, restart, or return to menu", "defeat_hint": "Press R, restart, or return to menu",
+		"ready": "Ready", "blocked_outside_build_zone": "Blocked: outside build zone", "blocked_lane": "Blocked: too close to lane", "blocked_tower": "Blocked: too close to tower", "blocked_credits": "Blocked: not enough credits", "blocked": "Blocked",
+		"not_enough_credits": "Not enough credits", "tower_placed": "Tower placed", "commander_repositioned": "Commander repositioned", "base_hit": "Base hit -%d", "credits_gain": "+%d credits", "overwatch_active": "Overwatch active",
+		"boss_approaching": "[!!!] BOSS APPROACHING", "boss_enter_lane": "Siegebreaker-class shellback entering lane", "boss_priority": "[BOSS] Priority target in lane", "elite_contact": "[!] ELITE CONTACT", "elite_enter_lane": "Shellback Brute entering lane", "elite_pressure": "[BRUTE] Elite pressure detected",
+		"boss_terminated": "BOSS TERMINATED", "boss_neutralized": "Siegebreaker neutralized", "boss_clear": "[CLEAR] Boss signature eliminated", "fortress_lost": "FORTRESS LOST", "run_over_restart": "Run over - press R to restart", "failure_base": "[FAILURE] Base integrity collapsed",
+		"objective_secured": "OBJECTIVE SECURED", "target_wave_cleared": "Target wave %d cleared - Free Mode unlocked", "victory_continue": "[VICTORY] Continue or return to command", "wave_cleared_bonus": "Wave cleared +%d", "wave_cleared_manual": "Wave cleared - click Start Next Wave", "wave_banner": "WAVE %d", "pressure_rising": "Carrion pressure rising",
+		"tower_selected": "Tower selected", "targeting_mode": "Targeting: %s", "tower_sold": "Tower sold +%d", "commander_selected": "Commander selected", "selected_tower_status": "Selected tower | Use right panel for targeting and sell", "commander_selected_status": "Commander selected | LMB move | 2 Overwatch",
+		"free_mode_banner": "FREE MODE", "free_mode_continue": "Objective complete - survival can continue indefinitely", "free_mode_manual": "Objective complete - start the next wave when ready",
+		"line_defense": "Line Defense", "siege_battery": "Siege Battery", "tower_control": "%s Control", "sell_tower": "Sell Tower (+%d)", "tower_stats": "Damage: %.1f\nDPS: %.1f\nDamage dealt: %.0f\nKills: %d\nRange: %.0f\nFire rate: %.2f\nSell refund: +%d",
+		"settings": "Settings", "master_volume": "Master Volume", "music_volume": "Music Volume", "sfx_volume": "SFX Volume", "fullscreen": "Fullscreen", "apply": "Apply", "close": "Close", "locked_requires": "Locked: requires victory on %s",
 	},
 	"de": {
-		"difficulty": "Schwierigkeit",
-		"objective": "Ziel",
-		"wave_reached": "Erreichte Welle",
-		"enemies_defeated": "Besiegte Gegner",
-		"credits_remaining": "Verbleibende Credits",
-		"survival_time": "Überlebenszeit",
-		"objective_endless": "Endlos",
-		"objective_free_mode": "Freier Modus",
-		"objective_target_wave": "Zielwelle: %d",
-		"build_mode_off": "Aus",
-		"placement_build_off": "Bauen aus",
-		"hint_gameplay": "1/3 oder Buttons = bauen | LMB = platzieren/auswählen | Commander auswählen zum Bewegen | RMB = abbrechen | Rechtes Panel = Turmaktionen | X/T optional | 2 = Overwatch",
-		"commander_offline": "Commander: offline",
-		"commander_active": "Commander: aktiv",
-		"commander_ready": "Commander: Overwatch BEREIT",
-		"commander_active_timer": "Commander: Overwatch AKTIV %.1fs",
-		"commander_cooldown": "Commander: Overwatch %.1fs",
-		"selected_tower": "Ausgewählter Turm",
-		"defense_unit": "Verteidigungseinheit",
-		"no_tower_selected": "Kein Turm ausgewählt",
-		"targeting": "◎ Zielmodus",
-		"build_mode": "Bau-Modus: %s",
-		"placement": "Platzierung: %s",
-		"credits": "Credits: %d",
-		"wave": "Welle: %d",
-		"base_hp": "Basis-HP: %d",
-		"resume": "Fortsetzen",
-		"pause": "Pause",
-		"restart_run": "Run neu starten",
-		"return_to_menu": "Zurück zum Menü",
-		"continue_free_mode": "Freien Modus fortsetzen",
-		"victory": "SIEG",
-		"game_over": "GAME OVER",
-		"target_secured": "Ziel gesichert",
-		"base_integrity_collapsed": "Basisintegrität zusammengebrochen",
-		"victory_hint": "Freien Modus fortsetzen, neu starten oder zum Menü zurückkehren",
-		"defeat_hint": "Drücke R, starte neu oder kehre zum Menü zurück",
-		"run_over_hint": "Run vorbei | Drücke R zum Neustart",
-		"ready": "Bereit",
-		"blocked_outside_build_zone": "Blockiert: außerhalb der Bauzone",
-		"blocked_lane": "Blockiert: zu nah an der Lane",
-		"blocked_tower": "Blockiert: zu nah an einem Turm",
-		"blocked_credits": "Blockiert: nicht genug Credits",
-		"blocked": "Blockiert",
-		"not_enough_credits": "Nicht genug Credits",
-		"tower_placed": "Turm platziert",
-		"commander_repositioned": "Commander verlegt",
-		"base_hit": "Basis getroffen -%d",
-		"credits_gain": "+%d Credits",
-		"overwatch_active": "Overwatch aktiv",
-		"boss_approaching": "[!!!] BOSS NÄHERT SICH",
-		"boss_enter_lane": "Belagerer-Klasse betritt die Lane",
-		"boss_priority": "[BOSS] Prioritätsziel in der Lane",
-		"elite_contact": "[!] ELITEKONTAKT",
-		"elite_enter_lane": "Shellback-Brute betritt die Lane",
-		"elite_pressure": "[BRUTE] Elitedruck erkannt",
-		"boss_terminated": "BOSS ELIMINIERT",
-		"boss_neutralized": "Belagerer neutralisiert",
-		"boss_clear": "[CLEAR] Boss-Signal eliminiert",
-		"fortress_lost": "FESTUNG VERLOREN",
-		"run_over_restart": "Run vorbei - drücke R zum Neustart",
-		"failure_base": "[FAILURE] Basisintegrität zusammengebrochen",
-		"objective_secured": "ZIEL GESICHERT",
-		"target_wave_cleared": "Zielwelle %d geschafft - Freier Modus freigeschaltet",
-		"victory_continue": "[SIEG] Fortsetzen oder zum Kommando zurück",
-		"wave_cleared_bonus": "Welle geschafft +%d",
-		"wave_cleared_manual": "Welle geschafft - klicke auf Nächste Welle starten",
-		"wave_banner": "WELLE %d",
-		"pressure_rising": "Carrion-Druck steigt",
-		"tower_selected": "Turm ausgewählt",
-		"targeting_mode": "Zielmodus: %s",
-		"tower_sold": "Turm verkauft +%d",
-		"commander_selected": "Commander ausgewählt",
-		"selected_tower_status": "Turm ausgewählt | Rechtes Panel für Zielmodus und Verkauf",
-		"commander_selected_status": "Commander ausgewählt | LMB bewegen | 2 Overwatch",
-		"free_mode_banner": "FREIER MODUS",
-		"free_mode_continue": "Ziel erfüllt - Überleben kann unbegrenzt weitergehen",
-		"free_mode_manual": "Ziel erfüllt - starte die nächste Welle, wenn du bereit bist",
-		"line_defense": "Linienverteidigung",
-		"siege_battery": "Belagerungsbatterie",
-		"tower_control": "%s Steuerung",
-		"sell_tower": "Turm verkaufen (+%d)",
-		"tower_stats": "Schaden: %.1f\nDPS: %.1f\nVerursachter Schaden: %.0f\nKills: %d\nReichweite: %.0f\nFeuerrate: %.2f\nVerkaufswert: +%d",
-		"settings": "Einstellungen",
-		"master_volume": "Master-Lautstärke",
-		"fullscreen": "Vollbild",
-		"apply": "Anwenden",
-		"close": "Schließen",
-		"locked_requires": "Gesperrt: benötigt Sieg auf %s",
+		"difficulty": "Schwierigkeit", "objective": "Ziel", "wave_reached": "Erreichte Welle", "enemies_defeated": "Besiegte Gegner", "credits_remaining": "Verbleibende Credits", "survival_time": "Überlebenszeit",
+		"objective_endless": "Endlos", "objective_free_mode": "Freier Modus", "objective_target_wave": "Zielwelle: %d",
+		"build_mode_off": "Aus", "placement_build_off": "Bauen aus", "hint_gameplay": "1/3 oder Buttons = bauen | LMB = platzieren/auswählen | Commander auswählen zum Bewegen | RMB = abbrechen | Rechtes Panel = Turmaktionen | X/T optional | 2 = Overwatch",
+		"commander_offline": "Commander: offline", "commander_active": "Commander: aktiv", "commander_ready": "Commander: Overwatch BEREIT", "commander_active_timer": "Commander: Overwatch AKTIV %.1fs", "commander_cooldown": "Commander: Overwatch %.1fs",
+		"selected_tower": "Ausgewählter Turm", "defense_unit": "Verteidigungseinheit", "no_tower_selected": "Kein Turm ausgewählt", "targeting": "◎ Zielmodus",
+		"credits": "Credits: %d", "wave": "Welle: %d", "base_hp": "Basis-HP: %d", "resume": "Fortsetzen", "pause": "Pause", "restart_run": "Run neu starten", "return_to_menu": "Zurück zum Menü", "continue_free_mode": "Freien Modus fortsetzen",
+		"victory": "SIEG", "game_over": "GAME OVER", "target_secured": "Ziel gesichert", "base_integrity_collapsed": "Basisintegrität zusammengebrochen", "victory_hint": "Freien Modus fortsetzen, neu starten oder zum Menü zurückkehren", "defeat_hint": "Drücke R, starte neu oder kehre zum Menü zurück",
+		"ready": "Bereit", "blocked_outside_build_zone": "Blockiert: außerhalb der Bauzone", "blocked_lane": "Blockiert: zu nah an der Lane", "blocked_tower": "Blockiert: zu nah an einem Turm", "blocked_credits": "Blockiert: nicht genug Credits", "blocked": "Blockiert",
+		"not_enough_credits": "Nicht genug Credits", "tower_placed": "Turm platziert", "commander_repositioned": "Commander verlegt", "base_hit": "Basis getroffen -%d", "credits_gain": "+%d Credits", "overwatch_active": "Overwatch aktiv",
+		"boss_approaching": "[!!!] BOSS NÄHERT SICH", "boss_enter_lane": "Belagerer-Klasse betritt die Lane", "boss_priority": "[BOSS] Prioritätsziel in der Lane", "elite_contact": "[!] ELITEKONTAKT", "elite_enter_lane": "Shellback-Brute betritt die Lane", "elite_pressure": "[BRUTE] Elitedruck erkannt",
+		"boss_terminated": "BOSS ELIMINIERT", "boss_neutralized": "Belagerer neutralisiert", "boss_clear": "[CLEAR] Boss-Signal eliminiert", "fortress_lost": "FESTUNG VERLOREN", "run_over_restart": "Run vorbei - drücke R zum Neustart", "failure_base": "[FAILURE] Basisintegrität zusammengebrochen",
+		"objective_secured": "ZIEL GESICHERT", "target_wave_cleared": "Zielwelle %d geschafft - Freier Modus freigeschaltet", "victory_continue": "[SIEG] Fortsetzen oder zum Kommando zurück", "wave_cleared_bonus": "Welle geschafft +%d", "wave_cleared_manual": "Welle geschafft - klicke auf Nächste Welle starten", "wave_banner": "WELLE %d", "pressure_rising": "Carrion-Druck steigt",
+		"tower_selected": "Turm ausgewählt", "targeting_mode": "Zielmodus: %s", "tower_sold": "Turm verkauft +%d", "commander_selected": "Commander ausgewählt", "selected_tower_status": "Turm ausgewählt | Rechtes Panel für Zielmodus und Verkauf", "commander_selected_status": "Commander ausgewählt | LMB bewegen | 2 Overwatch",
+		"free_mode_banner": "FREIER MODUS", "free_mode_continue": "Ziel erfüllt - Überleben kann unbegrenzt weitergehen", "free_mode_manual": "Ziel erfüllt - starte die nächste Welle, wenn du bereit bist",
+		"line_defense": "Linienverteidigung", "siege_battery": "Belagerungsbatterie", "tower_control": "%s Steuerung", "sell_tower": "Turm verkaufen (+%d)", "tower_stats": "Schaden: %.1f\nDPS: %.1f\nVerursachter Schaden: %.0f\nKills: %d\nReichweite: %.0f\nFeuerrate: %.2f\nVerkaufswert: +%d",
+		"settings": "Einstellungen", "master_volume": "Master-Lautstärke", "music_volume": "Musik-Lautstärke", "sfx_volume": "SFX-Lautstärke", "fullscreen": "Vollbild", "apply": "Anwenden", "close": "Schließen", "locked_requires": "Gesperrt: benötigt Sieg auf %s",
 	},
 }
 
@@ -220,8 +75,13 @@ var free_mode_active: bool = false
 var game_mode: String = DEFAULT_GAME_MODE
 var menu_language: String = DEFAULT_LANGUAGE
 var master_volume: float = 1.0
+var music_volume: float = 1.0
+var sfx_volume: float = 1.0
 var fullscreen_enabled: bool = false
 var unlocked_difficulties: Array[String] = ["recruit", "standard", "custom"]
+
+func _ready() -> void:
+	_load_profile()
 
 func configure_difficulty(config: Dictionary) -> void:
 	starting_credits = int(config.get("starting_credits", 300))
@@ -233,6 +93,7 @@ func configure_difficulty(config: Dictionary) -> void:
 	target_wave = int(config.get("target_wave", DEFAULT_TARGET_WAVE))
 	game_mode = String(config.get("game_mode", DEFAULT_GAME_MODE))
 	menu_language = String(config.get("language", menu_language))
+	_save_profile()
 
 func reset_for_new_run() -> void:
 	credits = starting_credits
@@ -261,6 +122,7 @@ func mark_victory() -> void:
 	is_run_over = true
 	end_state = "victory"
 	_unlock_next_difficulty()
+	_save_profile()
 
 func resume_free_mode() -> void:
 	is_run_over = false
@@ -278,26 +140,11 @@ func get_run_stats_text() -> String:
 		objective_text = t("objective_free_mode")
 	else:
 		objective_text = t("objective_target_wave") % target_wave
-	return "%s: %s\n%s: %s\n%s: %d\n%s: %d\n%s: %d\n%s: %s" % [
-		t("difficulty"),
-		difficulty_name,
-		t("objective"),
-		objective_text,
-		t("wave_reached"),
-		current_wave,
-		t("enemies_defeated"),
-		enemies_defeated,
-		t("credits_remaining"),
-		credits,
-		t("survival_time"),
-		get_formatted_elapsed_time(),
-	]
+	return "%s: %s\n%s: %s\n%s: %d\n%s: %d\n%s: %d\n%s: %s" % [t("difficulty"), difficulty_name, t("objective"), objective_text, t("wave_reached"), current_wave, t("enemies_defeated"), enemies_defeated, t("credits_remaining"), credits, t("survival_time"), get_formatted_elapsed_time()]
 
 func get_formatted_elapsed_time() -> String:
 	var total_seconds: int = int(floor(elapsed_run_time))
-	var minutes: int = total_seconds / 60
-	var seconds: int = total_seconds % 60
-	return "%02d:%02d" % [minutes, seconds]
+	return "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
 
 func t(key: String) -> String:
 	var lang_table: Dictionary = TEXTS.get(menu_language, TEXTS["en"])
@@ -315,9 +162,12 @@ func get_locked_reason(id: String, localized_name: String) -> String:
 		return ""
 	return t("locked_requires") % localized_name
 
-func apply_settings(volume: float, fullscreen: bool) -> void:
-	master_volume = clampf(volume, 0.0, 1.0)
+func apply_settings(master: float, music: float, sfx: float, fullscreen: bool) -> void:
+	master_volume = clampf(master, 0.0, 1.0)
+	music_volume = clampf(music, 0.0, 1.0)
+	sfx_volume = clampf(sfx, 0.0, 1.0)
 	fullscreen_enabled = fullscreen
+	_save_profile()
 
 func can_afford(amount: int) -> bool:
 	return credits >= amount
@@ -332,3 +182,31 @@ func _unlock_next_difficulty() -> void:
 	for difficulty_id_to_check in DIFFICULTY_UNLOCKS.keys():
 		if DIFFICULTY_UNLOCKS[difficulty_id_to_check] == difficulty_id and not unlocked_difficulties.has(difficulty_id_to_check):
 			unlocked_difficulties.append(difficulty_id_to_check)
+
+func _save_profile() -> void:
+	var config := ConfigFile.new()
+	config.set_value("profile", "language", menu_language)
+	config.set_value("profile", "game_mode", game_mode)
+	config.set_value("profile", "master_volume", master_volume)
+	config.set_value("profile", "music_volume", music_volume)
+	config.set_value("profile", "sfx_volume", sfx_volume)
+	config.set_value("profile", "fullscreen_enabled", fullscreen_enabled)
+	config.set_value("profile", "unlocked_difficulties", unlocked_difficulties)
+	config.save(SAVE_PATH)
+
+func _load_profile() -> void:
+	var config := ConfigFile.new()
+	if config.load(SAVE_PATH) != OK:
+		return
+	menu_language = String(config.get_value("profile", "language", menu_language))
+	game_mode = String(config.get_value("profile", "game_mode", game_mode))
+	master_volume = float(config.get_value("profile", "master_volume", master_volume))
+	music_volume = float(config.get_value("profile", "music_volume", music_volume))
+	sfx_volume = float(config.get_value("profile", "sfx_volume", sfx_volume))
+	fullscreen_enabled = bool(config.get_value("profile", "fullscreen_enabled", fullscreen_enabled))
+	var loaded_unlocks: Array = config.get_value("profile", "unlocked_difficulties", unlocked_difficulties)
+	unlocked_difficulties = []
+	for value in loaded_unlocks:
+		unlocked_difficulties.append(String(value))
+	if unlocked_difficulties.is_empty():
+		unlocked_difficulties = ["recruit", "standard", "custom"]

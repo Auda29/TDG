@@ -113,6 +113,12 @@ func get_health_ratio() -> float:
 	return clampf(health / maxf(1.0, max_health), 0.0, 1.0)
 
 func get_display_name() -> String:
+	if RunState.menu_language == "de":
+		if is_boss:
+			return "Belagerer"
+		if is_elite:
+			return "Shellback-Brute"
+		return "Skuttling"
 	if is_boss:
 		return "Siegebreaker"
 	if is_elite:

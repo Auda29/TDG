@@ -6,6 +6,7 @@
 script = ExtResource("1")
 tower_id = "basic_tower"
 display_name = "Basic Tower"
+display_name_de = "Basisturm"
 tower_cost = 100
 attack_range = 180.0
 fire_rate = 1.2

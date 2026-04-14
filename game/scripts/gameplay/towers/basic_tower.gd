@@ -202,8 +202,8 @@ func get_targeting_mode_label() -> String:
 
 func get_ui_display_name() -> String:
 	if tower_data != null:
-		return tower_data.display_name
-	return "Tower"
+		return tower_data.get_localized_display_name()
+	return "Turm" if RunState.menu_language == "de" else "Tower"
 
 func get_selection_radius() -> float:
 	return tower_data.selection_radius if tower_data != null else 30.0

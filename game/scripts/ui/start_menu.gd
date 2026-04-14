@@ -144,9 +144,15 @@ const DIFFICULTIES := [
 @onready var settings_button: Button = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/SettingsPanel/SettingsMargin/SettingsVBox/OpenSettingsButton
 @onready var settings_popup: PanelContainer = $SettingsOverlay/SettingsCenter/SettingsPopup
 @onready var settings_title_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SettingsTitleLabel
-@onready var settings_volume_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/VolumeRow/VolumeLabel
-@onready var settings_volume_slider: HSlider = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/VolumeRow/VolumeSlider
-@onready var settings_volume_value_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/VolumeRow/VolumeValueLabel
+@onready var settings_master_volume_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MasterVolumeRow/VolumeLabel
+@onready var settings_master_volume_slider: HSlider = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MasterVolumeRow/VolumeSlider
+@onready var settings_master_volume_value_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MasterVolumeRow/VolumeValueLabel
+@onready var settings_music_volume_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MusicVolumeRow/MusicLabel
+@onready var settings_music_volume_slider: HSlider = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MusicVolumeRow/MusicSlider
+@onready var settings_music_volume_value_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/MusicVolumeRow/MusicValueLabel
+@onready var settings_sfx_volume_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SfxVolumeRow/SfxLabel
+@onready var settings_sfx_volume_slider: HSlider = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SfxVolumeRow/SfxSlider
+@onready var settings_sfx_volume_value_label: Label = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SfxVolumeRow/SfxValueLabel
 @onready var settings_fullscreen_button: CheckButton = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/FullscreenButton
 @onready var settings_apply_button: Button = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SettingsActionRow/ApplySettingsButton
 @onready var settings_close_button: Button = $SettingsOverlay/SettingsCenter/SettingsPopup/SettingsMargin/SettingsVBox/SettingsActionRow/CloseSettingsButton
@@ -198,7 +204,9 @@ func _ready() -> void:
 	enemy_speed_slider.value_changed.connect(func(_value: float) -> void: _refresh_custom_labels())
 	enemy_health_slider.value_changed.connect(func(_value: float) -> void: _refresh_custom_labels())
 	target_wave_slider.value_changed.connect(func(_value: float) -> void: _refresh_custom_labels())
-	settings_volume_slider.value_changed.connect(func(value: float) -> void: settings_volume_value_label.text = "%d%%" % int(round(value * 100.0)))
+	settings_master_volume_slider.value_changed.connect(func(value: float) -> void: settings_master_volume_value_label.text = "%d%%" % int(round(value * 100.0)))
+	settings_music_volume_slider.value_changed.connect(func(value: float) -> void: settings_music_volume_value_label.text = "%d%%" % int(round(value * 100.0)))
+	settings_sfx_volume_slider.value_changed.connect(func(value: float) -> void: settings_sfx_volume_value_label.text = "%d%%" % int(round(value * 100.0)))
 	settings_button.pressed.connect(_toggle_settings)
 	settings_apply_button.pressed.connect(_apply_settings)
 	settings_close_button.pressed.connect(_toggle_settings)
@@ -213,9 +221,17 @@ func _ready() -> void:
 		button.mouse_exited.connect(func() -> void: _restore_selected_tooltip())
 	start_button.pressed.connect(_start_game)
 	quit_button.pressed.connect(func() -> void: get_tree().quit())
-	settings_volume_slider.value = RunState.master_volume
+	settings_master_volume_slider.value = RunState.master_volume
+	settings_music_volume_slider.value = RunState.music_volume
+	settings_sfx_volume_slider.value = RunState.sfx_volume
 	settings_fullscreen_button.button_pressed = RunState.fullscreen_enabled
-	settings_volume_value_label.text = "%d%%" % int(round(RunState.master_volume * 100.0))
+	AudioManager.set_master_volume(RunState.master_volume)
+	AudioManager.set_music_volume(RunState.music_volume)
+	AudioManager.set_sfx_volume(RunState.sfx_volume)
+	AudioManager.set_fullscreen(RunState.fullscreen_enabled)
+	settings_master_volume_value_label.text = "%d%%" % int(round(RunState.master_volume * 100.0))
+	settings_music_volume_value_label.text = "%d%%" % int(round(RunState.music_volume * 100.0))
+	settings_sfx_volume_value_label.text = "%d%%" % int(round(RunState.sfx_volume * 100.0))
 	_refresh_custom_labels()
 	_apply_language()
 	_set_mode(_current_mode)
@@ -252,8 +268,10 @@ func _toggle_settings() -> void:
 	$SettingsOverlay.visible = not $SettingsOverlay.visible
 
 func _apply_settings() -> void:
-	RunState.apply_settings(settings_volume_slider.value, settings_fullscreen_button.button_pressed)
+	RunState.apply_settings(settings_master_volume_slider.value, settings_music_volume_slider.value, settings_sfx_volume_slider.value, settings_fullscreen_button.button_pressed)
 	AudioManager.set_master_volume(RunState.master_volume)
+	AudioManager.set_music_volume(RunState.music_volume)
+	AudioManager.set_sfx_volume(RunState.sfx_volume)
 	AudioManager.set_fullscreen(RunState.fullscreen_enabled)
 	_toggle_settings()
 
@@ -268,7 +286,9 @@ func _apply_language() -> void:
 	mode_endless_button.text = _text("endless")
 	settings_button.text = _text("open_settings")
 	settings_title_label.text = _text("settings")
-	settings_volume_label.text = _text("master_volume")
+	settings_master_volume_label.text = _text("master_volume")
+	settings_music_volume_label.text = _text("music_volume")
+	settings_sfx_volume_label.text = _text("sfx_volume")
 	settings_fullscreen_button.text = _text("fullscreen")
 	settings_apply_button.text = _text("apply_settings")
 	settings_close_button.text = _text("close_settings")

@@ -3,6 +3,7 @@ class_name TowerData
 
 @export var tower_id: String = ""
 @export var display_name: String = "Tower"
+@export var display_name_de: String = ""
 @export var tower_cost: int = 100
 @export var attack_range: float = 180.0
 @export var fire_rate: float = 1.0
@@ -20,3 +21,8 @@ class_name TowerData
 @export var laser_width: float = 2.0
 @export var flash_size: float = 6.0
 @export var impact_radius: float = 8.0
+
+func get_localized_display_name() -> String:
+	if RunState.menu_language == "de" and display_name_de != "":
+		return display_name_de
+	return display_name

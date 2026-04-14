@@ -10,6 +10,7 @@ signal next_wave_requested
 signal restart_requested
 signal menu_requested
 signal continue_free_mode_requested
+signal settings_requested
 
 const UI_COLOR_DEFENDER := Color(0.36, 0.88, 0.96)
 const UI_COLOR_DEFENDER_SOFT := Color(0.58, 0.90, 0.96)
@@ -76,6 +77,7 @@ const TARGET_ICONS := {
 @onready var pause_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/PauseButton
 @onready var auto_wave_button: CheckButton = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/AutoWaveButton
 @onready var next_wave_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/NextWaveButton
+@onready var settings_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/SettingsButton
 @onready var header_panel: PanelContainer = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel
 @onready var header_divider: ColorRect = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderDivider
 @onready var silhouette_panel: PanelContainer = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/SilhouettePanel
@@ -138,11 +140,12 @@ func _ready() -> void:
 	pause_button.pressed.connect(_on_pause_button_pressed)
 	auto_wave_button.toggled.connect(func(enabled: bool) -> void: auto_wave_toggled.emit(enabled))
 	next_wave_button.pressed.connect(func() -> void: next_wave_requested.emit())
+	settings_button.pressed.connect(func() -> void: settings_requested.emit())
 	game_over_restart_button.pressed.connect(func() -> void: restart_requested.emit())
 	game_over_menu_button.pressed.connect(func() -> void: menu_requested.emit())
 	game_over_continue_button.pressed.connect(func() -> void: continue_free_mode_requested.emit())
-	basic_tower_button.text = "%s (%d)" % [BASIC_TOWER_DATA.display_name, BASIC_TOWER_DATA.tower_cost]
-	heavy_battery_button.text = "%s (%d)" % [HEAVY_BATTERY_DATA.display_name, HEAVY_BATTERY_DATA.tower_cost]
+	basic_tower_button.text = "%s (%d)" % [BASIC_TOWER_DATA.get_localized_display_name(), BASIC_TOWER_DATA.tower_cost]
+	heavy_battery_button.text = "%s (%d)" % [HEAVY_BATTERY_DATA.get_localized_display_name(), HEAVY_BATTERY_DATA.tower_cost]
 	_apply_visual_theme()
 	_update_selected_panel()
 	_update_flow_panel()
@@ -300,7 +303,7 @@ func _get_build_mode_text() -> String:
 	var tower_data = TOWER_DISPLAY_DATA.get(GameState.selected_tower_id)
 	if tower_data == null:
 		return RunState.t("build_mode_off")
-	return "%s (%d)" % [tower_data.display_name, tower_data.tower_cost]
+	return "%s (%d)" % [tower_data.get_localized_display_name(), tower_data.tower_cost]
 
 func _apply_visual_theme() -> void:
 	bottom_bar.self_modulate = Color(0.74, 0.82, 0.90, 0.98)
@@ -331,13 +334,14 @@ func _apply_visual_theme() -> void:
 	threat_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
 	banner_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
 	boss_name_label.add_theme_color_override("font_color", UI_COLOR_WARNING)
-	for button in [basic_tower_button, heavy_battery_button, pause_button, auto_wave_button, next_wave_button, target_prev_button, target_next_button, sell_button, upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d, game_over_restart_button, game_over_menu_button, game_over_continue_button]:
+	for button in [basic_tower_button, heavy_battery_button, pause_button, auto_wave_button, next_wave_button, settings_button, target_prev_button, target_next_button, sell_button, upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d, game_over_restart_button, game_over_menu_button, game_over_continue_button]:
 		button.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	basic_tower_button.modulate = Color(0.24, 0.34, 0.38, 1.0)
 	heavy_battery_button.modulate = Color(0.34, 0.26, 0.22, 1.0)
 	pause_button.modulate = Color(0.24, 0.24, 0.28, 1.0)
 	auto_wave_button.modulate = Color(0.24, 0.28, 0.24, 1.0)
 	next_wave_button.modulate = Color(0.34, 0.18, 0.16, 1.0)
+	settings_button.modulate = Color(0.22, 0.28, 0.34, 1.0)
 	_set_arrow_button_visual(target_prev_button, "normal")
 	_set_arrow_button_visual(target_next_button, "normal")
 	sell_button.modulate = Color(0.28, 0.18, 0.16, 1.0)
@@ -395,7 +399,7 @@ func _update_selected_panel() -> void:
 	sell_button.disabled = false
 
 func _apply_selected_visual_identity(tower_name: String) -> void:
-	if tower_name == "Heavy Battery":
+	if tower_name == HEAVY_BATTERY_DATA.get_localized_display_name():
 		_current_header_base_color = Color(0.54, 0.38, 0.24, 1.0)
 		_current_silhouette_base_color = Color(0.22, 0.16, 0.12, 1.0)
 		_current_accent_color = Color(1.0, 0.74, 0.34, 0.95)
@@ -443,6 +447,7 @@ func _update_flow_panel() -> void:
 	auto_wave_button.modulate = Color(0.22, 0.34, 0.24, 1.0) if _auto_wave_enabled and not _run_over else Color(0.28, 0.22, 0.20, 1.0)
 	pause_button.disabled = _run_over
 	auto_wave_button.disabled = _run_over
+	settings_button.text = RunState.t("settings")
 
 func _on_pause_button_pressed() -> void:
 	pause_toggled.emit(not _is_paused)

@@ -6,6 +6,7 @@
 script = ExtResource("1")
 tower_id = "heavy_battery"
 display_name = "Heavy Battery"
+display_name_de = "Schwere Batterie"
 tower_cost = 175
 attack_range = 240.0
 fire_rate = 0.45

@@ -132,6 +132,8 @@ func _setup_hud() -> void:
 		hud_instance.menu_requested.connect(_return_to_menu)
 	if hud_instance.has_signal("continue_free_mode_requested"):
 		hud_instance.continue_free_mode_requested.connect(_continue_in_free_mode)
+	if hud_instance.has_signal("settings_requested"):
+		hud_instance.settings_requested.connect(_return_to_menu)
 
 func _setup_wave() -> void:
 	wave_runner = WAVE_RUNNER_SCENE.instantiate()
