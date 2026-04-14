@@ -76,19 +76,19 @@ layout_mode = 0
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 140.0
-offset_top = 72.0
-offset_right = -140.0
-offset_bottom = -72.0
+offset_left = 120.0
+offset_top = 64.0
+offset_right = -120.0
+offset_bottom = -64.0
 mouse_filter = 2
 
 [node name="RootVBox" type="VBoxContainer" parent="Margin"]
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 18
 
 [node name="HeaderPanel" type="PanelContainer" parent="Margin/RootVBox"]
 layout_mode = 2
-self_modulate = Color(0.88, 0.90, 0.96, 0.98)
+self_modulate = Color(0.94, 0.97, 1, 0.16)
 
 [node name="HeaderMargin" type="MarginContainer" parent="Margin/RootVBox/HeaderPanel"]
 layout_mode = 2
@@ -115,7 +115,7 @@ autowrap_mode = 3
 [node name="MenuPanel" type="PanelContainer" parent="Margin/RootVBox"]
 layout_mode = 2
 size_flags_vertical = 3
-self_modulate = Color(0.92, 0.94, 0.98, 0.98)
+self_modulate = Color(0.94, 0.97, 1, 0.12)
 
 [node name="MenuMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel"]
 layout_mode = 2
@@ -126,16 +126,16 @@ theme_override_constants/margin_bottom = 18
 
 [node name="MenuVBox" type="VBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 16
 
 [node name="TopControlRow" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 14
 
 [node name="LanguagePanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-self_modulate = Color(0.84, 0.88, 0.94, 1)
+self_modulate = Color(0.94, 0.97, 1, 0.10)
 
 [node name="LanguageMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/LanguagePanel"]
 layout_mode = 2
@@ -171,7 +171,7 @@ text = "Deutsch"
 [node name="ModePanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-self_modulate = Color(0.84, 0.88, 0.94, 1)
+self_modulate = Color(0.94, 0.97, 1, 0.10)
 
 [node name="ModeMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/ModePanel"]
 layout_mode = 2
@@ -207,7 +207,7 @@ text = ""
 [node name="SettingsPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow"]
 layout_mode = 2
 size_flags_horizontal = 2
-self_modulate = Color(0.84, 0.88, 0.94, 1)
+self_modulate = Color(0.94, 0.97, 1, 0.10)
 
 [node name="SettingsMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/SettingsPanel"]
 layout_mode = 2

@@ -3,6 +3,7 @@ extends Node2D
 signal defeated(enemy: Node)
 signal reached_goal(enemy: Node)
 
+@export var enemy_data: EnemyData
 @export var max_health: float = 30.0
 @export var move_speed: float = 110.0
 @export var fortress_damage: int = 1
@@ -21,6 +22,7 @@ var _impact_local: Vector2 = Vector2.ZERO
 var _threat_pulse: float = 0.0
 
 func _ready() -> void:
+	_apply_enemy_data()
 	health = max_health
 	add_to_group("enemies")
 
@@ -112,15 +114,42 @@ func get_threat_label() -> String:
 func get_health_ratio() -> float:
 	return clampf(health / maxf(1.0, max_health), 0.0, 1.0)
 
+func get_content_summary() -> String:
+	if enemy_data != null:
+		return enemy_data.get_localized_short_description()
+	return ""
+
+func get_content_description() -> String:
+	if enemy_data != null:
+		return enemy_data.get_localized_description()
+	return ""
+
+func get_gameplay_stats() -> Dictionary:
+	if enemy_data != null:
+		return enemy_data.get_gameplay_stats()
+	return {
+		"max_health": max_health,
+		"move_speed": move_speed,
+		"fortress_damage": fortress_damage,
+		"credit_reward": credit_reward,
+		"armor": armor,
+		"is_elite": is_elite,
+		"is_boss": is_boss,
+	}
+
 func get_display_name() -> String:
-	if RunState.menu_language == "de":
-		if is_boss:
-			return "Belagerer"
-		if is_elite:
-			return "Shellback-Brute"
-		return "Skuttling"
-	if is_boss:
-		return "Siegebreaker"
-	if is_elite:
-		return "Shellback Brute"
-	return "Scuttleborn"
+	if enemy_data != null:
+		return enemy_data.get_localized_display_name()
+	return name
+
+func _apply_enemy_data() -> void:
+	if enemy_data == null:
+		return
+	max_health = enemy_data.max_health
+	move_speed = enemy_data.move_speed
+	fortress_damage = enemy_data.fortress_damage
+	credit_reward = enemy_data.credit_reward
+	armor = enemy_data.armor
+	is_elite = enemy_data.is_elite
+	is_boss = enemy_data.is_boss
+	turn_speed = enemy_data.turn_speed

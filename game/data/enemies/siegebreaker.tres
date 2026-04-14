@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+content_id = "siegebreaker"
+display_name = "Siegebreaker"
+display_name_de = "Belagerer"
+short_description = "Boss bio-siege engine built to break fortresses through armor and mass."
+short_description_de = "Boss-Belagerungsbioform, gebaut um Festungen mit Panzerung und Masse zu brechen."
+description = "A towering assault organism that serves as the current boss threat of the prototype. It is slow, armored, and extremely dangerous if it reaches the base."
+description_de = "Eine gewaltige Angriffs-Bioform, die aktuell die Bossbedrohung des Prototyps darstellt. Sie ist langsam, gepanzert und extrem gefährlich, wenn sie die Basis erreicht."
+max_health = 260.0
+move_speed = 58.0
+fortress_damage = 5
+credit_reward = 120
+armor = 8.0
+is_elite = true
+is_boss = true
+turn_speed = 7.5

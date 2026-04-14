@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+content_id = "shellback_brute"
+display_name = "Shellback Brute"
+display_name_de = "Shellback-Brute"
+short_description = "Elite assault beast with armor plating and heavier fortress damage."
+short_description_de = "Elite-Angriffsbestie mit Panzerplatten und höherem Festungsschaden."
+description = "A reinforced elite bio-form designed to crack established defensive lines through brute durability."
+description_de = "Eine verstärkte Elite-Bioform, die bestehende Verteidigungslinien mit roher Haltbarkeit aufbrechen soll."
+max_health = 100.0
+move_speed = 70.0
+fortress_damage = 2
+credit_reward = 30
+armor = 4.0
+is_elite = true
+is_boss = false
+turn_speed = 10.0

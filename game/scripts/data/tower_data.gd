@@ -1,9 +1,7 @@
-extends Resource
+extends GameContentData
 class_name TowerData
 
 @export var tower_id: String = ""
-@export var display_name: String = "Tower"
-@export var display_name_de: String = ""
 @export var tower_cost: int = 100
 @export var attack_range: float = 180.0
 @export var fire_rate: float = 1.0
@@ -22,7 +20,20 @@ class_name TowerData
 @export var flash_size: float = 6.0
 @export var impact_radius: float = 8.0
 
-func get_localized_display_name() -> String:
-	if RunState.menu_language == "de" and display_name_de != "":
-		return display_name_de
-	return display_name
+func _init() -> void:
+	category = "tower"
+
+func get_localized_display_name(language: String = "") -> String:
+	return super.get_localized_display_name(language)
+
+func get_gameplay_stats() -> Dictionary:
+	var stats := super.get_gameplay_stats()
+	stats.merge({
+		"tower_cost": tower_cost,
+		"attack_range": attack_range,
+		"fire_rate": fire_rate,
+		"damage": damage,
+		"turn_speed": turn_speed,
+		"selection_radius": selection_radius,
+	}, true)
+	return stats

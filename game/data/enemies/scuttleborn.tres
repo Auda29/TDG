@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+content_id = "scuttleborn"
+display_name = "Scuttleborn"
+display_name_de = "Skuttling"
+short_description = "Standard swarm attacker with light armor and steady advance."
+short_description_de = "Standard-Schwarmgegner mit leichter Panzerung und stetigem Vormarsch."
+description = "A baseline carrion organism that tests the line with numbers instead of resilience."
+description_de = "Ein grundlegender Carrion-Organismus, der die Verteidigung eher mit Anzahl als mit Zähigkeit prüft."
+max_health = 30.0
+move_speed = 110.0
+fortress_damage = 1
+credit_reward = 15
+armor = 0.0
+is_elite = false
+is_boss = false
+turn_speed = 10.0

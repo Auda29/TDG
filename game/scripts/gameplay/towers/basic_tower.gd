@@ -205,6 +205,26 @@ func get_ui_display_name() -> String:
 		return tower_data.get_localized_display_name()
 	return "Turm" if RunState.menu_language == "de" else "Tower"
 
+func get_content_summary() -> String:
+	if tower_data != null:
+		return tower_data.get_localized_short_description()
+	return ""
+
+func get_content_description() -> String:
+	if tower_data != null:
+		return tower_data.get_localized_description()
+	return ""
+
+func get_gameplay_stats() -> Dictionary:
+	if tower_data != null:
+		return tower_data.get_gameplay_stats()
+	return {
+		"tower_cost": tower_cost,
+		"attack_range": attack_range,
+		"fire_rate": fire_rate,
+		"damage": damage,
+	}
+
 func get_selection_radius() -> float:
 	return tower_data.selection_radius if tower_data != null else 30.0
 

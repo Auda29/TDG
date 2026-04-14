@@ -19,6 +19,15 @@ const UI_COLOR_CARRION_SOFT := Color(0.96, 0.62, 0.28)
 const UI_COLOR_NEUTRAL := Color(0.76, 0.80, 0.82)
 const UI_COLOR_WARNING := Color(0.96, 0.72, 0.24)
 const UI_COLOR_SUCCESS := Color(0.46, 0.92, 0.68)
+const UI_PANEL_TINT := Color(0.94, 0.97, 1.0, 0.10)
+const UI_PANEL_SOFT_TINT := Color(0.94, 0.97, 1.0, 0.07)
+const UI_PANEL_HEADER_TINT := Color(0.94, 0.97, 1.0, 0.12)
+const UI_TITLE_TINT := Color(0.80, 0.88, 0.96)
+const UI_BUTTON_COOL := Color(0.88, 0.96, 1.0, 1.0)
+const UI_BUTTON_COOL_SOFT := Color(0.92, 0.94, 1.0, 1.0)
+const UI_BUTTON_GO := Color(0.90, 0.98, 0.92, 1.0)
+const UI_BUTTON_WARM := Color(1.0, 0.88, 0.84, 1.0)
+const UI_SLOT_TINT := Color(0.90, 0.95, 1.0, 0.92)
 const BASIC_TOWER_DATA = preload("res://data/towers/basic_tower.tres")
 const HEAVY_BATTERY_DATA = preload("res://data/towers/heavy_battery.tres")
 
@@ -345,48 +354,53 @@ func _get_build_mode_text() -> String:
 	return "%s (%d)" % [tower_data.get_localized_display_name(), tower_data.tower_cost]
 
 func _apply_visual_theme() -> void:
-	bottom_bar.self_modulate = Color(0.74, 0.82, 0.90, 0.98)
-	status_panel.self_modulate = Color(0.74, 0.82, 0.90, 1.0)
-	center_panel.self_modulate = Color(0.74, 0.82, 0.90, 1.0)
-	selected_panel.self_modulate = Color(0.74, 0.82, 0.90, 1.0)
+	bottom_bar.self_modulate = UI_PANEL_TINT
+	status_panel.self_modulate = UI_PANEL_SOFT_TINT
+	center_panel.self_modulate = UI_PANEL_SOFT_TINT
+	selected_panel.self_modulate = UI_PANEL_TINT
 	selected_panel.modulate = Color(1, 1, 1, 0.98)
-	selected_panel.custom_minimum_size = Vector2(320, 0)
-	header_panel.self_modulate = Color(0.72, 0.82, 0.90, 1.0)
-	silhouette_panel.self_modulate = Color(0.18, 0.24, 0.28, 1.0)
-	stats_panel.self_modulate = Color(0.86, 0.90, 0.96, 1.0)
-	actions_panel.self_modulate = Color(0.82, 0.88, 0.94, 1.0)
-	upgrades_panel.self_modulate = Color(0.80, 0.84, 0.90, 1.0)
-	header_divider.color = Color(0.48, 0.82, 0.94, 0.45)
-	stats_divider.color = Color(0.48, 0.82, 0.94, 0.25)
-	actions_divider.color = Color(0.96, 0.72, 0.24, 0.22)
+	selected_panel.custom_minimum_size = Vector2(332, 0)
+	header_panel.self_modulate = UI_PANEL_HEADER_TINT
+	silhouette_panel.self_modulate = Color(0.18, 0.24, 0.28, 0.96)
+	stats_panel.self_modulate = UI_PANEL_SOFT_TINT
+	actions_panel.self_modulate = UI_PANEL_SOFT_TINT
+	upgrades_panel.self_modulate = UI_PANEL_SOFT_TINT
+	header_divider.color = Color(0.48, 0.82, 0.94, 0.38)
+	stats_divider.color = Color(0.48, 0.82, 0.94, 0.20)
+	actions_divider.color = Color(0.96, 0.72, 0.24, 0.18)
 	frame_top.color = Color(0.42, 0.82, 0.96, 0.85)
 	frame_bottom.color = Color(0.42, 0.82, 0.96, 0.45)
 	corner_tl.color = Color(0.60, 0.90, 1.0, 0.9)
 	corner_br.color = Color(0.96, 0.72, 0.24, 0.8)
-	for label in [credits_label, wave_label, base_label, mode_label, placement_label, commander_label, hint_label, selected_title_label, selected_subtitle_label, selected_stats_label, silhouette_label, target_mode_label]:
+	for label in [credits_label, wave_label, base_label, mode_label, placement_label, commander_label, hint_label, selected_title_label, selected_subtitle_label, selected_stats_label, silhouette_label, target_mode_label, build_title_label, flow_title_label, actions_title_label, upgrades_title_label, settings_title_label]:
 		label.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	credits_label.add_theme_color_override("font_color", UI_COLOR_DEFENDER)
 	wave_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
 	base_label.add_theme_color_override("font_color", UI_COLOR_WARNING)
 	mode_label.add_theme_color_override("font_color", UI_COLOR_DEFENDER_SOFT)
+	placement_label.add_theme_color_override("font_color", Color(0.84, 0.90, 0.96))
 	commander_label.add_theme_color_override("font_color", UI_COLOR_DEFENDER_SOFT)
+	build_title_label.add_theme_color_override("font_color", UI_TITLE_TINT)
+	flow_title_label.add_theme_color_override("font_color", UI_TITLE_TINT)
+	actions_title_label.add_theme_color_override("font_color", UI_TITLE_TINT)
+	upgrades_title_label.add_theme_color_override("font_color", UI_TITLE_TINT)
 	event_label.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	threat_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
 	banner_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
 	boss_name_label.add_theme_color_override("font_color", UI_COLOR_WARNING)
 	for button in [basic_tower_button, heavy_battery_button, pause_button, auto_wave_button, next_wave_button, settings_button, target_prev_button, target_next_button, sell_button, upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d, game_over_restart_button, game_over_menu_button, game_over_continue_button]:
 		button.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
-	basic_tower_button.modulate = Color(0.24, 0.34, 0.38, 1.0)
-	heavy_battery_button.modulate = Color(0.34, 0.26, 0.22, 1.0)
-	pause_button.modulate = Color(0.24, 0.24, 0.28, 1.0)
-	auto_wave_button.modulate = Color(0.24, 0.28, 0.24, 1.0)
-	next_wave_button.modulate = Color(0.34, 0.18, 0.16, 1.0)
-	settings_button.modulate = Color(0.22, 0.28, 0.34, 1.0)
+	basic_tower_button.modulate = UI_BUTTON_COOL
+	heavy_battery_button.modulate = Color(1.0, 0.90, 0.82, 1.0)
+	pause_button.modulate = UI_BUTTON_COOL_SOFT
+	auto_wave_button.modulate = UI_BUTTON_GO
+	next_wave_button.modulate = UI_BUTTON_WARM
+	settings_button.modulate = UI_BUTTON_COOL
 	_set_arrow_button_visual(target_prev_button, "normal")
 	_set_arrow_button_visual(target_next_button, "normal")
-	sell_button.modulate = Color(0.28, 0.18, 0.16, 1.0)
+	sell_button.modulate = UI_BUTTON_WARM
 	for upgrade_slot in [upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
-		upgrade_slot.modulate = Color(0.18, 0.24, 0.30, 0.95)
+		upgrade_slot.modulate = UI_SLOT_TINT
 	boss_bar.self_modulate = Color(0.92, 0.88, 0.74, 1.0)
 	boss_health_bar.self_modulate = Color(1.0, 0.78, 0.20, 1.0)
 	game_over_panel.self_modulate = Color(0.90, 0.82, 0.78, 0.98)
@@ -460,7 +474,7 @@ func _apply_selected_visual_identity(tower_name: String) -> void:
 		selected_subtitle_label.text = RunState.t("line_defense") if tower_name != "" else RunState.t("defense_unit")
 		selected_subtitle_label.add_theme_color_override("font_color", UI_COLOR_DEFENDER_SOFT)
 		for upgrade_slot in [upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
-			upgrade_slot.modulate = Color(0.18, 0.24, 0.30, 0.95)
+			upgrade_slot.modulate = UI_SLOT_TINT
 	frame_top.color = _current_accent_color
 	header_divider.color = _current_accent_color.lerp(Color(1, 1, 1, 1), 0.18)
 	stats_divider.color = _current_accent_color.lerp(Color(0, 0, 0, 1), 0.35)
@@ -487,8 +501,8 @@ func _update_flow_panel() -> void:
 	pause_button.text = RunState.t("resume") if _is_paused else RunState.t("pause")
 	auto_wave_button.set_pressed_no_signal(_auto_wave_enabled)
 	next_wave_button.disabled = _run_over or _auto_wave_enabled or not _can_start_next_wave
-	next_wave_button.modulate = Color(0.48, 0.22, 0.18, 1.0) if not next_wave_button.disabled else Color(0.22, 0.18, 0.18, 0.9)
-	auto_wave_button.modulate = Color(0.22, 0.34, 0.24, 1.0) if _auto_wave_enabled and not _run_over else Color(0.28, 0.22, 0.20, 1.0)
+	next_wave_button.modulate = UI_BUTTON_WARM if not next_wave_button.disabled else Color(0.42, 0.42, 0.46, 0.82)
+	auto_wave_button.modulate = UI_BUTTON_GO if _auto_wave_enabled and not _run_over else UI_BUTTON_COOL_SOFT
 	pause_button.disabled = _run_over
 	auto_wave_button.disabled = _run_over or _settings_open
 	pause_button.disabled = _run_over or _settings_open

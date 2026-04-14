@@ -1,9 +1,11 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/gameplay/commander/basic_commander.gd" id="1"]
+[ext_resource type="Resource" path="res://data/commander/basic_commander.tres" id="2"]
 
 [node name="BasicCommander" type="Node2D"]
 script = ExtResource("1")
+commander_data = ExtResource("2")
 
 [node name="Body" type="Polygon2D" parent="."]
 color = Color(0.16, 0.26, 0.32, 1)

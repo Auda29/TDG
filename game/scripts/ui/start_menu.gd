@@ -1,6 +1,10 @@
 extends Control
 
 const GAME_ROOT_SCENE := "res://scenes/bootstrap/game_root.tscn"
+const UI_BUTTON_ACTIVE := Color(0.88, 0.96, 1.0, 1.0)
+const UI_BUTTON_IDLE := Color(0.78, 0.84, 0.90, 0.92)
+const UI_BUTTON_ACTIVE_ENDLESS := Color(0.88, 0.98, 0.90, 1.0)
+const UI_BUTTON_LOCKED := Color(0.48, 0.52, 0.58, 0.72)
 
 const TEXTS := {
 	"en": {
@@ -253,8 +257,8 @@ func _set_language(language: String) -> void:
 	RunState.menu_language = language
 	language_en_button.button_pressed = language == "en"
 	language_de_button.button_pressed = language == "de"
-	language_en_button.modulate = Color(0.24, 0.38, 0.46, 1.0) if language == "en" else Color(0.18, 0.22, 0.26, 1.0)
-	language_de_button.modulate = Color(0.24, 0.38, 0.46, 1.0) if language == "de" else Color(0.18, 0.22, 0.26, 1.0)
+	language_en_button.modulate = UI_BUTTON_ACTIVE if language == "en" else UI_BUTTON_IDLE
+	language_de_button.modulate = UI_BUTTON_ACTIVE if language == "de" else UI_BUTTON_IDLE
 	RunState.persist_profile()
 	_apply_language()
 	_select_difficulty(_selected_difficulty_index)
@@ -264,8 +268,8 @@ func _set_mode(mode: String) -> void:
 	RunState.game_mode = mode
 	mode_campaign_button.button_pressed = mode == "campaign"
 	mode_endless_button.button_pressed = mode == "endless"
-	mode_campaign_button.modulate = Color(0.24, 0.34, 0.48, 1.0) if mode == "campaign" else Color(0.18, 0.22, 0.26, 1.0)
-	mode_endless_button.modulate = Color(0.24, 0.40, 0.30, 1.0) if mode == "endless" else Color(0.18, 0.22, 0.26, 1.0)
+	mode_campaign_button.modulate = UI_BUTTON_ACTIVE if mode == "campaign" else UI_BUTTON_IDLE
+	mode_endless_button.modulate = UI_BUTTON_ACTIVE_ENDLESS if mode == "endless" else UI_BUTTON_IDLE
 	custom_panel.visible = _is_custom_selected() and _current_mode == "campaign"
 	RunState.persist_profile()
 	_select_difficulty(_selected_difficulty_index)
@@ -368,20 +372,20 @@ func _restore_selected_tooltip() -> void:
 
 func _get_button_color(index: int, active: bool, locked: bool = false) -> Color:
 	if locked:
-		return Color(0.14, 0.16, 0.18, 0.88)
+		return UI_BUTTON_LOCKED
 	match index:
 		0:
-			return Color(0.24, 0.40, 0.32, 1.0) if active else Color(0.18, 0.24, 0.22, 0.92)
+			return Color(0.86, 0.98, 0.90, 1.0) if active else Color(0.80, 0.90, 0.84, 0.94)
 		1:
-			return Color(0.24, 0.38, 0.46, 1.0) if active else Color(0.18, 0.22, 0.26, 0.92)
+			return Color(0.86, 0.94, 1.0, 1.0) if active else Color(0.80, 0.86, 0.92, 0.94)
 		2:
-			return Color(0.28, 0.34, 0.48, 1.0) if active else Color(0.18, 0.22, 0.26, 0.92)
+			return Color(0.88, 0.90, 1.0, 1.0) if active else Color(0.82, 0.84, 0.92, 0.94)
 		3:
-			return Color(0.46, 0.24, 0.20, 1.0) if active else Color(0.20, 0.20, 0.22, 0.92)
+			return Color(1.0, 0.88, 0.84, 1.0) if active else Color(0.92, 0.82, 0.78, 0.94)
 		4:
-			return Color(0.52, 0.18, 0.18, 1.0) if active else Color(0.20, 0.18, 0.20, 0.92)
+			return Color(1.0, 0.82, 0.82, 1.0) if active else Color(0.92, 0.78, 0.78, 0.94)
 		_:
-			return Color(0.32, 0.30, 0.18, 1.0) if active else Color(0.20, 0.20, 0.18, 0.92)
+			return Color(0.96, 0.92, 0.82, 1.0) if active else Color(0.90, 0.86, 0.78, 0.94)
 
 func _refresh_custom_labels() -> void:
 	credits_value_label.text = str(int(credits_slider.value))

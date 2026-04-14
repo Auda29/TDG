@@ -2,6 +2,7 @@ extends Node2D
 
 signal overwatch_activated
 
+@export var commander_data: CommanderData
 @export var move_speed: float = 260.0
 @export var attack_range: float = 130.0
 @export var fire_rate: float = 1.5
@@ -30,6 +31,7 @@ var _body_kick: float = 0.0
 @onready var helmet: Node2D = $Helmet
 
 func _ready() -> void:
+	_apply_commander_data()
 	GameState.selected_commander = self
 
 func setup(world_bounds: Rect2) -> void:
@@ -173,3 +175,43 @@ func set_move_target(world_position: Vector2) -> void:
 		clampf(world_position.y, _world_bounds.position.y, _world_bounds.end.y)
 	)
 	_has_move_target = true
+
+func get_display_name() -> String:
+	if commander_data != null:
+		return commander_data.get_localized_display_name()
+	return name
+
+func get_content_summary() -> String:
+	if commander_data != null:
+		return commander_data.get_localized_short_description()
+	return ""
+
+func get_content_description() -> String:
+	if commander_data != null:
+		return commander_data.get_localized_description()
+	return ""
+
+func get_gameplay_stats() -> Dictionary:
+	if commander_data != null:
+		return commander_data.get_gameplay_stats()
+	return {
+		"move_speed": move_speed,
+		"attack_range": attack_range,
+		"fire_rate": fire_rate,
+		"damage": damage,
+		"max_health": max_health,
+	}
+
+func _apply_commander_data() -> void:
+	if commander_data == null:
+		return
+	move_speed = commander_data.move_speed
+	attack_range = commander_data.attack_range
+	fire_rate = commander_data.fire_rate
+	damage = commander_data.damage
+	max_health = commander_data.max_health
+	overwatch_radius = commander_data.overwatch_radius
+	overwatch_duration = commander_data.overwatch_duration
+	overwatch_cooldown = commander_data.overwatch_cooldown
+	overwatch_fire_rate_multiplier = commander_data.overwatch_fire_rate_multiplier
+	turn_speed = commander_data.turn_speed

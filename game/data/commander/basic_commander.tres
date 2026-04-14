@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="CommanderData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/commander_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+content_id = "basic_commander"
+display_name = "Warden Commander"
+display_name_de = "Wächter-Commander"
+short_description = "Mobile support officer who boosts nearby defenses with Overwatch."
+short_description_de = "Mobile Unterstützungseinheit, die nahe Verteidigungen mit Overwatch verstärkt."
+description = "The prototype commander can reposition across the map, fire on priority targets, and trigger Overwatch to accelerate nearby towers."
+description_de = "Der Prototype-Commander kann sich über die Karte verlegen, Prioritätsziele bekämpfen und mit Overwatch nahe Türme beschleunigen."
+move_speed = 260.0
+attack_range = 130.0
+fire_rate = 1.5
+damage = 6.0
+max_health = 100.0
+overwatch_radius = 220.0
+overwatch_duration = 4.0
+overwatch_cooldown = 10.0
+overwatch_fire_rate_multiplier = 1.5
+turn_speed = 9.0
+ability_name = "Overwatch"
+ability_name_de = "Overwatch"
+ability_description = "Boosts the fire rate of nearby defenses for a short duration."
+ability_description_de = "Erhöht für kurze Zeit die Feuerrate naher Verteidigungen."

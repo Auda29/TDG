@@ -4,9 +4,14 @@
 
 [resource]
 script = ExtResource("1")
+content_id = "heavy_battery"
 tower_id = "heavy_battery"
 display_name = "Heavy Battery"
 display_name_de = "Schwere Batterie"
+short_description = "Slow-firing siege platform with high impact against tough targets."
+short_description_de = "Langsam feuernde Belagerungsplattform mit hoher Wirkung gegen harte Ziele."
+description = "A heavy emplacement built for range and burst damage. It fires more slowly, but each shot punches through pressure spikes and elite enemies."
+description_de = "Eine schwere Stellung für Reichweite und hohen Einzelschaden. Sie feuert langsamer, kann dafür aber Druckspitzen und Elitegegner effektiv brechen."
 tower_cost = 175
 attack_range = 240.0
 fire_rate = 0.45
