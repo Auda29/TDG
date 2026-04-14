@@ -43,7 +43,6 @@ jobs:
             --offline
             --no-progress
             --include-fragments
-            --glob
             --fail-if-empty=false
             README.md
             docs/**/*.md
