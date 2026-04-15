@@ -649,7 +649,7 @@ func _format_commander_stats(content) -> String:
 		"%s: %.0f" % [_text("stat_damage"), content.damage],
 		"%s: %.2f/s" % [_text("stat_rate"), content.fire_rate],
 		"%s: %.0f" % [_text("stat_range"), content.attack_range],
-		"%s: %.0fs | CD %.0fs | Radius %.0f" % [_text("stat_overwatch"), content.overwatch_duration, content.overwatch_cooldown, content.overwatch_radius],
+		"%s: %.0fs | CD %.0fs | %.0f %s" % [_text("stat_overwatch"), content.overwatch_duration, content.overwatch_cooldown, content.overwatch_radius, _text("stat_range").to_lower()],
 	]
 	if content.extra_stats.has("ability_description"):
 		lines.append("%s: %s" % [_text("stat_ability"), str(content.extra_stats["ability_description"])])
