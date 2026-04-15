@@ -333,11 +333,13 @@ func _on_wave_cleared() -> void:
 	hud_instance.show_event(RunState.t("wave_cleared_bonus") % bonus, Color(0.9, 0.9, 0.4))
 	current_wave_number += 1
 	if RunState.is_target_wave_reached(cleared_wave):
+		waiting_for_manual_next_wave = false
+		auto_start_next_wave = false
 		_trigger_victory(cleared_wave)
 		return
 	if auto_start_next_wave:
 		await get_tree().create_timer(2.0).timeout
-		if auto_start_next_wave:
+		if auto_start_next_wave and not RunState.is_run_over:
 			_start_wave(current_wave_number)
 	else:
 		waiting_for_manual_next_wave = true
@@ -605,10 +607,6 @@ func _continue_in_free_mode() -> void:
 		return
 	RunState.resume_free_mode()
 	get_tree().paused = false
+	waiting_for_manual_next_wave = true
 	hud_instance.show_banner(RunState.t("free_mode_banner"), Color(0.62, 1.0, 0.76), 2.0)
-	hud_instance.show_event(RunState.t("free_mode_continue"), Color(0.72, 1.0, 0.78), 2.6)
-	if auto_start_next_wave:
-		_start_wave(current_wave_number)
-	else:
-		waiting_for_manual_next_wave = true
-		hud_instance.show_event(RunState.t("free_mode_manual"), Color(0.72, 1.0, 0.78), 2.8)
+	hud_instance.show_event(RunState.t("free_mode_manual"), Color(0.72, 1.0, 0.78), 2.8)

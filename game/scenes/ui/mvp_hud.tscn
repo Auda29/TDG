@@ -563,7 +563,7 @@ theme_override_constants/separation = 6
 [node name="TargetPrevButton" type="Button" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow"]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
-text = "<"
+text = "◄"
 disabled = true
 
 [node name="TargetModeLabel" type="Label" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow"]
@@ -575,7 +575,7 @@ text = ""
 [node name="TargetNextButton" type="Button" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow"]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
-text = ">"
+text = "►"
 disabled = true
 
 [node name="SellButton" type="Button" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox"]

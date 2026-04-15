@@ -16,6 +16,8 @@ var speed_scale: float = 1.0
 var health_scale: float = 1.0
 var spawned_count: int = 0
 var active_count: int = 0
+var defeated_count: int = 0
+var reached_goal_count: int = 0
 var _spawn_timer: float = 0.0
 var _started: bool = false
 
@@ -25,6 +27,8 @@ func start_wave(target_enemy_layer: Node, target_curve: Curve2D, on_enemy_reache
 	fortress_callback = on_enemy_reached_goal
 	spawned_count = 0
 	active_count = 0
+	defeated_count = 0
+	reached_goal_count = 0
 	_spawn_timer = 0.0
 	_started = true
 
@@ -55,11 +59,13 @@ func _spawn_enemy() -> void:
 
 func _on_enemy_removed(enemy: Node) -> void:
 	active_count = max(0, active_count - 1)
+	defeated_count += 1
 	if is_instance_valid(enemy):
 		enemy_defeated.emit(enemy.credit_reward)
 
 func _on_enemy_reached_goal(enemy: Node) -> void:
 	active_count = max(0, active_count - 1)
+	reached_goal_count += 1
 	if fortress_callback.is_valid():
 		fortress_callback.call(enemy)
 

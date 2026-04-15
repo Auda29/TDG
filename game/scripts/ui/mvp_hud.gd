@@ -260,16 +260,25 @@ func _process(delta: float) -> void:
 		game_over_side_right.color.a = 0.22 + end_pulse * 0.16
 	if _banner_timer > 0.0:
 		_banner_timer = maxf(0.0, _banner_timer - delta)
+		banner_label.modulate.a = clampf(_banner_timer / 0.4, 0.0, 1.0)
 		if _banner_timer <= 0.0:
 			banner_label.text = ""
+	else:
+		banner_label.modulate.a = 0.0
 	if _event_timer > 0.0:
 		_event_timer = maxf(0.0, _event_timer - delta)
+		event_label.modulate.a = clampf(_event_timer / 0.4, 0.0, 1.0)
 		if _event_timer <= 0.0:
 			_event_text = ""
+	else:
+		event_label.modulate.a = 0.0
 	if _threat_timer > 0.0:
 		_threat_timer = maxf(0.0, _threat_timer - delta)
+		threat_label.modulate.a = clampf(_threat_timer / 0.4, 0.0, 1.0)
 		if _threat_timer <= 0.0:
 			_threat_text = ""
+	else:
+		threat_label.modulate.a = 0.0
 	_update_selected_panel()
 	_update_flow_panel()
 
@@ -309,6 +318,12 @@ func set_boss_state(active: bool, boss_name: String = "", health_ratio: float = 
 		return
 	boss_name_label.text = RunState.t("boss_name") % boss_name
 	boss_health_bar.value = clampf(health_ratio, 0.0, 1.0) * 100.0
+	if health_ratio <= 0.25:
+		boss_health_bar.self_modulate = Color(1.0, 0.28, 0.18, 1.0)
+	elif health_ratio <= 0.5:
+		boss_health_bar.self_modulate = Color(1.0, 0.56, 0.18, 1.0)
+	else:
+		boss_health_bar.self_modulate = Color(1.0, 0.78, 0.20, 1.0)
 
 func set_selected_build_mode(tower_id: String) -> void:
 	var build_buttons := {
@@ -325,7 +340,9 @@ func set_selected_build_mode(tower_id: String) -> void:
 		button.modulate = UI_BUTTON_GO if active else UI_BUTTON_COOL
 	if tower_id != "":
 		_set_build_drawer_visible(false)
+		build_drawer_toggle_button.visible = false
 	elif _selected_tower == null:
+		build_drawer_toggle_button.visible = true
 		_set_build_drawer_visible(true)
 
 func set_selected_tower(tower: Node) -> void:
@@ -406,7 +423,7 @@ func _toggle_build_drawer() -> void:
 func _set_build_drawer_visible(visible: bool) -> void:
 	_build_drawer_open = visible
 	build_drawer_panel.visible = visible
-	build_drawer_toggle_button.text = "<" if visible else ">"
+	build_drawer_toggle_button.text = "◀" if visible else "▶"
 
 func _apply_visual_theme() -> void:
 	bottom_bar.self_modulate = UI_PANEL_TINT
@@ -427,6 +444,7 @@ func _apply_visual_theme() -> void:
 	frame_bottom.color = Color(0.42, 0.82, 0.96, 0.45)
 	corner_tl.color = Color(0.60, 0.90, 1.0, 0.9)
 	corner_br.color = Color(0.96, 0.72, 0.24, 0.8)
+	silhouette_label.add_theme_font_size_override("font_size", 36)
 	for label in [credits_label, wave_label, base_label, mode_label, placement_label, commander_label, hint_label, selected_title_label, selected_subtitle_label, selected_stats_label, silhouette_label, target_mode_label, build_title_label, build_hint_label, flow_title_label, actions_title_label, upgrades_title_label, settings_title_label]:
 		label.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	credits_label.add_theme_color_override("font_color", UI_COLOR_DEFENDER)
@@ -475,6 +493,8 @@ func _apply_visual_theme() -> void:
 func _update_selected_panel() -> void:
 	if _selected_tower == null or not is_instance_valid(_selected_tower):
 		selected_panel.visible = false
+		build_drawer_toggle_button.visible = true
+		_set_build_drawer_visible(true)
 		selected_title_label.text = RunState.t("selected_tower")
 		selected_subtitle_label.text = RunState.t("defense_unit")
 		silhouette_label.text = "⬢"
@@ -490,6 +510,8 @@ func _update_selected_panel() -> void:
 		sell_button.disabled = true
 		return
 	selected_panel.visible = true
+	_set_build_drawer_visible(false)
+	build_drawer_toggle_button.visible = false
 	var tower_name: String = _selected_tower.get_ui_display_name() if _selected_tower.has_method("get_ui_display_name") else String(_selected_tower.name)
 	var refund: int = _selected_tower.get_sell_refund() if _selected_tower.has_method("get_sell_refund") else 0
 	var average_dps: float = _selected_tower.get_average_dps() if _selected_tower.has_method("get_average_dps") else 0.0
@@ -526,6 +548,33 @@ func _apply_selected_visual_identity(tower_name: String) -> void:
 		selected_subtitle_label.add_theme_color_override("font_color", Color(1.0, 0.74, 0.34))
 		for upgrade_slot in [upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
 			upgrade_slot.modulate = Color(0.34, 0.22, 0.16, 0.95)
+	elif tower_name == PYRE_CHAPEL_DATA.get_localized_display_name():
+		_current_header_base_color = Color(0.46, 0.20, 0.14, 1.0)
+		_current_silhouette_base_color = Color(0.22, 0.10, 0.08, 1.0)
+		_current_accent_color = Color(1.0, 0.44, 0.14, 0.95)
+		silhouette_label.text = "▲"
+		selected_subtitle_label.text = RunState.t("anti_swarm_array")
+		selected_subtitle_label.add_theme_color_override("font_color", Color(1.0, 0.44, 0.14))
+		for upgrade_slot in [upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
+			upgrade_slot.modulate = Color(0.38, 0.18, 0.12, 0.95)
+	elif tower_name == COGFORGED_RELAY_DATA.get_localized_display_name():
+		_current_header_base_color = Color(0.18, 0.30, 0.44, 1.0)
+		_current_silhouette_base_color = Color(0.10, 0.16, 0.24, 1.0)
+		_current_accent_color = Color(0.34, 0.92, 1.0, 0.95)
+		silhouette_label.text = "◈"
+		selected_subtitle_label.text = RunState.t("relay_support")
+		selected_subtitle_label.add_theme_color_override("font_color", Color(0.34, 0.92, 1.0))
+		for upgrade_slot in [upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
+			upgrade_slot.modulate = Color(0.16, 0.28, 0.40, 0.95)
+	elif tower_name == RELIQUARY_BOMBARD_DATA.get_localized_display_name():
+		_current_header_base_color = Color(0.32, 0.28, 0.14, 1.0)
+		_current_silhouette_base_color = Color(0.16, 0.14, 0.08, 1.0)
+		_current_accent_color = Color(1.0, 0.58, 0.18, 0.95)
+		silhouette_label.text = "⊕"
+		selected_subtitle_label.text = RunState.t("siege_bombard")
+		selected_subtitle_label.add_theme_color_override("font_color", Color(1.0, 0.58, 0.18))
+		for upgrade_slot in [upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d]:
+			upgrade_slot.modulate = Color(0.30, 0.24, 0.12, 0.95)
 	else:
 		_current_header_base_color = Color(0.26, 0.42, 0.48, 1.0)
 		_current_silhouette_base_color = Color(0.16, 0.22, 0.26, 1.0)
