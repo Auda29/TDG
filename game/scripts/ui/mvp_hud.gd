@@ -169,6 +169,7 @@ var _end_screen_pulse_time: float = 0.0
 var _settings_open: bool = false
 var _build_drawer_open: bool = true
 var _build_drawer_tween: Tween = null
+var _had_selected_tower: bool = false
 
 const BUILD_DRAWER_OPEN_LEFT := -352.0
 const BUILD_DRAWER_OPEN_RIGHT := -20.0
@@ -533,10 +534,12 @@ func _apply_visual_theme() -> void:
 	game_over_continue_button.modulate = Color(0.22, 0.38, 0.28, 1.0)
 
 func _update_selected_panel() -> void:
-	if _selected_tower == null or not is_instance_valid(_selected_tower):
+	var has_selected_tower := _selected_tower != null and is_instance_valid(_selected_tower)
+	if not has_selected_tower:
 		selected_panel.visible = false
 		build_drawer_toggle_button.visible = true
-		_set_build_drawer_visible(_drawer_state_before_selection)
+		if _had_selected_tower:
+			_set_build_drawer_visible(_drawer_state_before_selection)
 		selected_title_label.text = RunState.t("selected_tower")
 		selected_subtitle_label.text = RunState.t("defense_unit")
 		silhouette_label.text = "⬢"
@@ -550,11 +553,14 @@ func _update_selected_panel() -> void:
 		_set_arrow_button_visual(target_prev_button, "disabled")
 		_set_arrow_button_visual(target_next_button, "disabled")
 		sell_button.disabled = true
+		_had_selected_tower = false
 		return
 	selected_panel.visible = true
-	_drawer_state_before_selection = _build_drawer_open
-	_set_build_drawer_visible(false)
+	if not _had_selected_tower:
+		_drawer_state_before_selection = _build_drawer_open
+		_set_build_drawer_visible(false)
 	build_drawer_toggle_button.visible = false
+	_had_selected_tower = true
 	var tower_name: String = _selected_tower.get_ui_display_name() if _selected_tower.has_method("get_ui_display_name") else String(_selected_tower.name)
 	var refund: int = _selected_tower.get_sell_refund() if _selected_tower.has_method("get_sell_refund") else 0
 	var average_dps: float = _selected_tower.get_average_dps() if _selected_tower.has_method("get_average_dps") else 0.0
