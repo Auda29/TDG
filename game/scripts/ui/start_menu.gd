@@ -6,6 +6,8 @@ const UI_BUTTON_IDLE := Color(0.78, 0.84, 0.90, 0.92)
 const UI_BUTTON_ACTIVE_ENDLESS := Color(0.88, 0.98, 0.90, 1.0)
 const UI_BUTTON_LOCKED := Color(0.48, 0.52, 0.58, 0.72)
 const MENU_SCROLL_STEP := 72.0
+const MENU_MARGIN_TOP := 64.0
+const MENU_MARGIN_BOTTOM := -64.0
 const MVP_TOWERS := [
 	preload("res://data/mvp/towers/musterline_redoubt.tres"),
 	preload("res://data/mvp/towers/auric_sentinel_lancepost.tres"),
@@ -321,7 +323,7 @@ func _process(delta: float) -> void:
 	sweep_line.position.x = -260.0 + fmod(_pulse_time * 38.0, size.x + 520.0)
 	menu_panel.scale = Vector2.ONE
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if commander_dialog.visible or $SettingsOverlay.visible:
 		return
 	if event is InputEventMouseButton and event.pressed:
@@ -339,7 +341,8 @@ func _update_scroll_bounds() -> void:
 
 func _set_scroll_offset(value: float) -> void:
 	_scroll_offset = clampf(value, 0.0, _max_scroll_offset)
-	root_vbox.position.y = -_scroll_offset
+	margin_root.offset_top = MENU_MARGIN_TOP - _scroll_offset
+	margin_root.offset_bottom = MENU_MARGIN_BOTTOM - _scroll_offset
 
 func _set_language(language: String) -> void:
 	_current_language = language
