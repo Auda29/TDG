@@ -9,11 +9,11 @@ extends Node2D
 
 const TARGETING_MODES := ["first", "closest", "strongest", "last", "boss_focus"]
 const TARGETING_LABELS := {
-	"first": "First",
-	"closest": "Closest",
-	"strongest": "Strongest",
-	"last": "Last",
-	"boss_focus": "Boss-Focus",
+	"first": {"en": "First", "de": "Erster"},
+	"closest": {"en": "Closest", "de": "Nächster"},
+	"strongest": {"en": "Strongest", "de": "Stärkster"},
+	"last": {"en": "Last", "de": "Letzter"},
+	"boss_focus": {"en": "Boss-Focus", "de": "Boss-Fokus"},
 }
 
 var _cooldown: float = 0.0
@@ -283,7 +283,11 @@ func cycle_targeting_mode(step: int = 1) -> void:
 	queue_redraw()
 
 func get_targeting_mode_label() -> String:
-	return TARGETING_LABELS.get(_targeting_mode, "First")
+	var localized_label: Variant = TARGETING_LABELS.get(_targeting_mode, {"en": "First", "de": "Erster"})
+	if localized_label is Dictionary:
+		var language := RunState.menu_language if Engine.has_singleton("RunState") else "en"
+		return String(localized_label.get(language, localized_label.get("en", "First")))
+	return String(localized_label)
 
 func get_ui_display_name() -> String:
 	if tower_data != null:

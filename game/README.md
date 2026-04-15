@@ -1,9 +1,9 @@
-# Godot Prototype
+# Godot Prototyp
 
-Dieses Verzeichnis enthält den aktuellen **spielbaren Godot-Prototype** für TDG40k.
+Dieses Verzeichnis enthält den aktuellen **spielbaren Godot-Prototyp** für TDG40k.
 
 ## Aktueller Stand
-Der Prototype deckt bereits den Kern eines Vertical Slice ab:
+Der Prototyp deckt bereits den Kern eines Vertical Slice ab:
 - freie Tower-Platzierung in einer Build-Zone
 - fünf spielbare MVP-Tower-Klassen mit klareren Rollen:
   - Musterline Redoubt
@@ -13,20 +13,20 @@ Der Prototype deckt bereits den Kern eines Vertical Slice ab:
   - Reliquary Bombard
 - Commander-Auswahl vor dem Run, danach im Run gesperrt
 - Commander als aktive Einheit auf dem Feld mit Overwatch-Supportfähigkeit
-- Kampagne- und Endlosmodus mit Schwierigkeitswahl und Unlock-Fortschritt
+- Kampagnen- und Endlosmodus mit Schwierigkeitswahl und Unlock-Fortschritt
 - persistente Profileinstellungen für Sprache, Modus, Audio, Vollbild und Freischaltungen
 - bilinguale UI (Deutsch / Englisch)
-- Wellen mit skalierenden Gegnern und sinnvoller gestaffelten Elite-/Boss-Spawns
+- Wellen mit skalierenden Gegnern und sinnvoll gestaffelten Elite-/Boss-Spawns
 - integrierte MVP-Gegnerrollen: Schwarm, schneller Breacher, Tank/Elite, Support, Boss
-- HUD mit Events, Threat-Line, Boss-Bar, Endscreen und Ingame-Settings-Overlay
+- HUD mit Events, Bedrohungsanzeige, Boss-Bar, Endscreen und Ingame-Settings-Overlay
 - Basis-Lebenspunkte, Credits und Sell-Refunds
-- visuelle Readability-Features wie Lane-Warnings und Combat-VFX
-- datengetriebene Content-Ressourcen für Tower, Gegner und Commander
-- MVP-Content-Browser im Startmenü
+- visuelle Lesbarkeitsverbesserungen wie Pfad-Warnungen und Kampf-VFX
+- datengetriebene Content-Ressourcen für Türme, Gegner und Commander
+- MVP-Inhaltsbrowser im Startmenü
 
 ## Ziel der Struktur
 Die Struktur ist weiterhin bewusst leichtgewichtig gehalten, damit schnell iteriert werden kann. Im Fokus stehen aktuell:
-- Tower / Defense Units
+- Türme / Verteidigungseinheiten
 - Gegner
 - Wellenlogik
 - Commander-Gameplay

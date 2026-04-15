@@ -89,7 +89,7 @@ const TEXTS := {
 		"sfx_volume": "SFX-Lautstärke",
 		"fullscreen": "Vollbild",
 		"content_browser": "MVP-Inhaltsbrowser", "content_towers": "Türme", "content_commander": "Commander", "content_enemies": "Gegner", "content_prev": "Zurück", "content_next": "Weiter",
-		"commander_select_title": "Commander wählen", "commander_select_hint": "Wähle deinen Commander für diesen Run. Diese Wahl ist nach Missionsbeginn gesperrt.", "commander_confirm": "Commander einsetzen", "commander_cancel": "Zurück", "commander_locked_hint": "Commander für diesen Run gesperrt", "selected_commander": "Gewählter Commander", "commander_card_hint": "Nach Missionsstart fest zugewiesen", "commander_dialog_current": "Aktuelle Auswahl für diesen Run", "stat_role": "Rolle", "stat_cost": "Kosten", "stat_damage": "Schaden", "stat_rate": "Rate", "stat_range": "Reichweite", "stat_formation_link": "Formationslink", "stat_priority_damage": "Prioritätsschaden", "stat_splash": "Flächenschaden", "stat_relay_aura": "Relais-Aura", "stat_rule": "Regel", "stat_tags": "Tags", "stat_health": "Leben", "stat_speed": "Tempo", "stat_armor": "Panzerung", "stat_leak_damage": "Basis-Schaden", "stat_bounty": "Belohnung", "stat_threat_class": "Bedrohungsklasse", "stat_elite": "Elite", "stat_boss": "Boss", "stat_move_speed": "Bewegung", "stat_overwatch": "Overwatch", "stat_ability": "Fähigkeit",
+		"commander_select_title": "Commander wählen", "commander_select_hint": "Wähle deinen Commander für diesen Run. Diese Wahl ist nach Missionsbeginn gesperrt.", "commander_confirm": "Commander einsetzen", "commander_cancel": "Zurück", "commander_locked_hint": "Commander für diesen Run gesperrt", "selected_commander": "Gewählter Commander", "commander_card_hint": "Nach Missionsstart fest zugewiesen", "commander_dialog_current": "Aktuelle Auswahl für diesen Run", "stat_role": "Rolle", "stat_cost": "Kosten", "stat_damage": "Schaden", "stat_rate": "Feuerrate", "stat_range": "Reichweite", "stat_formation_link": "Formationslink", "stat_priority_damage": "Prioritätsschaden", "stat_splash": "Flächenschaden", "stat_relay_aura": "Relais-Aura", "stat_rule": "Regel", "stat_tags": "Merkmale", "stat_health": "Leben", "stat_speed": "Tempo", "stat_armor": "Panzerung", "stat_leak_damage": "Basis-Schaden", "stat_bounty": "Belohnung", "stat_threat_class": "Bedrohungsklasse", "stat_elite": "Elite", "stat_boss": "Boss", "stat_move_speed": "Bewegung", "stat_overwatch": "Overwatch", "stat_ability": "Fähigkeit",
 	},
 }
 
@@ -595,8 +595,9 @@ func _localize_role(role: String) -> String:
 		"standard swarm enemy": "Standard-Schwarmgegner",
 		"fast mover / gap punisher": "Schneller Durchbrecher",
 		"tank / front breaker": "Tank / Frontbrecher",
-		"support buffer": "Support-Verstärker",
+		"support buffer": "Unterstützungs-Verstärker",
 		"boss / siege monster": "Boss / Belagerungsmonster",
+		"support commander": "Unterstützungs-Commander",
 	}
 	return String(localized_roles.get(role.to_lower(), role.replace("_", " ").capitalize()))
 

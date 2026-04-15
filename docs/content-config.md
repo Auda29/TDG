@@ -42,6 +42,11 @@ Script:
 Resources:
 - `game/data/towers/basic_tower.tres`
 - `game/data/towers/heavy_battery.tres`
+- `game/data/mvp/towers/musterline_redoubt.tres`
+- `game/data/mvp/towers/auric_sentinel_lancepost.tres`
+- `game/data/mvp/towers/pyre_chapel_array.tres`
+- `game/data/mvp/towers/cogforged_relay_spire.tres`
+- `game/data/mvp/towers/reliquary_bombard.tres`
 
 ### Enemies
 Script:
@@ -51,6 +56,11 @@ Resources:
 - `game/data/enemies/scuttleborn.tres`
 - `game/data/enemies/shellback_brute.tres`
 - `game/data/enemies/siegebreaker.tres`
+- `game/data/mvp/enemies/scuttleborn-mvp.tres`
+- `game/data/mvp/enemies/razor_leaper.tres`
+- `game/data/mvp/enemies/shellback_brute-mvp.tres`
+- `game/data/mvp/enemies/spore_herald.tres`
+- `game/data/mvp/enemies/maw_colossus.tres`
 
 ### Commander
 Script:
@@ -58,6 +68,7 @@ Script:
 
 Resources:
 - `game/data/commander/basic_commander.tres`
+- `game/data/mvp/commander/legion_prefect.tres`
 
 ## Runtime usage
 
@@ -97,19 +108,19 @@ Useful methods:
 ## How to add future content
 
 ### New tower
-1. Create a new `.tres` under `game/data/towers/`
+1. Create a new `.tres` under `game/data/towers/` or `game/data/mvp/towers/`
 2. Use `TowerData`
 3. Fill in localized names, descriptions, and stats
 4. Point the tower scene to that resource
 
 ### New enemy or boss
-1. Create a new `.tres` under `game/data/enemies/`
+1. Create a new `.tres` under `game/data/enemies/` or `game/data/mvp/enemies/`
 2. Use `EnemyData`
 3. Fill in localized names, descriptions, and stats
 4. Point the enemy scene to that resource
 
 ### New commander or hero
-1. Create a new `.tres` under `game/data/commander/`
+1. Create a new `.tres` under `game/data/commander/` or `game/data/mvp/commander/`
 2. Use `CommanderData`
 3. Fill in localized names, descriptions, ability text, and stats
 4. Point the commander scene to that resource
@@ -125,4 +136,5 @@ Recommended pattern:
 
 - The current system is intentionally lightweight and MVP-friendly.
 - Existing gameplay scripts still keep typed fallback exports so scenes remain robust while content is being migrated.
+- The currently playable prototype already uses MVP-derived content resources alongside the earlier baseline examples.
 - Localization remains dictionary/resource-based through the config objects instead of using Godot translation tables for these entity definitions.
