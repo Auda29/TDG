@@ -264,6 +264,7 @@ toggle_mode = true
 text = ""
 
 [node name="TooltipPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
+custom_minimum_size = Vector2(0, 108)
 layout_mode = 2
 self_modulate = Color(0.20, 0.26, 0.30, 0.95)
 
@@ -275,7 +276,10 @@ theme_override_constants/margin_right = 14
 theme_override_constants/margin_bottom = 12
 
 [node name="TooltipLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TooltipPanel/TooltipMargin"]
+custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
+size_flags_vertical = 3
+vertical_alignment = 1
 text = ""
 autowrap_mode = 3
 

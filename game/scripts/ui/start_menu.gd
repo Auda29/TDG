@@ -5,6 +5,7 @@ const UI_BUTTON_ACTIVE := Color(0.88, 0.96, 1.0, 1.0)
 const UI_BUTTON_IDLE := Color(0.78, 0.84, 0.90, 0.92)
 const UI_BUTTON_ACTIVE_ENDLESS := Color(0.88, 0.98, 0.90, 1.0)
 const UI_BUTTON_LOCKED := Color(0.48, 0.52, 0.58, 0.72)
+const MENU_SCROLL_STEP := 72.0
 const MVP_TOWERS := [
 	preload("res://data/mvp/towers/musterline_redoubt.tres"),
 	preload("res://data/mvp/towers/auric_sentinel_lancepost.tres"),
@@ -162,6 +163,8 @@ const DIFFICULTIES := [
 	},
 ]
 
+@onready var margin_root: MarginContainer = $Margin
+@onready var root_vbox: VBoxContainer = $Margin/RootVBox
 @onready var menu_panel: PanelContainer = $Margin/RootVBox/MenuPanel
 @onready var back_glow: ColorRect = $BackGlow
 @onready var sweep_line: ColorRect = $SweepLine
@@ -250,6 +253,8 @@ var _tooltip_locked_to_selection: bool = true
 var _content_category: String = "tower"
 var _content_index: int = 0
 var _selected_commander_index: int = 0
+var _scroll_offset: float = 0.0
+var _max_scroll_offset: float = 0.0
 
 func _ready() -> void:
 	_current_language = RunState.menu_language if RunState.menu_language != "" else "en"
@@ -305,6 +310,9 @@ func _ready() -> void:
 	_refresh_content_browser()
 	_refresh_commander_dialog()
 	_refresh_selected_commander_summary()
+	resized.connect(_update_scroll_bounds)
+	get_viewport().size_changed.connect(_update_scroll_bounds)
+	call_deferred("_update_scroll_bounds")
 
 func _process(delta: float) -> void:
 	_pulse_time += delta
@@ -312,6 +320,26 @@ func _process(delta: float) -> void:
 	back_glow.modulate = Color(0.28, 0.44, 0.52, glow_alpha)
 	sweep_line.position.x = -260.0 + fmod(_pulse_time * 38.0, size.x + 520.0)
 	menu_panel.scale = Vector2.ONE
+
+func _unhandled_input(event: InputEvent) -> void:
+	if commander_dialog.visible or $SettingsOverlay.visible:
+		return
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			_set_scroll_offset(_scroll_offset - MENU_SCROLL_STEP)
+			get_viewport().set_input_as_handled()
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			_set_scroll_offset(_scroll_offset + MENU_SCROLL_STEP)
+			get_viewport().set_input_as_handled()
+
+func _update_scroll_bounds() -> void:
+	await get_tree().process_frame
+	_max_scroll_offset = maxf(0.0, root_vbox.get_combined_minimum_size().y - margin_root.size.y)
+	_set_scroll_offset(_scroll_offset)
+
+func _set_scroll_offset(value: float) -> void:
+	_scroll_offset = clampf(value, 0.0, _max_scroll_offset)
+	root_vbox.position.y = -_scroll_offset
 
 func _set_language(language: String) -> void:
 	_current_language = language
@@ -397,6 +425,7 @@ func _apply_language() -> void:
 	_refresh_content_browser()
 	_refresh_commander_dialog()
 	_refresh_selected_commander_summary()
+	call_deferred("_update_scroll_bounds")
 
 func _select_difficulty(index: int) -> void:
 	_selected_difficulty_index = clampi(index, 0, DIFFICULTIES.size() - 1)
