@@ -54,6 +54,7 @@ var active_boss: Node = null
 var _screen_shake_time: float = 0.0
 var _screen_shake_strength: float = 0.0
 var _pause_before_settings: bool = false
+var _build_drag_active: bool = false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -96,12 +97,15 @@ func _handle_build_input() -> void:
 		_try_cycle_selected_tower_targeting(1)
 		return
 	if Input.is_action_just_pressed("command_secondary"):
+		_build_drag_active = false
 		_clear_selected_placed_tower()
 		GameState.clear_selection()
 		_clear_preview()
 		return
 	if Input.is_action_just_pressed("command_primary"):
 		if _is_pointer_over_ui():
+			return
+		if _build_drag_active:
 			return
 		if _has_selected_tower():
 			_try_place_selected_tower()
@@ -112,6 +116,8 @@ func _handle_build_input() -> void:
 			return
 		if GameState.is_commander_selected:
 			_move_commander_to_mouse()
+	if _build_drag_active and Input.is_action_just_released("command_primary"):
+		_finalize_build_drag()
 
 func _setup_map() -> void:
 	map_instance = MAP_SCENE.instantiate()
@@ -132,6 +138,8 @@ func _setup_hud() -> void:
 	ui_layer.add_child(hud_instance)
 	if hud_instance.has_signal("build_tower_requested"):
 		hud_instance.build_tower_requested.connect(_toggle_tower_selection)
+	if hud_instance.has_signal("build_tower_drag_started"):
+		hud_instance.build_tower_drag_started.connect(_begin_tower_drag)
 	if hud_instance.has_signal("sell_selected_requested"):
 		hud_instance.sell_selected_requested.connect(_try_sell_selected_tower)
 	if hud_instance.has_signal("cycle_targeting_previous_requested"):
@@ -164,11 +172,28 @@ func _setup_wave() -> void:
 	_start_wave(current_wave_number)
 
 func _toggle_tower_selection(tower_id: String) -> void:
+	if _build_drag_active and GameState.selected_tower_id == tower_id:
+		_build_drag_active = false
+		return
+	_build_drag_active = false
 	_clear_selected_placed_tower()
 	GameState.is_commander_selected = false
 	GameState.selected_tower_id = "" if GameState.selected_tower_id == tower_id else tower_id
 	if GameState.selected_tower_id == "":
 		_clear_preview()
+
+func _begin_tower_drag(tower_id: String) -> void:
+	_clear_selected_placed_tower()
+	GameState.is_commander_selected = false
+	GameState.selected_tower_id = tower_id
+	_build_drag_active = true
+
+func _finalize_build_drag() -> void:
+	_build_drag_active = false
+	if _is_pointer_over_ui():
+		return
+	if _has_selected_tower():
+		_try_place_selected_tower()
 
 func _has_selected_tower() -> bool:
 	return _get_selected_tower_scene() != null
@@ -276,6 +301,7 @@ func _trigger_game_over() -> void:
 	RunState.mark_defeat()
 	waiting_for_manual_next_wave = false
 	auto_start_next_wave = false
+	_build_drag_active = false
 	_clear_preview()
 	_clear_selected_placed_tower()
 	GameState.clear_selection()
@@ -288,6 +314,7 @@ func _trigger_game_over() -> void:
 func _trigger_victory(cleared_wave: int) -> void:
 	RunState.mark_victory()
 	waiting_for_manual_next_wave = false
+	_build_drag_active = false
 	_clear_preview()
 	_clear_selected_placed_tower()
 	GameState.clear_selection()

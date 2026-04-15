@@ -331,17 +331,92 @@ max_value = 100.0
 value = 100.0
 show_percentage = false
 
-[node name="SelectedPanel" type="PanelContainer" parent="."]
+[node name="BuildDrawerToggle" type="Button" parent="."]
 layout_mode = 0
 anchors_preset = 9
 anchor_left = 1.0
-anchor_top = 0.16
+anchor_top = 0.12
+anchor_right = 1.0
+anchor_bottom = 0.12
+offset_left = -56.0
+offset_top = 0.0
+offset_right = -20.0
+offset_bottom = 48.0
+text = ">"
+
+[node name="BuildDrawerPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+anchors_preset = 9
+anchor_left = 1.0
+anchor_top = 0.12
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -352.0
 offset_top = 0.0
 offset_right = -20.0
-offset_bottom = -176.0
+offset_bottom = -132.0
+mouse_filter = 1
+
+[node name="BuildDrawerMargin" type="MarginContainer" parent="BuildDrawerPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="BuildDrawerVBox" type="VBoxContainer" parent="BuildDrawerPanel/BuildDrawerMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BuildTitleLabel" type="Label" parent="BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox"]
+layout_mode = 2
+text = ""
+
+[node name="BuildHintLabel" type="Label" parent="BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 3
+
+[node name="BuildButtons" type="VBoxContainer" parent="BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="BasicTowerButton" type="Button" parent="BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons"]
+layout_mode = 2
+toggle_mode = true
+text = ""
+
+[node name="HeavyBatteryButton" type="Button" parent="BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons"]
+layout_mode = 2
+toggle_mode = true
+text = ""
+
+[node name="PyreChapelButton" type="Button" parent="BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons"]
+layout_mode = 2
+toggle_mode = true
+text = ""
+
+[node name="CogforgedRelayButton" type="Button" parent="BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons"]
+layout_mode = 2
+toggle_mode = true
+text = ""
+
+[node name="ReliquaryBombardButton" type="Button" parent="BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons"]
+layout_mode = 2
+toggle_mode = true
+text = ""
+
+[node name="SelectedPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+anchors_preset = 9
+anchor_left = 1.0
+anchor_top = 0.18
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -352.0
+offset_top = 0.0
+offset_right = -20.0
+offset_bottom = -132.0
 mouse_filter = 1
 visible = false
 
@@ -382,172 +457,178 @@ offset_top = -18.0
 mouse_filter = 2
 color = Color(0.96, 0.72, 0.24, 0.8)
 
-[node name="SelectedMargin" type="MarginContainer" parent="SelectedPanel"]
+[node name="SelectedScroll" type="ScrollContainer" parent="SelectedPanel"]
+layout_mode = 2
+vertical_scroll_mode = 2
+horizontal_scroll_mode = 0
+follow_focus = true
+
+[node name="SelectedMargin" type="MarginContainer" parent="SelectedPanel/SelectedScroll"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="SelectedVBox" type="VBoxContainer" parent="SelectedPanel/SelectedMargin"]
+[node name="SelectedVBox" type="VBoxContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="HeaderPanel" type="PanelContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+[node name="HeaderPanel" type="PanelContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox"]
 layout_mode = 2
 
-[node name="HeaderMargin" type="MarginContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel"]
+[node name="HeaderMargin" type="MarginContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="HeaderHBox" type="HBoxContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin"]
+[node name="HeaderHBox" type="HBoxContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="SilhouettePanel" type="PanelContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox"]
+[node name="SilhouettePanel" type="PanelContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox"]
 custom_minimum_size = Vector2(72, 72)
 layout_mode = 2
 
-[node name="SilhouetteLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/SilhouettePanel"]
+[node name="SilhouetteLabel" type="Label" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/SilhouettePanel"]
 layout_mode = 2
 horizontal_alignment = 1
 vertical_alignment = 1
 text = "⬢"
 
-[node name="HeaderTextVBox" type="VBoxContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox"]
+[node name="HeaderTextVBox" type="VBoxContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="SelectedTitleLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/HeaderTextVBox"]
+[node name="SelectedTitleLabel" type="Label" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/HeaderTextVBox"]
 layout_mode = 2
 text = ""
 
-[node name="SelectedSubtitleLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/HeaderTextVBox"]
+[node name="SelectedSubtitleLabel" type="Label" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/HeaderTextVBox"]
 layout_mode = 2
 text = ""
 
-[node name="HeaderDivider" type="ColorRect" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+[node name="HeaderDivider" type="ColorRect" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox"]
 custom_minimum_size = Vector2(0, 2)
 layout_mode = 2
 mouse_filter = 2
 color = Color(0.48, 0.82, 0.94, 0.45)
 
-[node name="StatsPanel" type="PanelContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+[node name="StatsPanel" type="PanelContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox"]
 layout_mode = 2
 
-[node name="StatsMargin" type="MarginContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/StatsPanel"]
+[node name="StatsMargin" type="MarginContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/StatsPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="SelectedStatsLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/StatsPanel/StatsMargin"]
+[node name="SelectedStatsLabel" type="Label" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/StatsPanel/StatsMargin"]
 layout_mode = 2
 text = ""
 autowrap_mode = 3
 
-[node name="StatsDivider" type="ColorRect" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+[node name="StatsDivider" type="ColorRect" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox"]
 custom_minimum_size = Vector2(0, 2)
 layout_mode = 2
 mouse_filter = 2
 color = Color(0.48, 0.82, 0.94, 0.25)
 
-[node name="ActionsPanel" type="PanelContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+[node name="ActionsPanel" type="PanelContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox"]
 layout_mode = 2
 
-[node name="ActionsMargin" type="MarginContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel"]
+[node name="ActionsMargin" type="MarginContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="ActionsVBox" type="VBoxContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin"]
+[node name="ActionsVBox" type="VBoxContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="ActionsTitleLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox"]
+[node name="ActionsTitleLabel" type="Label" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox"]
 layout_mode = 2
 text = ""
 
-[node name="TargetingRow" type="HBoxContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox"]
+[node name="TargetingRow" type="HBoxContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="TargetPrevButton" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow"]
+[node name="TargetPrevButton" type="Button" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow"]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "<"
 disabled = true
 
-[node name="TargetModeLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow"]
+[node name="TargetModeLabel" type="Label" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_alignment = 1
 text = ""
 
-[node name="TargetNextButton" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow"]
+[node name="TargetNextButton" type="Button" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow"]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = ">"
 disabled = true
 
-[node name="SellButton" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox"]
+[node name="SellButton" type="Button" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox"]
 layout_mode = 2
 text = ""
 disabled = true
 
-[node name="ActionsDivider" type="ColorRect" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+[node name="ActionsDivider" type="ColorRect" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox"]
 custom_minimum_size = Vector2(0, 2)
 layout_mode = 2
 mouse_filter = 2
 color = Color(0.96, 0.72, 0.24, 0.22)
 
-[node name="UpgradesPanel" type="PanelContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox"]
+[node name="UpgradesPanel" type="PanelContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox"]
 layout_mode = 2
 
-[node name="UpgradesMargin" type="MarginContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel"]
+[node name="UpgradesMargin" type="MarginContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="UpgradesVBox" type="VBoxContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin"]
+[node name="UpgradesVBox" type="VBoxContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="UpgradesTitleLabel" type="Label" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox"]
+[node name="UpgradesTitleLabel" type="Label" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox"]
 layout_mode = 2
 text = ""
 
-[node name="UpgradeSlots" type="GridContainer" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox"]
+[node name="UpgradeSlots" type="GridContainer" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox"]
 layout_mode = 2
 columns = 2
 theme_override_constants/h_separation = 6
 theme_override_constants/v_separation = 6
 
-[node name="UpgradeSlotA" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
+[node name="UpgradeSlotA" type="Button" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
 layout_mode = 2
 text = ""
 disabled = true
 
-[node name="UpgradeSlotB" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
+[node name="UpgradeSlotB" type="Button" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
 layout_mode = 2
 text = ""
 disabled = true
 
-[node name="UpgradeSlotC" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
+[node name="UpgradeSlotC" type="Button" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
 layout_mode = 2
 text = ""
 disabled = true
 
-[node name="UpgradeSlotD" type="Button" parent="SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
+[node name="UpgradeSlotD" type="Button" parent="SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots"]
 layout_mode = 2
 text = ""
 disabled = true
@@ -558,7 +639,7 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -176.0
+offset_top = -132.0
 mouse_filter = 1
 
 [node name="Margin" type="MarginContainer" parent="BottomBar"]
@@ -633,7 +714,7 @@ text = ""
 autowrap_mode = 3
 
 [node name="CenterPanel" type="PanelContainer" parent="BottomBar/Margin/RootHBox"]
-custom_minimum_size = Vector2(440, 0)
+custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 
 [node name="CenterMargin" type="MarginContainer" parent="BottomBar/Margin/RootHBox/CenterPanel"]
@@ -646,41 +727,6 @@ theme_override_constants/margin_bottom = 6
 [node name="CenterHBox" type="HBoxContainer" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin"]
 layout_mode = 2
 theme_override_constants/separation = 12
-
-[node name="BuildPanel" type="VBoxContainer" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox"]
-custom_minimum_size = Vector2(170, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 6
-
-[node name="BuildTitleLabel" type="Label" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
-layout_mode = 2
-text = ""
-
-[node name="BasicTowerButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
-layout_mode = 2
-toggle_mode = true
-text = ""
-
-[node name="HeavyBatteryButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
-layout_mode = 2
-toggle_mode = true
-text = ""
-
-[node name="PyreChapelButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
-layout_mode = 2
-toggle_mode = true
-text = ""
-
-[node name="CogforgedRelayButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
-layout_mode = 2
-toggle_mode = true
-text = ""
-
-[node name="ReliquaryBombardButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
-layout_mode = 2
-toggle_mode = true
-text = ""
 
 [node name="FlowPanel" type="VBoxContainer" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox"]
 custom_minimum_size = Vector2(190, 0)

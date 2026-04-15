@@ -1,6 +1,7 @@
 extends Control
 
 signal build_tower_requested(tower_id: String)
+signal build_tower_drag_started(tower_id: String)
 signal sell_selected_requested
 signal cycle_targeting_previous_requested
 signal cycle_targeting_next_requested
@@ -44,10 +45,15 @@ const TOWER_DISPLAY_DATA := {
 
 const TARGET_ICONS := {
 	"First": "➤",
+	"Erster": "➤",
 	"Closest": "◎",
+	"Nächster": "◎",
 	"Strongest": "✦",
+	"Stärkster": "✦",
 	"Last": "◁",
+	"Letzter": "◁",
 	"Boss-Focus": "☠",
+	"Boss-Fokus": "☠",
 }
 
 @onready var damage_flash: ColorRect = $DamageFlash
@@ -101,39 +107,42 @@ const TARGET_ICONS := {
 @onready var threat_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/ThreatLabel
 @onready var hint_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/HintLabel
 
-@onready var build_title_label: Label = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/BuildTitleLabel
-@onready var basic_tower_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/BasicTowerButton
-@onready var heavy_battery_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/HeavyBatteryButton
-@onready var pyre_chapel_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/PyreChapelButton
-@onready var cogforged_relay_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/CogforgedRelayButton
-@onready var reliquary_bombard_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/ReliquaryBombardButton
+@onready var build_drawer_toggle_button: Button = $BuildDrawerToggle
+@onready var build_drawer_panel: PanelContainer = $BuildDrawerPanel
+@onready var build_title_label: Label = $BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildTitleLabel
+@onready var build_hint_label: Label = $BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildHintLabel
+@onready var basic_tower_button: Button = $BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons/BasicTowerButton
+@onready var heavy_battery_button: Button = $BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons/HeavyBatteryButton
+@onready var pyre_chapel_button: Button = $BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons/PyreChapelButton
+@onready var cogforged_relay_button: Button = $BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons/CogforgedRelayButton
+@onready var reliquary_bombard_button: Button = $BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons/ReliquaryBombardButton
 @onready var flow_title_label: Label = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/FlowTitleLabel
 @onready var pause_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/PauseButton
 @onready var auto_wave_button: CheckButton = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/AutoWaveButton
 @onready var next_wave_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/NextWaveButton
 @onready var settings_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/SettingsButton
-@onready var header_panel: PanelContainer = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel
-@onready var header_divider: ColorRect = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderDivider
-@onready var silhouette_panel: PanelContainer = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/SilhouettePanel
-@onready var silhouette_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/SilhouettePanel/SilhouetteLabel
-@onready var selected_title_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/HeaderTextVBox/SelectedTitleLabel
-@onready var selected_subtitle_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/HeaderTextVBox/SelectedSubtitleLabel
-@onready var stats_panel: PanelContainer = $SelectedPanel/SelectedMargin/SelectedVBox/StatsPanel
-@onready var stats_divider: ColorRect = $SelectedPanel/SelectedMargin/SelectedVBox/StatsDivider
-@onready var selected_stats_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/StatsPanel/StatsMargin/SelectedStatsLabel
-@onready var actions_panel: PanelContainer = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel
-@onready var actions_divider: ColorRect = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsDivider
-@onready var actions_title_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/ActionsTitleLabel
-@onready var target_prev_button: Button = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow/TargetPrevButton
-@onready var target_mode_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow/TargetModeLabel
-@onready var target_next_button: Button = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow/TargetNextButton
-@onready var sell_button: Button = $SelectedPanel/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/SellButton
-@onready var upgrades_panel: PanelContainer = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel
-@onready var upgrades_title_label: Label = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradesTitleLabel
-@onready var upgrade_slot_a: Button = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotA
-@onready var upgrade_slot_b: Button = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotB
-@onready var upgrade_slot_c: Button = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotC
-@onready var upgrade_slot_d: Button = $SelectedPanel/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotD
+@onready var header_panel: PanelContainer = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel
+@onready var header_divider: ColorRect = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderDivider
+@onready var silhouette_panel: PanelContainer = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/SilhouettePanel
+@onready var silhouette_label: Label = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/SilhouettePanel/SilhouetteLabel
+@onready var selected_title_label: Label = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/HeaderTextVBox/SelectedTitleLabel
+@onready var selected_subtitle_label: Label = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/HeaderTextVBox/SelectedSubtitleLabel
+@onready var stats_panel: PanelContainer = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/StatsPanel
+@onready var stats_divider: ColorRect = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/StatsDivider
+@onready var selected_stats_label: Label = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/StatsPanel/StatsMargin/SelectedStatsLabel
+@onready var actions_panel: PanelContainer = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel
+@onready var actions_divider: ColorRect = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsDivider
+@onready var actions_title_label: Label = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/ActionsTitleLabel
+@onready var target_prev_button: Button = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow/TargetPrevButton
+@onready var target_mode_label: Label = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow/TargetModeLabel
+@onready var target_next_button: Button = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/TargetingRow/TargetNextButton
+@onready var sell_button: Button = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/ActionsPanel/ActionsMargin/ActionsVBox/SellButton
+@onready var upgrades_panel: PanelContainer = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel
+@onready var upgrades_title_label: Label = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradesTitleLabel
+@onready var upgrade_slot_a: Button = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotA
+@onready var upgrade_slot_b: Button = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotB
+@onready var upgrade_slot_c: Button = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotC
+@onready var upgrade_slot_d: Button = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotD
 
 var _placement_text: String = "Build off"
 var _banner_timer: float = 0.0
@@ -159,13 +168,15 @@ var _current_silhouette_base_color: Color = Color(0.16, 0.22, 0.26, 1.0)
 var _current_accent_color: Color = UI_COLOR_DEFENDER_SOFT
 var _end_screen_pulse_time: float = 0.0
 var _settings_open: bool = false
+var _build_drawer_open: bool = true
 
 func _ready() -> void:
-	basic_tower_button.pressed.connect(func() -> void: build_tower_requested.emit("musterline_redoubt"))
-	heavy_battery_button.pressed.connect(func() -> void: build_tower_requested.emit("auric_sentinel_lancepost"))
-	pyre_chapel_button.pressed.connect(func() -> void: build_tower_requested.emit("pyre_chapel_array"))
-	cogforged_relay_button.pressed.connect(func() -> void: build_tower_requested.emit("cogforged_relay_spire"))
-	reliquary_bombard_button.pressed.connect(func() -> void: build_tower_requested.emit("reliquary_bombard"))
+	_connect_build_button(basic_tower_button, "musterline_redoubt")
+	_connect_build_button(heavy_battery_button, "auric_sentinel_lancepost")
+	_connect_build_button(pyre_chapel_button, "pyre_chapel_array")
+	_connect_build_button(cogforged_relay_button, "cogforged_relay_spire")
+	_connect_build_button(reliquary_bombard_button, "reliquary_bombard")
+	build_drawer_toggle_button.pressed.connect(_toggle_build_drawer)
 	sell_button.pressed.connect(func() -> void: sell_selected_requested.emit())
 	target_prev_button.pressed.connect(func() -> void: cycle_targeting_previous_requested.emit())
 	target_next_button.pressed.connect(func() -> void: cycle_targeting_next_requested.emit())
@@ -201,6 +212,7 @@ func _ready() -> void:
 	reliquary_bombard_button.text = "%s (%d)" % [RELIQUARY_BOMBARD_DATA.get_localized_display_name(), RELIQUARY_BOMBARD_DATA.tower_cost]
 	_apply_visual_theme()
 	_apply_localized_ui()
+	_set_build_drawer_visible(_build_drawer_open)
 	_update_selected_panel()
 	_update_flow_panel()
 
@@ -311,6 +323,10 @@ func set_selected_build_mode(tower_id: String) -> void:
 		var active: bool = tower_id == id
 		button.button_pressed = active
 		button.modulate = UI_BUTTON_GO if active else UI_BUTTON_COOL
+	if tower_id != "":
+		_set_build_drawer_visible(false)
+	elif _selected_tower == null:
+		_set_build_drawer_visible(true)
 
 func set_selected_tower(tower: Node) -> void:
 	_selected_tower = tower
@@ -377,6 +393,21 @@ func _get_build_mode_text() -> String:
 		return RunState.t("build_mode_off")
 	return "%s (%d)" % [tower_data.get_localized_display_name(), tower_data.tower_cost]
 
+func _connect_build_button(button: Button, tower_id: String) -> void:
+	button.button_down.connect(func() -> void:
+		build_tower_drag_started.emit(tower_id)
+		_set_build_drawer_visible(false)
+	)
+	button.pressed.connect(func() -> void: build_tower_requested.emit(tower_id))
+
+func _toggle_build_drawer() -> void:
+	_set_build_drawer_visible(not _build_drawer_open)
+
+func _set_build_drawer_visible(visible: bool) -> void:
+	_build_drawer_open = visible
+	build_drawer_panel.visible = visible
+	build_drawer_toggle_button.text = "<" if visible else ">"
+
 func _apply_visual_theme() -> void:
 	bottom_bar.self_modulate = UI_PANEL_TINT
 	status_panel.self_modulate = UI_PANEL_SOFT_TINT
@@ -396,7 +427,7 @@ func _apply_visual_theme() -> void:
 	frame_bottom.color = Color(0.42, 0.82, 0.96, 0.45)
 	corner_tl.color = Color(0.60, 0.90, 1.0, 0.9)
 	corner_br.color = Color(0.96, 0.72, 0.24, 0.8)
-	for label in [credits_label, wave_label, base_label, mode_label, placement_label, commander_label, hint_label, selected_title_label, selected_subtitle_label, selected_stats_label, silhouette_label, target_mode_label, build_title_label, flow_title_label, actions_title_label, upgrades_title_label, settings_title_label]:
+	for label in [credits_label, wave_label, base_label, mode_label, placement_label, commander_label, hint_label, selected_title_label, selected_subtitle_label, selected_stats_label, silhouette_label, target_mode_label, build_title_label, build_hint_label, flow_title_label, actions_title_label, upgrades_title_label, settings_title_label]:
 		label.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	credits_label.add_theme_color_override("font_color", UI_COLOR_DEFENDER)
 	wave_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
@@ -414,6 +445,8 @@ func _apply_visual_theme() -> void:
 	boss_name_label.add_theme_color_override("font_color", UI_COLOR_WARNING)
 	for button in [basic_tower_button, heavy_battery_button, pyre_chapel_button, cogforged_relay_button, reliquary_bombard_button, pause_button, auto_wave_button, next_wave_button, settings_button, target_prev_button, target_next_button, sell_button, upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d, game_over_restart_button, game_over_menu_button, game_over_continue_button]:
 		button.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
+	build_drawer_panel.self_modulate = UI_PANEL_TINT
+	build_drawer_toggle_button.modulate = UI_BUTTON_COOL_SOFT
 	basic_tower_button.modulate = UI_BUTTON_COOL
 	heavy_battery_button.modulate = UI_BUTTON_COOL
 	pyre_chapel_button.modulate = UI_BUTTON_COOL
@@ -565,6 +598,7 @@ func _apply_settings() -> void:
 
 func _apply_localized_ui() -> void:
 	build_title_label.text = RunState.t("build")
+	build_hint_label.text = "Drag from the drawer onto the field, or click to arm placement" if RunState.menu_language == "en" else "Aus dem Panel aufs Feld ziehen oder anklicken, um die Platzierung zu aktivieren"
 	flow_title_label.text = RunState.t("wave_control")
 	actions_title_label.text = RunState.t("tower_actions")
 	upgrades_title_label.text = RunState.t("upgrade_slots")
