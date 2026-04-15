@@ -71,7 +71,7 @@ offset_top = -3.0
 mouse_filter = 2
 color = Color(1.0, 0.72, 0.24, 0.45)
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="Margin" type="ScrollContainer" parent="."]
 layout_mode = 0
 anchors_preset = 15
 anchor_right = 1.0
@@ -80,10 +80,15 @@ offset_left = 120.0
 offset_top = 64.0
 offset_right = -120.0
 offset_bottom = -64.0
-mouse_filter = 2
+vertical_scroll_mode = 2
+horizontal_scroll_mode = 0
+follow_focus = true
+mouse_filter = 1
 
 [node name="RootVBox" type="VBoxContainer" parent="Margin"]
+custom_minimum_size = Vector2(0, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 18
 
 [node name="HeaderPanel" type="PanelContainer" parent="Margin/RootVBox"]
