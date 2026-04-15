@@ -459,6 +459,101 @@ layout_mode = 2
 text = ""
 autowrap_mode = 3
 
+[node name="ContentBrowserPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
+layout_mode = 2
+self_modulate = Color(0.94, 0.97, 1, 0.10)
+
+[node name="ContentBrowserMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="ContentBrowserVBox" type="VBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ContentBrowserTitleLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox"]
+layout_mode = 2
+text = ""
+
+[node name="ContentCategoryRow" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TowerCategoryButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox/ContentCategoryRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = ""
+
+[node name="CommanderCategoryButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox/ContentCategoryRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = ""
+
+[node name="EnemyCategoryButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox/ContentCategoryRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = ""
+
+[node name="ContentNameLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox"]
+layout_mode = 2
+text = ""
+
+[node name="ContentSummaryLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 3
+
+[node name="ContentStatsLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 3
+
+[node name="ContentNavRow" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PrevContentButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox/ContentNavRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+
+[node name="NextContentButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox/ContentNavRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+
+[node name="SelectedCommanderPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
+layout_mode = 2
+self_modulate = Color(0.72, 0.90, 1, 0.16)
+
+[node name="SelectedCommanderMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedCommanderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="SelectedCommanderVBox" type="VBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedCommanderPanel/SelectedCommanderMargin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SelectedCommanderTitleLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedCommanderPanel/SelectedCommanderMargin/SelectedCommanderVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = ""
+
+[node name="SelectedCommanderValueLabel" type="Label" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedCommanderPanel/SelectedCommanderMargin/SelectedCommanderVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = ""
+autowrap_mode = 3
+
 [node name="ActionRow" type="HBoxContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
 layout_mode = 2
 theme_override_constants/separation = 10
@@ -469,6 +564,97 @@ size_flags_horizontal = 3
 text = ""
 
 [node name="QuitButton" type="Button" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+
+[node name="CommanderOverlay" type="Control" parent="."]
+visible = false
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="CommanderDim" type="ColorRect" parent="CommanderOverlay"]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.01, 0.01, 0.02, 0.76)
+
+[node name="CommanderCenter" type="CenterContainer" parent="CommanderOverlay"]
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="CommanderPopup" type="PanelContainer" parent="CommanderOverlay/CommanderCenter"]
+custom_minimum_size = Vector2(520, 320)
+layout_mode = 2
+self_modulate = Color(0.90, 0.95, 1.0, 0.98)
+
+[node name="CommanderMargin" type="MarginContainer" parent="CommanderOverlay/CommanderCenter/CommanderPopup"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="CommanderVBox" type="VBoxContainer" parent="CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CommanderTitleLabel" type="Label" parent="CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox"]
+layout_mode = 2
+text = ""
+
+[node name="CommanderHintLabel" type="Label" parent="CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 3
+
+[node name="CommanderNavRow" type="HBoxContainer" parent="CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CommanderPrevButton" type="Button" parent="CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox/CommanderNavRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+
+[node name="CommanderNextButton" type="Button" parent="CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox/CommanderNavRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+
+[node name="CommanderNameLabel" type="Label" parent="CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = ""
+
+[node name="CommanderSummaryLabel" type="Label" parent="CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 3
+
+[node name="CommanderStatsLabel" type="Label" parent="CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 3
+
+[node name="CommanderActionRow" type="HBoxContainer" parent="CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CommanderConfirmButton" type="Button" parent="CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox/CommanderActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+
+[node name="CommanderCancelButton" type="Button" parent="CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox/CommanderActionRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = ""

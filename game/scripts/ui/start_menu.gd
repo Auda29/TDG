@@ -5,6 +5,26 @@ const UI_BUTTON_ACTIVE := Color(0.88, 0.96, 1.0, 1.0)
 const UI_BUTTON_IDLE := Color(0.78, 0.84, 0.90, 0.92)
 const UI_BUTTON_ACTIVE_ENDLESS := Color(0.88, 0.98, 0.90, 1.0)
 const UI_BUTTON_LOCKED := Color(0.48, 0.52, 0.58, 0.72)
+const MVP_TOWERS := [
+	preload("res://data/mvp/towers/musterline_redoubt.tres"),
+	preload("res://data/mvp/towers/auric_sentinel_lancepost.tres"),
+	preload("res://data/mvp/towers/pyre_chapel_array.tres"),
+	preload("res://data/mvp/towers/cogforged_relay_spire.tres"),
+	preload("res://data/mvp/towers/reliquary_bombard.tres"),
+]
+const MVP_COMMANDERS := [
+	preload("res://data/mvp/commander/legion_prefect.tres"),
+]
+const COMMANDER_OPTIONS := [
+	{"id": "legion_prefect", "data": preload("res://data/mvp/commander/legion_prefect.tres")},
+]
+const MVP_ENEMIES := [
+	preload("res://data/mvp/enemies/scuttleborn-mvp.tres"),
+	preload("res://data/mvp/enemies/razor_leaper.tres"),
+	preload("res://data/mvp/enemies/shellback_brute-mvp.tres"),
+	preload("res://data/mvp/enemies/spore_herald.tres"),
+	preload("res://data/mvp/enemies/maw_colossus.tres"),
+]
 
 const TEXTS := {
 	"en": {
@@ -36,6 +56,8 @@ const TEXTS := {
 		"music_volume": "Music Volume",
 		"sfx_volume": "SFX Volume",
 		"fullscreen": "Fullscreen",
+		"content_browser": "MVP Content Browser", "content_towers": "Towers", "content_commander": "Commander", "content_enemies": "Enemies", "content_prev": "Previous", "content_next": "Next",
+		"commander_select_title": "Choose Commander", "commander_select_hint": "Select your commander for this run. This choice is locked once the mission begins.", "commander_confirm": "Deploy Commander", "commander_cancel": "Back", "commander_locked_hint": "Commander locked for this run", "selected_commander": "Selected Commander", "commander_card_hint": "Deployment locked after mission start", "commander_dialog_current": "Current selection for this run", "stat_role": "Role", "stat_cost": "Cost", "stat_damage": "Damage", "stat_rate": "Rate", "stat_range": "Range", "stat_formation_link": "Formation Link", "stat_priority_damage": "Priority Damage", "stat_splash": "Splash", "stat_relay_aura": "Relay Aura", "stat_rule": "Rule", "stat_tags": "Tags", "stat_health": "Health", "stat_speed": "Speed", "stat_armor": "Armor", "stat_leak_damage": "Leak Damage", "stat_bounty": "Bounty", "stat_threat_class": "Threat Class", "stat_elite": "Elite", "stat_boss": "Boss", "stat_move_speed": "Move Speed", "stat_overwatch": "Overwatch", "stat_ability": "Ability",
 	},
 	"de": {
 		"title": "TDG Prototyp",
@@ -66,6 +88,8 @@ const TEXTS := {
 		"music_volume": "Musik-Lautstärke",
 		"sfx_volume": "SFX-Lautstärke",
 		"fullscreen": "Vollbild",
+		"content_browser": "MVP-Inhaltsbrowser", "content_towers": "Türme", "content_commander": "Commander", "content_enemies": "Gegner", "content_prev": "Zurück", "content_next": "Weiter",
+		"commander_select_title": "Commander wählen", "commander_select_hint": "Wähle deinen Commander für diesen Run. Diese Wahl ist nach Missionsbeginn gesperrt.", "commander_confirm": "Commander einsetzen", "commander_cancel": "Zurück", "commander_locked_hint": "Commander für diesen Run gesperrt", "selected_commander": "Gewählter Commander", "commander_card_hint": "Nach Missionsstart fest zugewiesen", "commander_dialog_current": "Aktuelle Auswahl für diesen Run", "stat_role": "Rolle", "stat_cost": "Kosten", "stat_damage": "Schaden", "stat_rate": "Rate", "stat_range": "Reichweite", "stat_formation_link": "Formationslink", "stat_priority_damage": "Prioritätsschaden", "stat_splash": "Flächenschaden", "stat_relay_aura": "Relais-Aura", "stat_rule": "Regel", "stat_tags": "Tags", "stat_health": "Leben", "stat_speed": "Tempo", "stat_armor": "Panzerung", "stat_leak_damage": "Basis-Schaden", "stat_bounty": "Belohnung", "stat_threat_class": "Bedrohungsklasse", "stat_elite": "Elite", "stat_boss": "Boss", "stat_move_speed": "Bewegung", "stat_overwatch": "Overwatch", "stat_ability": "Fähigkeit",
 	},
 }
 
@@ -193,6 +217,27 @@ const DIFFICULTIES := [
 @onready var target_wave_slider: HSlider = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/TargetWaveRow/TargetWaveSlider
 @onready var target_wave_value_label: Label = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel/CustomMargin/CustomVBox/TargetWaveRow/TargetWaveValueLabel
 @onready var controls_label: Label = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ControlsPanel/ControlsMargin/ControlsLabel
+@onready var content_browser_title_label: Label = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox/ContentBrowserTitleLabel
+@onready var tower_category_button: Button = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox/ContentCategoryRow/TowerCategoryButton
+@onready var commander_category_button: Button = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox/ContentCategoryRow/CommanderCategoryButton
+@onready var enemy_category_button: Button = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox/ContentCategoryRow/EnemyCategoryButton
+@onready var content_name_label: Label = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox/ContentNameLabel
+@onready var content_summary_label: Label = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox/ContentSummaryLabel
+@onready var content_stats_label: Label = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox/ContentStatsLabel
+@onready var prev_content_button: Button = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox/ContentNavRow/PrevContentButton
+@onready var next_content_button: Button = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel/ContentBrowserMargin/ContentBrowserVBox/ContentNavRow/NextContentButton
+@onready var commander_dialog: Control = $CommanderOverlay
+@onready var commander_title_label: Label = $CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox/CommanderTitleLabel
+@onready var commander_hint_label: Label = $CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox/CommanderHintLabel
+@onready var commander_prev_button: Button = $CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox/CommanderNavRow/CommanderPrevButton
+@onready var commander_next_button: Button = $CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox/CommanderNavRow/CommanderNextButton
+@onready var commander_name_label: Label = $CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox/CommanderNameLabel
+@onready var commander_summary_label: Label = $CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox/CommanderSummaryLabel
+@onready var commander_stats_label: Label = $CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox/CommanderStatsLabel
+@onready var commander_confirm_button: Button = $CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox/CommanderActionRow/CommanderConfirmButton
+@onready var commander_cancel_button: Button = $CommanderOverlay/CommanderCenter/CommanderPopup/CommanderMargin/CommanderVBox/CommanderActionRow/CommanderCancelButton
+@onready var selected_commander_title_label: Label = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedCommanderPanel/SelectedCommanderMargin/SelectedCommanderVBox/SelectedCommanderTitleLabel
+@onready var selected_commander_value_label: Label = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedCommanderPanel/SelectedCommanderMargin/SelectedCommanderVBox/SelectedCommanderValueLabel
 @onready var start_button: Button = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ActionRow/StartButton
 @onready var quit_button: Button = $Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ActionRow/QuitButton
 
@@ -202,6 +247,9 @@ var _pulse_time: float = 0.0
 var _current_language: String = "en"
 var _current_mode: String = "campaign"
 var _tooltip_locked_to_selection: bool = true
+var _content_category: String = "tower"
+var _content_index: int = 0
+var _selected_commander_index: int = 0
 
 func _ready() -> void:
 	_current_language = RunState.menu_language if RunState.menu_language != "" else "en"
@@ -227,6 +275,15 @@ func _ready() -> void:
 		button.pressed.connect(func(index: int = i) -> void: _select_difficulty(index))
 		button.mouse_entered.connect(func(index: int = i) -> void: _show_difficulty_tooltip(index, false))
 		button.mouse_exited.connect(func() -> void: _restore_selected_tooltip())
+	tower_category_button.pressed.connect(func() -> void: _set_content_category("tower"))
+	commander_category_button.pressed.connect(func() -> void: _set_content_category("commander"))
+	enemy_category_button.pressed.connect(func() -> void: _set_content_category("enemy"))
+	prev_content_button.pressed.connect(func() -> void: _step_content(-1))
+	next_content_button.pressed.connect(func() -> void: _step_content(1))
+	commander_prev_button.pressed.connect(func() -> void: _step_commander(-1))
+	commander_next_button.pressed.connect(func() -> void: _step_commander(1))
+	commander_confirm_button.pressed.connect(_confirm_start_game)
+	commander_cancel_button.pressed.connect(_toggle_commander_dialog)
 	start_button.pressed.connect(_start_game)
 	quit_button.pressed.connect(func() -> void: get_tree().quit())
 	settings_master_volume_slider.value = RunState.master_volume
@@ -241,9 +298,13 @@ func _ready() -> void:
 	settings_music_volume_value_label.text = "%d%%" % int(round(RunState.music_volume * 100.0))
 	settings_sfx_volume_value_label.text = "%d%%" % int(round(RunState.sfx_volume * 100.0))
 	_refresh_custom_labels()
+	_selected_commander_index = _find_commander_index(RunState.selected_commander_id)
 	_apply_language()
 	_set_mode(_current_mode)
 	_select_difficulty(_selected_difficulty_index)
+	_refresh_content_browser()
+	_refresh_commander_dialog()
+	_refresh_selected_commander_summary()
 
 func _process(delta: float) -> void:
 	_pulse_time += delta
@@ -310,6 +371,19 @@ func _apply_language() -> void:
 	enemy_health_name_label.text = _text("enemy_health")
 	target_wave_name_label.text = _text("target_wave")
 	controls_label.text = _text("controls")
+	content_browser_title_label.text = _text("content_browser")
+	tower_category_button.text = _text("content_towers")
+	commander_category_button.text = _text("content_commander")
+	enemy_category_button.text = _text("content_enemies")
+	prev_content_button.text = _text("content_prev")
+	next_content_button.text = _text("content_next")
+	commander_title_label.text = _text("commander_select_title")
+	commander_hint_label.text = _text("commander_select_hint")
+	selected_commander_title_label.text = _text("selected_commander")
+	commander_prev_button.text = _text("content_prev")
+	commander_next_button.text = _text("content_next")
+	commander_confirm_button.text = _text("commander_confirm")
+	commander_cancel_button.text = _text("commander_cancel")
 	start_button.text = _text("start")
 	quit_button.text = _text("quit")
 	for i in range(DIFFICULTIES.size()):
@@ -320,6 +394,9 @@ func _apply_language() -> void:
 		_difficulty_buttons[i].text = label_text
 	if _tooltip_locked_to_selection:
 		_restore_selected_tooltip()
+	_refresh_content_browser()
+	_refresh_commander_dialog()
+	_refresh_selected_commander_summary()
 
 func _select_difficulty(index: int) -> void:
 	_selected_difficulty_index = clampi(index, 0, DIFFICULTIES.size() - 1)
@@ -438,7 +515,206 @@ func _text(key: String) -> String:
 func _is_custom_selected() -> bool:
 	return _selected_difficulty_index == DIFFICULTIES.size() - 1
 
+func _set_content_category(category: String) -> void:
+	_content_category = category
+	_content_index = 0
+	_refresh_content_browser()
+
+func _step_content(step: int) -> void:
+	var entries: Array = _get_content_entries_for_category()
+	if entries.is_empty():
+		return
+	_content_index = posmod(_content_index + step, entries.size())
+	_refresh_content_browser()
+
+func _get_content_entries_for_category() -> Array:
+	match _content_category:
+		"commander":
+			return MVP_COMMANDERS
+		"enemy":
+			return MVP_ENEMIES
+		_:
+			return MVP_TOWERS
+
+func _refresh_content_browser() -> void:
+	var entries: Array = _get_content_entries_for_category()
+	tower_category_button.button_pressed = _content_category == "tower"
+	commander_category_button.button_pressed = _content_category == "commander"
+	enemy_category_button.button_pressed = _content_category == "enemy"
+	tower_category_button.modulate = UI_BUTTON_ACTIVE if _content_category == "tower" else UI_BUTTON_IDLE
+	commander_category_button.modulate = UI_BUTTON_ACTIVE if _content_category == "commander" else UI_BUTTON_IDLE
+	enemy_category_button.modulate = UI_BUTTON_ACTIVE_ENDLESS if _content_category == "enemy" else UI_BUTTON_IDLE
+	if entries.is_empty():
+		content_name_label.text = ""
+		content_summary_label.text = ""
+		content_stats_label.text = ""
+		return
+	_content_index = clampi(_content_index, 0, entries.size() - 1)
+	var content = entries[_content_index]
+	content_name_label.text = content.get_localized_display_name(_current_language)
+	content_summary_label.text = "%s\n\n%s" % [content.get_localized_short_description(_current_language), content.get_localized_description(_current_language)]
+	content_stats_label.text = _format_content_stats(content)
+
+func _format_content_stats(content) -> String:
+	if content == null:
+		return ""
+	var category: String = String(content.get("category"))
+	match category:
+		"tower":
+			return _format_tower_stats(content)
+		"enemy":
+			return _format_enemy_stats(content)
+		"commander":
+			return _format_commander_stats(content)
+		_:
+			return ""
+
+func _format_role_value(content) -> String:
+	if content == null:
+		return ""
+	var stats: Dictionary = content.get_gameplay_stats() if content.has_method("get_gameplay_stats") else {}
+	return _localize_role(str(stats.get("role", "-")))
+
+func _format_tags(content) -> String:
+	if content == null:
+		return ""
+	var tags: PackedStringArray = content.tags if content.get("tags") != null else PackedStringArray()
+	return ", ".join(tags)
+
+func _localize_role(role: String) -> String:
+	if _current_language != "de":
+		return role.replace("_", " ").capitalize()
+	var localized_roles := {
+		"cheap generalist": "Günstiger Generalist",
+		"anti-armor / elite killer": "Anti-Panzer / Elite-Killer",
+		"anti-swarm / choke tower": "Anti-Schwarm / Engpass-Turm",
+		"support / scan": "Support / Aufklärung",
+		"indirect fire / aoe": "Indirektes Feuer / Fläche",
+		"standard swarm enemy": "Standard-Schwarmgegner",
+		"fast mover / gap punisher": "Schneller Durchbrecher",
+		"tank / front breaker": "Tank / Frontbrecher",
+		"support buffer": "Support-Verstärker",
+		"boss / siege monster": "Boss / Belagerungsmonster",
+	}
+	return String(localized_roles.get(role.to_lower(), role.replace("_", " ").capitalize()))
+
+func _format_tower_stats(content) -> String:
+	var lines := [
+		"%s: %s" % [_text("stat_role"), _format_role_value(content)],
+		"%s: %d" % [_text("stat_cost"), int(content.tower_cost)],
+		"%s: %.0f" % [_text("stat_damage"), content.damage],
+		"%s: %.2f/s" % [_text("stat_rate"), content.fire_rate],
+		"%s: %.1f" % [_text("stat_range"), content.attack_range],
+	]
+	if content.adjacency_fire_rate_bonus > 0.0:
+		lines.append("%s: +%d%% %s" % [_text("stat_formation_link"), int(round(content.adjacency_fire_rate_bonus * 100.0)), _text("stat_rate").to_lower()])
+	if content.damage_bonus_vs_elite > 0.0 or content.damage_bonus_vs_boss > 0.0:
+		lines.append("%s: +%d%% %s | +%d%% %s" % [_text("stat_priority_damage"), int(round(content.damage_bonus_vs_elite * 100.0)), _text("stat_elite").to_lower(), int(round(content.damage_bonus_vs_boss * 100.0)), _text("stat_boss").to_lower()])
+	if content.splash_radius > 0.0:
+		lines.append("%s: %.0f Radius | %d%% %s" % [_text("stat_splash"), content.splash_radius, int(round(content.splash_damage_multiplier * 100.0)), _text("stat_damage").to_lower()])
+	if content.support_aura_radius > 0.0:
+		lines.append("%s: %.0f Radius | +%d%% %s | +%d%% %s" % [_text("stat_relay_aura"), content.support_aura_radius, int(round(content.support_fire_rate_bonus * 100.0)), _text("stat_rate").to_lower(), int(round(content.support_range_bonus * 100.0)), _text("stat_range").to_lower()])
+	if content.extra_stats.has("special_rule"):
+		lines.append("%s: %s" % [_text("stat_rule"), str(content.extra_stats["special_rule"])])
+	if content.tags.size() > 0:
+		lines.append("%s: %s" % [_text("stat_tags"), _format_tags(content)])
+	return "\n".join(lines)
+
+func _format_enemy_stats(content) -> String:
+	var lines := [
+		"%s: %s" % [_text("stat_role"), _format_role_value(content)],
+		"%s: %.0f" % [_text("stat_health"), content.max_health],
+		"%s: %.1f" % [_text("stat_speed"), content.move_speed],
+		"%s: %.0f" % [_text("stat_armor"), content.armor],
+		"%s: %d" % [_text("stat_leak_damage"), int(content.fortress_damage)],
+		"%s: %d" % [_text("stat_bounty"), int(content.credit_reward)],
+	]
+	if content.is_elite:
+		lines.append("%s: %s" % [_text("stat_threat_class"), _text("stat_elite")])
+	if content.is_boss:
+		lines.append("%s: %s" % [_text("stat_threat_class"), _text("stat_boss")])
+	if content.extra_stats.has("special_rule"):
+		lines.append("%s: %s" % [_text("stat_rule"), str(content.extra_stats["special_rule"])])
+	if content.tags.size() > 0:
+		lines.append("%s: %s" % [_text("stat_tags"), _format_tags(content)])
+	return "\n".join(lines)
+
+func _format_commander_stats(content) -> String:
+	var lines := [
+		"%s: %s" % [_text("stat_role"), _format_role_value(content)],
+		"%s: %.0f" % [_text("stat_move_speed"), content.move_speed],
+		"%s: %.0f" % [_text("stat_damage"), content.damage],
+		"%s: %.2f/s" % [_text("stat_rate"), content.fire_rate],
+		"%s: %.0f" % [_text("stat_range"), content.attack_range],
+		"%s: %.0fs | CD %.0fs | Radius %.0f" % [_text("stat_overwatch"), content.overwatch_duration, content.overwatch_cooldown, content.overwatch_radius],
+	]
+	if content.extra_stats.has("ability_description"):
+		lines.append("%s: %s" % [_text("stat_ability"), str(content.extra_stats["ability_description"])])
+	elif content.has_method("get_localized_ability_description"):
+		lines.append("%s: %s" % [_text("stat_ability"), content.get_localized_ability_description(_current_language)])
+	if content.tags.size() > 0:
+		lines.append("%s: %s" % [_text("stat_tags"), _format_tags(content)])
+	return "\n".join(lines)
+
+func _refresh_selected_commander_summary() -> void:
+	var selected_data = null
+	for option in COMMANDER_OPTIONS:
+		if String(option.get("id", "")) == RunState.selected_commander_id:
+			selected_data = option.get("data")
+			break
+	var summary := ""
+	if selected_data != null:
+		summary = selected_data.get_localized_short_description(_current_language)
+	selected_commander_value_label.text = "%s\n%s\n\n%s" % [RunState.get_selected_commander_name(), _text("commander_card_hint"), summary]
+	selected_commander_title_label.add_theme_color_override("font_color", Color(0.86, 0.96, 1.0))
+	selected_commander_value_label.add_theme_color_override("font_color", Color(0.92, 0.95, 0.98))
+
+func _find_commander_index(commander_id: String) -> int:
+	for i in range(COMMANDER_OPTIONS.size()):
+		if String(COMMANDER_OPTIONS[i].get("id", "")) == commander_id:
+			return i
+	return 0
+
+func _toggle_commander_dialog() -> void:
+	commander_dialog.visible = not commander_dialog.visible
+	if commander_dialog.visible:
+		_refresh_commander_dialog()
+
+func _step_commander(step: int) -> void:
+	if COMMANDER_OPTIONS.is_empty():
+		return
+	_selected_commander_index = posmod(_selected_commander_index + step, COMMANDER_OPTIONS.size())
+	_refresh_commander_dialog()
+
+func _refresh_commander_dialog() -> void:
+	if COMMANDER_OPTIONS.is_empty():
+		commander_name_label.text = ""
+		commander_summary_label.text = ""
+		commander_stats_label.text = ""
+		return
+	_selected_commander_index = clampi(_selected_commander_index, 0, COMMANDER_OPTIONS.size() - 1)
+	var commander_option: Dictionary = COMMANDER_OPTIONS[_selected_commander_index]
+	var commander_data = commander_option.get("data")
+	var localized_name := commander_data.get_localized_display_name(_current_language)
+	var is_current := String(commander_option.get("id", "")) == RunState.selected_commander_id
+	commander_name_label.text = ("✓ " if is_current else "") + localized_name
+	commander_summary_label.text = "%s\n\n%s\n\n%s" % [commander_data.get_localized_short_description(_current_language), commander_data.get_localized_description(_current_language), _text("commander_dialog_current") if is_current else ""]
+	commander_stats_label.text = _format_content_stats(commander_data)
+	commander_name_label.add_theme_color_override("font_color", Color(0.92, 1.0, 0.94) if is_current else Color(0.88, 0.92, 0.96))
+	commander_summary_label.add_theme_color_override("font_color", Color(0.88, 0.98, 0.92) if is_current else Color(0.84, 0.88, 0.92))
+	commander_confirm_button.modulate = Color(0.22, 0.52, 0.34, 1.0) if is_current else Color(0.20, 0.36, 0.48, 1.0)
+	commander_prev_button.modulate = Color(0.90, 0.98, 0.92, 1.0) if is_current else UI_BUTTON_IDLE
+	commander_next_button.modulate = Color(0.90, 0.98, 0.92, 1.0) if is_current else UI_BUTTON_IDLE
+
 func _start_game() -> void:
-	RunState.configure_difficulty(_get_selected_config())
+	commander_dialog.visible = true
+	_refresh_commander_dialog()
+
+func _confirm_start_game() -> void:
+	var run_config := _get_selected_config()
+	if not COMMANDER_OPTIONS.is_empty():
+		run_config["commander_id"] = String(COMMANDER_OPTIONS[_selected_commander_index].get("id", RunState.DEFAULT_COMMANDER_ID))
+	RunState.configure_difficulty(run_config)
+	_refresh_selected_commander_summary()
 	get_tree().paused = false
 	SceneRouter.goto_scene(GAME_ROOT_SCENE)

@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="TowerData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/tower_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+content_id = "auric_sentinel_lancepost"
+tower_id = "auric_sentinel_lancepost"
+category = "tower"
+display_name = "Auric Sentinel Lancepost"
+display_name_de = "Aurischer Sentinel-Lanzenposten"
+short_description = "Luxury anti-armor tower for elites and bosses."
+short_description_de = "Luxus-Anti-Panzer-Turm gegen Elite- und Bossziele."
+description = "A precision defense platform built to break heavy targets with a small number of devastating shots. Expensive, specialized, and ideal as a boss-pressure anchor."
+description_de = "Eine Präzisionsplattform zur Ausschaltung schwerer Ziele mit wenigen, verheerenden Schüssen. Teuer, spezialisiert und ideal als Bossdruck-Anker."
+tags = PackedStringArray("elite", "precision", "anti-armor", "anti-boss", "mvp")
+extra_stats = {"role": "anti-armor / elite killer", "dps": 80.0, "armor_pressure": "very high", "target_modes": PackedStringArray("Strongest", "Elite", "Boss"), "special_rule": "Priority Lance: +35% damage against elite and boss targets."}
+tower_cost = 210
+attack_range = 8.5
+fire_rate = 0.5
+damage = 160.0
+turn_speed = 9.0
+recoil_distance = 8.0
+sway_speed = 1.9
+sway_amount = 0.7
+muzzle_offset = Vector2(0, -22)
+selection_radius = 34.0
+decal_fill_color = Color(0.18, 0.16, 0.10, 0.46)
+decal_arc_color = Color(0.58, 0.52, 0.22, 0.24)
+laser_color = Color(1.0, 0.84, 0.28, 0.95)
+beam_core_color = Color(1.0, 0.96, 0.78, 0.98)
+laser_width = 3.0
+flash_size = 10.0
+impact_radius = 12.0
+damage_bonus_vs_elite = 0.35
+damage_bonus_vs_boss = 0.6

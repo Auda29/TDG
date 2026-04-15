@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+content_id = "spore_herald"
+category = "enemy"
+display_name = "Spore Herald"
+display_name_de = "Sporen-Herold"
+short_description = "Backline support enemy that buffs nearby attackers."
+short_description_de = "Backline-Supportgegner, der nahe Angreifer verstärkt."
+description = "A support bio-form that stays behind the front and amplifies nearby enemies through healing or mobility pressure. It is designed to be a clear priority target."
+description_de = "Eine Support-Bioform, die hinter der Front bleibt und nahe Gegner durch Heilung oder Bewegungsdruck verstärkt. Sie ist bewusst als klares Prioritätsziel ausgelegt."
+tags = PackedStringArray("support", "spore", "buffer", "mvp")
+extra_stats = {"role": "support buffer", "threat": 6, "bounty": 18, "special_rule": "Spore Burst Aura: nearby enemies regenerate 8 HP/s or gain +20% movement, depending on encounter setup."}
+max_health = 180.0
+move_speed = 2.0
+fortress_damage = 2
+credit_reward = 18
+armor = 1.0
+is_elite = true
+is_boss = false
+turn_speed = 8.5

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+content_id = "scuttleborn_mvp"
+category = "enemy"
+display_name = "Scuttleborn"
+display_name_de = "Skuttling"
+short_description = "Light swarm enemy that pressures early AoE coverage."
+short_description_de = "Leichter Schwarmgegner, der frühe AoE-Abdeckung testet."
+description = "Small, fast, numerous, and disposable. Its main purpose is to test whether the defense can control swarm density cleanly."
+description_de = "Klein, schnell, zahlreich und entbehrlich. Sein Hauptzweck ist zu prüfen, ob die Verteidigung Schwarmdichte sauber kontrollieren kann."
+tags = PackedStringArray("swarm", "light", "organic", "mvp")
+extra_stats = {"role": "standard swarm enemy", "threat": 2, "bounty": 5, "special_rule": "Appears frequently in groups of 8 to 20 units."}
+max_health = 40.0
+move_speed = 3.6
+fortress_damage = 1
+credit_reward = 5
+armor = 0.0
+is_elite = false
+is_boss = false
+turn_speed = 10.0

@@ -45,7 +45,7 @@ Typical patterns:
 - use a `reviewer` after implementation for a second pass
 
 ## Task system
-Use the task system for multi-step or non-trivial work.
+Use the task system.
 
 Available task tools may include:
 - `TaskCreate`

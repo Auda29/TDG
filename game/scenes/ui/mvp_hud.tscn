@@ -667,6 +667,21 @@ layout_mode = 2
 toggle_mode = true
 text = ""
 
+[node name="PyreChapelButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
+layout_mode = 2
+toggle_mode = true
+text = ""
+
+[node name="CogforgedRelayButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
+layout_mode = 2
+toggle_mode = true
+text = ""
+
+[node name="ReliquaryBombardButton" type="Button" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel"]
+layout_mode = 2
+toggle_mode = true
+text = ""
+
 [node name="FlowPanel" type="VBoxContainer" parent="BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox"]
 custom_minimum_size = Vector2(190, 0)
 layout_mode = 2

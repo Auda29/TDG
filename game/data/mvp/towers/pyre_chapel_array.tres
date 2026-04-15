@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="TowerData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/tower_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+content_id = "pyre_chapel_array"
+tower_id = "pyre_chapel_array"
+category = "tower"
+display_name = "Pyre Chapel Array"
+display_name_de = "Pyre-Kapellen-Array"
+short_description = "Short-range anti-swarm flame array for choke points."
+short_description_de = "Kurzreichweitiges Flammen-Array gegen Schwärme an Engstellen."
+description = "A brutal flame projector for corridors and bends. It dominates clustered light enemies and applies lingering burn pressure beyond the initial cone."
+description_de = "Ein brutaler Flammenwerfer für Korridore und Kurven. Er dominiert geballte leichte Gegner und hält sie über nachwirkenden Brandschaden weiter unter Druck."
+tags = PackedStringArray("flame", "aoe", "short-range", "anti-swarm", "mvp")
+extra_stats = {"role": "anti-swarm / choke tower", "dps": 90.0, "armor_pressure": "low", "attack_shape": "cone", "target_modes": PackedStringArray("densest group", "nearest in cone"), "special_rule": "Lingering Burn: 8 burn DPS for 2.5s, refreshed on hit."}
+tower_cost = 130
+attack_range = 3.8
+fire_rate = 5.0
+damage = 18.0
+turn_speed = 14.0
+recoil_distance = 2.0
+sway_speed = 3.2
+sway_amount = 0.5
+muzzle_offset = Vector2(0, -16)
+selection_radius = 28.0
+decal_fill_color = Color(0.20, 0.10, 0.08, 0.46)
+decal_arc_color = Color(0.74, 0.36, 0.16, 0.24)
+laser_color = Color(1.0, 0.44, 0.14, 0.92)
+beam_core_color = Color(1.0, 0.82, 0.38, 0.96)
+laser_width = 5.0
+flash_size = 12.0
+impact_radius = 10.0
+splash_radius = 52.0
+splash_damage_multiplier = 0.35

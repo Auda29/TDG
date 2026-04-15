@@ -19,6 +19,16 @@ class_name TowerData
 @export var laser_width: float = 2.0
 @export var flash_size: float = 6.0
 @export var impact_radius: float = 8.0
+@export var adjacency_radius: float = 0.0
+@export var adjacency_fire_rate_bonus: float = 0.0
+@export var max_adjacency_stacks: int = 0
+@export var damage_bonus_vs_elite: float = 0.0
+@export var damage_bonus_vs_boss: float = 0.0
+@export var splash_radius: float = 0.0
+@export var splash_damage_multiplier: float = 0.0
+@export var support_aura_radius: float = 0.0
+@export var support_fire_rate_bonus: float = 0.0
+@export var support_range_bonus: float = 0.0
 
 func _init() -> void:
 	category = "tower"
@@ -35,5 +45,15 @@ func get_gameplay_stats() -> Dictionary:
 		"damage": damage,
 		"turn_speed": turn_speed,
 		"selection_radius": selection_radius,
+		"adjacency_radius": adjacency_radius,
+		"adjacency_fire_rate_bonus": adjacency_fire_rate_bonus,
+		"max_adjacency_stacks": max_adjacency_stacks,
+		"damage_bonus_vs_elite": damage_bonus_vs_elite,
+		"damage_bonus_vs_boss": damage_bonus_vs_boss,
+		"splash_radius": splash_radius,
+		"splash_damage_multiplier": splash_damage_multiplier,
+		"support_aura_radius": support_aura_radius,
+		"support_fire_rate_bonus": support_fire_rate_bonus,
+		"support_range_bonus": support_range_bonus,
 	}, true)
 	return stats

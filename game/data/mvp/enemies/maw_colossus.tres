@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+content_id = "maw_colossus"
+category = "enemy"
+display_name = "Maw Colossus"
+display_name_de = "Mahlkoloss"
+short_description = "MVP boss siege organism and final roster pressure test."
+short_description_de = "MVP-Boss-Belagerungsorganismus und letzte Druckprüfung der Liste."
+description = "A colossal siege organism for the MVP roster. It combines heavy armor, extreme leak damage, and breakpoint-based reinforcement pressure into a final boss encounter."
+description_de = "Ein kolossaler Belagerungsorganismus für die MVP-Liste. Er kombiniert schwere Panzerung, extremen Leak-Schaden und verstärkungsbasierte Schwellenmechaniken zu einem finalen Bosskampf."
+tags = PackedStringArray("boss", "colossal", "siege", "mvp")
+extra_stats = {"role": "boss / siege monster", "threat": 10, "bounty": 180, "special_rule": "Brood Call: summons 6 Scuttleborn at 80%, 60%, 40%, and 20% HP.", "rage_threshold": "Below 25% HP gains +20% movement."}
+max_health = 5200.0
+move_speed = 1.1
+fortress_damage = 20
+credit_reward = 180
+armor = 8.0
+is_elite = true
+is_boss = true
+turn_speed = 6.0

@@ -81,12 +81,15 @@ func _process(delta: float) -> void:
 	if _cooldown <= 0.0 and target != null:
 		_shot_flash = 1.0
 		_barrel_recoil = 1.0
+		var damage_to_deal := _get_damage_against_target(target)
 		var target_health_before: float = target.health
-		var dealt_damage: float = target.apply_damage(damage, global_position)
+		var dealt_damage: float = target.apply_damage(damage_to_deal, global_position)
 		total_damage_dealt += dealt_damage
+		if tower_data != null and tower_data.splash_radius > 0.0 and tower_data.splash_damage_multiplier > 0.0:
+			total_damage_dealt += _apply_splash_damage(target, damage_to_deal * tower_data.splash_damage_multiplier)
 		if dealt_damage >= target_health_before and target_health_before > 0.0:
 			total_kills += 1
-		var effective_fire_rate := fire_rate * _get_overwatch_multiplier()
+		var effective_fire_rate := fire_rate * _get_total_fire_rate_multiplier()
 		_cooldown = 1.0 / maxf(0.1, effective_fire_rate)
 	_animate_visuals()
 	queue_redraw()
@@ -99,7 +102,7 @@ func _get_target() -> Node:
 		if not is_instance_valid(enemy):
 			continue
 		var distance: float = global_position.distance_to(enemy.global_position)
-		if distance > attack_range:
+		if distance > _get_effective_attack_range():
 			continue
 		var score: float = _get_target_score(enemy, distance)
 		if score > best_score:
@@ -111,6 +114,15 @@ func _get_target_score(enemy: Node, distance: float) -> float:
 	var progress: float = float(enemy.get("progress")) if enemy.get("progress") != null else 0.0
 	var max_health_value: float = float(enemy.get("max_health")) if enemy.get("max_health") != null else 0.0
 	var is_boss_target: bool = bool(enemy.get("is_boss")) if enemy.get("is_boss") != null else false
+	var nearby_count: int = _count_enemies_near(enemy.global_position, 54.0)
+	if tower_data != null:
+		match tower_data.tower_id:
+			"pyre_chapel_array":
+				return nearby_count * 1500.0 - distance * 0.5 + progress * 0.2
+			"reliquary_bombard":
+				return nearby_count * 1800.0 + max_health_value * 0.4 + progress * 0.2 - distance * 0.1
+			"auric_sentinel_lancepost":
+				return (250000.0 if is_boss_target else 0.0) + max_health_value * 120.0 + progress - distance * 0.02
 	match _targeting_mode:
 		"closest":
 			return -distance + progress * 0.001
@@ -154,9 +166,10 @@ func _draw() -> void:
 			ring_color = Color(0.45, 0.82, 0.62, 0.16) if _preview_is_valid else Color(0.82, 0.28, 0.22, 0.18)
 		elif overwatch_multiplier > 1.0:
 			ring_color = Color(0.70, 0.52, 0.14, 0.14)
-		draw_circle(Vector2.ZERO, attack_range, ring_color)
+		var effective_range := _get_effective_attack_range()
+		draw_circle(Vector2.ZERO, effective_range, ring_color)
 		if overwatch_multiplier > 1.0 and not _is_preview:
-			draw_arc(Vector2.ZERO, attack_range, 0.0, TAU, 48, Color(0.8, 0.6, 0.1, 0.45), 2.0)
+			draw_arc(Vector2.ZERO, effective_range, 0.0, TAU, 48, Color(0.8, 0.6, 0.1, 0.45), 2.0)
 		var pad_color := Color(0.26, 0.42, 0.46, 0.50)
 		if _is_preview:
 			pad_color = Color(0.38, 0.74, 0.58, 0.55) if _preview_is_valid else Color(0.74, 0.26, 0.20, 0.58)
@@ -189,6 +202,78 @@ func _get_overwatch_multiplier() -> float:
 	if not commander.has_method("get_overwatch_multiplier_for_position"):
 		return 1.0
 	return commander.get_overwatch_multiplier_for_position(global_position)
+
+func _get_total_fire_rate_multiplier() -> float:
+	return _get_overwatch_multiplier() * _get_support_fire_rate_multiplier() * _get_adjacency_fire_rate_multiplier()
+
+func _get_effective_attack_range() -> float:
+	return attack_range * _get_support_range_multiplier()
+
+func _get_support_fire_rate_multiplier() -> float:
+	var bonus := 0.0
+	for tower in get_tree().get_nodes_in_group("player_towers"):
+		if tower == self or not is_instance_valid(tower) or tower.tower_data == null:
+			continue
+		if tower.tower_data.support_aura_radius <= 0.0 or tower.tower_data.support_fire_rate_bonus <= 0.0:
+			continue
+		if global_position.distance_to(tower.global_position) <= tower.tower_data.support_aura_radius:
+			bonus += tower.tower_data.support_fire_rate_bonus
+	return 1.0 + bonus
+
+func _get_support_range_multiplier() -> float:
+	var bonus := 0.0
+	for tower in get_tree().get_nodes_in_group("player_towers"):
+		if tower == self or not is_instance_valid(tower) or tower.tower_data == null:
+			continue
+		if tower.tower_data.support_aura_radius <= 0.0 or tower.tower_data.support_range_bonus <= 0.0:
+			continue
+		if global_position.distance_to(tower.global_position) <= tower.tower_data.support_aura_radius:
+			bonus += tower.tower_data.support_range_bonus
+	return 1.0 + bonus
+
+func _get_adjacency_fire_rate_multiplier() -> float:
+	if tower_data == null or tower_data.adjacency_radius <= 0.0 or tower_data.adjacency_fire_rate_bonus <= 0.0:
+		return 1.0
+	var stacks := 0
+	for tower in get_tree().get_nodes_in_group("player_towers"):
+		if tower == self or not is_instance_valid(tower) or tower.tower_data == null:
+			continue
+		if tower.tower_data.tower_id != tower_data.tower_id:
+			continue
+		if global_position.distance_to(tower.global_position) <= tower_data.adjacency_radius:
+			stacks += 1
+	var max_stacks := tower_data.max_adjacency_stacks if tower_data.max_adjacency_stacks > 0 else stacks
+	return 1.0 + tower_data.adjacency_fire_rate_bonus * min(stacks, max_stacks)
+
+func _get_damage_against_target(target: Node) -> float:
+	var resolved_damage := damage
+	if tower_data == null or target == null:
+		return resolved_damage
+	if bool(target.get("is_elite")):
+		resolved_damage *= 1.0 + tower_data.damage_bonus_vs_elite
+	if bool(target.get("is_boss")):
+		resolved_damage *= 1.0 + tower_data.damage_bonus_vs_boss
+	return resolved_damage
+
+func _apply_splash_damage(primary_target: Node, splash_damage: float) -> float:
+	if primary_target == null or tower_data == null:
+		return 0.0
+	var total_splash_damage := 0.0
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if enemy == primary_target or not is_instance_valid(enemy):
+			continue
+		if enemy.global_position.distance_to(primary_target.global_position) <= tower_data.splash_radius:
+			total_splash_damage += enemy.apply_damage(splash_damage, primary_target.global_position)
+	return total_splash_damage
+
+func _count_enemies_near(world_position: Vector2, radius: float) -> int:
+	var count := 0
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if not is_instance_valid(enemy):
+			continue
+		if enemy.global_position.distance_to(world_position) <= radius:
+			count += 1
+	return count
 
 func cycle_targeting_mode(step: int = 1) -> void:
 	var current_index: int = TARGETING_MODES.find(_targeting_mode)
@@ -235,3 +320,6 @@ func get_average_dps() -> float:
 	if active_time <= 0.01:
 		return 0.0
 	return total_damage_dealt / active_time
+
+func _enter_tree() -> void:
+	add_to_group("player_towers")

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+content_id = "shellback_brute_mvp"
+category = "enemy"
+display_name = "Shellback Brute"
+display_name_de = "Shellback-Brute"
+short_description = "Armored tank enemy that absorbs fire for the swarm."
+short_description_de = "Gepanzerter Tankgegner, der Feuer für den Schwarm bindet."
+description = "A slow and unpleasant front breaker that exists to soak damage while faster threats exploit the opening. It is one of the core tank checks of the MVP enemy roster."
+description_de = "Ein langsamer und zäher Frontbrecher, der Schaden bindet, während schnellere Bedrohungen die Lücke ausnutzen. Er ist einer der zentralen Tank-Checks der MVP-Gegnerliste."
+tags = PackedStringArray("armored", "brute", "frontline", "mvp")
+extra_stats = {"role": "tank / front breaker", "threat": 7, "bounty": 28, "special_rule": "Bulwark Carapace: takes 20% less damage from flame and light projectile sources."}
+max_health = 520.0
+move_speed = 1.6
+fortress_damage = 5
+credit_reward = 28
+armor = 6.0
+is_elite = true
+is_boss = false
+turn_speed = 8.0

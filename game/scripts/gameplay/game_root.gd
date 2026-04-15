@@ -1,21 +1,37 @@
 extends Node2D
 
 const MAP_SCENE := preload("res://scenes/maps/mvp_map.tscn")
-const BASIC_TOWER_SCENE := preload("res://scenes/gameplay/towers/basic_tower.tscn")
-const HEAVY_BATTERY_SCENE := preload("res://scenes/gameplay/towers/heavy_battery.tscn")
-const BASIC_ENEMY_SCENE := preload("res://scenes/gameplay/enemies/basic_enemy.tscn")
-const SHELLBACK_BRUTE_SCENE := preload("res://scenes/gameplay/enemies/shellback_brute.tscn")
-const SHELLBACK_BOSS_SCENE := preload("res://scenes/gameplay/enemies/shellback_boss.tscn")
-const BASIC_COMMANDER_SCENE := preload("res://scenes/gameplay/commander/basic_commander.tscn")
+const MUSTERLINE_REDOUBT_SCENE := preload("res://scenes/gameplay/towers/musterline_redoubt.tscn")
+const AURIC_SENTINEL_SCENE := preload("res://scenes/gameplay/towers/auric_sentinel_lancepost.tscn")
+const PYRE_CHAPEL_SCENE := preload("res://scenes/gameplay/towers/pyre_chapel_array.tscn")
+const COGFORGED_RELAY_SCENE := preload("res://scenes/gameplay/towers/cogforged_relay_spire.tscn")
+const RELIQUARY_BOMBARD_SCENE := preload("res://scenes/gameplay/towers/reliquary_bombard.tscn")
+const BASIC_ENEMY_SCENE := preload("res://scenes/gameplay/enemies/scuttleborn_mvp.tscn")
+const RAZOR_LEAPER_SCENE := preload("res://scenes/gameplay/enemies/razor_leaper.tscn")
+const SHELLBACK_BRUTE_SCENE := preload("res://scenes/gameplay/enemies/shellback_brute_mvp.tscn")
+const SPORE_HERALD_SCENE := preload("res://scenes/gameplay/enemies/spore_herald.tscn")
+const MAW_COLOSSUS_SCENE := preload("res://scenes/gameplay/enemies/maw_colossus.tscn")
+const LEGION_PREFECT_SCENE := preload("res://scenes/gameplay/commander/legion_prefect.tscn")
+const LEGION_PREFECT_DATA := preload("res://data/mvp/commander/legion_prefect.tres")
 const WAVE_RUNNER_SCENE := preload("res://scenes/gameplay/wave/wave_runner.tscn")
 const HUD_SCENE := preload("res://scenes/ui/mvp_hud.tscn")
 const MAIN_MENU_SCENE := "res://scenes/bootstrap/main.tscn"
-const BASIC_TOWER_DATA := preload("res://data/towers/basic_tower.tres")
-const HEAVY_BATTERY_DATA := preload("res://data/towers/heavy_battery.tres")
+const MUSTERLINE_REDOUBT_DATA := preload("res://data/mvp/towers/musterline_redoubt.tres")
+const AURIC_SENTINEL_DATA := preload("res://data/mvp/towers/auric_sentinel_lancepost.tres")
+const PYRE_CHAPEL_DATA := preload("res://data/mvp/towers/pyre_chapel_array.tres")
+const COGFORGED_RELAY_DATA := preload("res://data/mvp/towers/cogforged_relay_spire.tres")
+const RELIQUARY_BOMBARD_DATA := preload("res://data/mvp/towers/reliquary_bombard.tres")
 
 const TOWER_DEFS := {
-	"basic_tower": {"scene": BASIC_TOWER_SCENE, "data": BASIC_TOWER_DATA},
-	"heavy_battery": {"scene": HEAVY_BATTERY_SCENE, "data": HEAVY_BATTERY_DATA},
+	"musterline_redoubt": {"scene": MUSTERLINE_REDOUBT_SCENE, "data": MUSTERLINE_REDOUBT_DATA},
+	"auric_sentinel_lancepost": {"scene": AURIC_SENTINEL_SCENE, "data": AURIC_SENTINEL_DATA},
+	"pyre_chapel_array": {"scene": PYRE_CHAPEL_SCENE, "data": PYRE_CHAPEL_DATA},
+	"cogforged_relay_spire": {"scene": COGFORGED_RELAY_SCENE, "data": COGFORGED_RELAY_DATA},
+	"reliquary_bombard": {"scene": RELIQUARY_BOMBARD_SCENE, "data": RELIQUARY_BOMBARD_DATA},
+}
+
+const COMMANDER_DEFS := {
+	"legion_prefect": {"scene": LEGION_PREFECT_SCENE, "data": LEGION_PREFECT_DATA},
 }
 
 @onready var map_layer: Node2D = $MapLayer
@@ -68,10 +84,10 @@ func _process(delta: float) -> void:
 
 func _handle_build_input() -> void:
 	if Input.is_action_just_pressed("ability_1"):
-		_toggle_tower_selection("basic_tower")
+		_toggle_tower_selection("musterline_redoubt")
 		return
 	if Input.is_action_just_pressed("ability_3"):
-		_toggle_tower_selection("heavy_battery")
+		_toggle_tower_selection("auric_sentinel_lancepost")
 		return
 	if Input.is_action_just_pressed("sell_selected"):
 		_try_sell_selected_tower()
@@ -102,7 +118,8 @@ func _setup_map() -> void:
 	map_layer.add_child(map_instance)
 
 func _setup_commander() -> void:
-	commander_instance = BASIC_COMMANDER_SCENE.instantiate()
+	var commander_def: Dictionary = COMMANDER_DEFS.get(RunState.selected_commander_id, COMMANDER_DEFS[RunState.DEFAULT_COMMANDER_ID])
+	commander_instance = commander_def.get("scene").instantiate()
 	commander_layer.add_child(commander_instance)
 	commander_instance.global_position = map_instance.get_commander_spawn_position()
 	commander_instance.setup(map_instance.get_world_bounds())
@@ -305,24 +322,48 @@ func _start_wave(wave_number: int) -> void:
 	hud_instance.show_banner(RunState.t("wave_banner") % wave_number, Color(0.96, 0.62, 0.28), 1.5)
 	if wave_number >= 2:
 		hud_instance.show_event(RunState.t("pressure_rising"), Color(0.94, 0.52, 0.24), 1.2)
-	wave_runner.enemy_count = 8 + (wave_number * 2)
-	wave_runner.spawn_interval = maxf(0.45, 0.9 - (wave_number - 1) * 0.05)
-	wave_runner.speed_scale = minf(1.0 + ((wave_number - 1) * 0.04), 1.4) * RunState.enemy_speed_multiplier
-	wave_runner.health_scale = (1.0 if wave_number <= 3 else minf(1.0 + ((wave_number - 3) * 0.08), 1.6)) * RunState.enemy_health_multiplier
+	wave_runner.enemy_count = 8 + (wave_number * 2) + (2 if wave_number >= 6 else 0)
+	wave_runner.spawn_interval = maxf(0.42, 0.95 - (wave_number - 1) * 0.045)
+	wave_runner.speed_scale = minf(1.0 + ((wave_number - 1) * 0.035), 1.32) * RunState.enemy_speed_multiplier
+	wave_runner.health_scale = (1.0 if wave_number <= 4 else minf(1.0 + ((wave_number - 4) * 0.07), 1.55)) * RunState.enemy_health_multiplier
 	wave_runner.spawn_queue = _build_spawn_queue(wave_number)
 	wave_runner.start_wave(enemy_layer, map_instance.get_enemy_curve(), Callable(self, "_on_enemy_reached_goal"))
 
 func _build_spawn_queue(wave_number: int) -> Array:
-	var total_count: int = 8 + (wave_number * 2)
+	var total_count: int = wave_runner.enemy_count
 	var queue: Array = []
 	for i in range(total_count):
 		queue.append(BASIC_ENEMY_SCENE)
+
+	var is_boss_wave := false
+	if RunState.game_mode == "campaign" and not RunState.free_mode_active:
+		is_boss_wave = wave_number == RunState.target_wave
+	else:
+		is_boss_wave = wave_number >= 8 and wave_number % 6 == 0
+
 	if wave_number >= 2:
-		queue[max(0, total_count - 2)] = SHELLBACK_BRUTE_SCENE
+		for i in range(min(2, int(total_count / 4))):
+			queue[max(0, total_count - 2 - i)] = RAZOR_LEAPER_SCENE
 	if wave_number >= 3:
-		queue[max(0, total_count - 5)] = SHELLBACK_BRUTE_SCENE
+		for i in range(min(3, int(total_count / 3))):
+			queue[max(0, 2 + i * 2)] = RAZOR_LEAPER_SCENE
+	if wave_number >= 4:
+		queue[max(0, total_count - 4)] = SHELLBACK_BRUTE_SCENE
 	if wave_number >= 5:
-		queue[max(0, total_count - 1)] = SHELLBACK_BOSS_SCENE
+		queue[max(0, int(total_count / 2))] = SHELLBACK_BRUTE_SCENE
+	if wave_number >= 6:
+		queue[max(0, total_count - 6)] = SPORE_HERALD_SCENE
+	if wave_number >= 7:
+		queue[max(0, int(total_count / 3))] = SPORE_HERALD_SCENE
+		queue[max(0, total_count - 8)] = SHELLBACK_BRUTE_SCENE
+	if wave_number >= 9:
+		queue[max(0, total_count - 10)] = RAZOR_LEAPER_SCENE
+		queue[max(0, total_count - 12)] = SHELLBACK_BRUTE_SCENE
+	if is_boss_wave:
+		queue[max(0, total_count - 1)] = MAW_COLOSSUS_SCENE
+		queue[max(0, total_count - 3)] = SPORE_HERALD_SCENE
+		queue[max(0, total_count - 5)] = SHELLBACK_BRUTE_SCENE
+
 	return queue
 
 func _update_tower_preview() -> void:

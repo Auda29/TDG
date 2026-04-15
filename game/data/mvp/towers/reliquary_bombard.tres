@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="TowerData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/tower_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+content_id = "reliquary_bombard"
+tower_id = "reliquary_bombard"
+category = "tower"
+display_name = "Reliquary Bombard"
+display_name_de = "Reliquiar-Bombarde"
+short_description = "Indirect artillery platform for group pressure and zone damage."
+short_description_de = "Indirekte Artillerieplattform für Gruppendruck und Flächenschaden."
+description = "A slow-firing relic artillery tower that punishes clustered enemies from long range. It is designed around indirect splash pressure rather than direct sustained fire."
+description_de = "Ein langsam feuernder Reliquien-Artillerieturm, der dichte Gegnergruppen auf große Entfernung bestraft. Er ist auf indirekten Flächendruck statt direkten Dauerschaden ausgelegt."
+tags = PackedStringArray("artillery", "explosive", "indirect", "aoe", "mvp")
+extra_stats = {"role": "indirect fire / aoe", "single_target_dps": 40.0, "direct_damage": 120.0, "splash_damage": 60.0, "splash_radius": 2.2, "target_modes": PackedStringArray("largest group", "marked zone"), "special_rule": "Buried Coordinates: +25% accuracy against marked or slowed groups."}
+tower_cost = 190
+attack_range = 11.5
+fire_rate = 0.333333
+damage = 120.0
+turn_speed = 5.5
+recoil_distance = 12.0
+sway_speed = 1.4
+sway_amount = 0.4
+muzzle_offset = Vector2(0, -24)
+selection_radius = 40.0
+decal_fill_color = Color(0.14, 0.12, 0.10, 0.48)
+decal_arc_color = Color(0.60, 0.54, 0.24, 0.20)
+laser_color = Color(1.0, 0.58, 0.18, 0.88)
+beam_core_color = Color(1.0, 0.86, 0.54, 0.92)
+laser_width = 4.0
+flash_size = 14.0
+impact_radius = 14.0
+splash_radius = 84.0
+splash_damage_multiplier = 0.5

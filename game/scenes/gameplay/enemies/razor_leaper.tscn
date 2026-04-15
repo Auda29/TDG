@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/enemies/basic_enemy.gd" id="1"]
+[ext_resource type="Resource" path="res://data/mvp/enemies/razor_leaper.tres" id="2"]
+
+[node name="RazorLeaper" type="Node2D"]
+script = ExtResource("1")
+enemy_data = ExtResource("2")
+
+[node name="Body" type="Polygon2D" parent="."]
+color = Color(0.32, 0.12, 0.14, 1)
+polygon = PackedVector2Array(-18, -10, -2, -18, 20, -8, 10, 10, -8, 14, -20, 2)
+
+[node name="Claw" type="Polygon2D" parent="."]
+color = Color(0.78, 0.26, 0.18, 1)
+polygon = PackedVector2Array(6, -4, 20, 0, 6, 6)

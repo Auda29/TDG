@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+content_id = "razor_leaper"
+category = "enemy"
+display_name = "Razor Leaper"
+display_name_de = "Klingen-Springer"
+short_description = "Fast breach enemy that punishes slow defenses."
+short_description_de = "Schneller Durchbruchsgegner, der träge Verteidigungen bestraft."
+description = "A rapid assault organism built to punish slow or overly heavy tower setups. If it is not intercepted quickly, it creates immediate leak pressure."
+description_de = "Ein schneller Angriffsorganismus, der langsame oder zu schwere Tower-Setups bestraft. Wird er nicht früh gestoppt, erzeugt er sofortigen Leak-Druck."
+tags = PackedStringArray("fast", "leaper", "assault", "mvp")
+extra_stats = {"role": "fast mover / gap punisher", "threat": 4, "bounty": 10, "special_rule": "Pounce: every 6s it jumps forward and ignores short slow effects."}
+max_health = 95.0
+move_speed = 5.2
+fortress_damage = 2
+credit_reward = 10
+armor = 1.0
+is_elite = false
+is_boss = false
+turn_speed = 11.0

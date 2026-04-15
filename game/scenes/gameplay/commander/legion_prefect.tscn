@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/commander/basic_commander.gd" id="1"]
+[ext_resource type="Resource" path="res://data/mvp/commander/legion_prefect.tres" id="2"]
+
+[node name="LegionPrefect" type="Node2D"]
+script = ExtResource("1")
+commander_data = ExtResource("2")
+
+[node name="Body" type="Polygon2D" parent="."]
+color = Color(0.18, 0.28, 0.34, 1)
+polygon = PackedVector2Array(-16, -14, -8, -20, 8, -20, 16, -14, 18, 4, 12, 16, -12, 16, -18, 4)
+
+[node name="Helmet" type="Polygon2D" parent="."]
+color = Color(0.26, 0.94, 1.0, 1)
+polygon = PackedVector2Array(-6, -24, 6, -24, 10, -14, 4, -8, -4, -8, -10, -14)

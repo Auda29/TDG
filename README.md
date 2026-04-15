@@ -14,12 +14,22 @@ This repository is no longer concept-only. It currently contains:
 
 Current prototype features include:
 - free tower placement inside a defended build zone
-- two playable tower types
-- a movable commander with Overwatch support ability
-- wave spawning with scaling enemies
-- elite and boss threats with dedicated HUD feedback
-- sell refunds, credits, and base HP
-- boss bar, warning banners, and lane threat markers
+- five playable MVP tower classes with clearer roles:
+  - Musterline Redoubt
+  - Auric Sentinel Lancepost
+  - Pyre Chapel Array
+  - Cogforged Relay Spire
+  - Reliquary Bombard
+- a pre-run commander selection flow with a movable commander and Overwatch support ability
+- campaign and endless modes with difficulty selection and unlock progression
+- bilingual UI support for English and German
+- persistent profile/settings storage for language, mode, audio, fullscreen, and unlocks
+- start menu settings, in-game settings overlay, and end-of-run restart/menu/free-mode flow
+- wave spawning with scaling enemies and staged elite/boss pacing
+- MVP enemy roster integration with swarm, fast, elite, support, and boss threats
+- sell refunds, credits, base HP, boss bar, warning banners, and lane threat markers
+- data-driven content resources for towers, enemies, and commander content
+- an MVP content browser/inspect UI in the start menu
 
 ## Vision
 The project aims to combine:
@@ -65,10 +75,10 @@ Inside `game/` the main entry points are:
 - `scripts/gameplay/game_root.gd`
 
 ## Near-term priorities
-- define and polish run fail-state/game-over flow
-- centralize gameplay data for towers and future upgrades
-- expand tower roster toward MVP scope
-- add progression and upgrade decisions within a run
+- runtime-validate the current Godot prototype changes in-editor/headless
+- continue polishing the 5-tower MVP roster and wave balance
+- deepen tower differentiation with richer mechanics and upgrade paths
+- expand commander options beyond the current MVP commander
 - keep visuals lightweight but readable
 
 ## CI

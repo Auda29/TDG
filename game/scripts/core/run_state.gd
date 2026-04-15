@@ -6,8 +6,13 @@ const DEFAULT_TARGET_WAVE := 12
 const DEFAULT_GAME_MODE := "campaign"
 const DEFAULT_LANGUAGE := "en"
 const SAVE_PATH := "user://profile.cfg"
-const PROFILE_VERSION := 2
+const PROFILE_VERSION := 3
 const DEFAULT_UNLOCKED_DIFFICULTIES: Array[String] = ["recruit", "standard", "custom"]
+const DEFAULT_COMMANDER_ID := "legion_prefect"
+const LEGION_PREFECT_DATA := preload("res://data/mvp/commander/legion_prefect.tres")
+const COMMANDER_DISPLAY_DATA := {
+	"legion_prefect": LEGION_PREFECT_DATA,
+}
 
 const DIFFICULTY_UNLOCKS := {
 	"recruit": "",
@@ -83,6 +88,7 @@ var music_volume: float = 1.0
 var sfx_volume: float = 1.0
 var fullscreen_enabled: bool = false
 var unlocked_difficulties: Array[String] = ["recruit", "standard", "custom"]
+var selected_commander_id: String = DEFAULT_COMMANDER_ID
 
 func _ready() -> void:
 	_load_profile()
@@ -97,6 +103,7 @@ func configure_difficulty(config: Dictionary) -> void:
 	target_wave = int(config.get("target_wave", DEFAULT_TARGET_WAVE))
 	game_mode = String(config.get("game_mode", DEFAULT_GAME_MODE))
 	menu_language = String(config.get("language", menu_language))
+	selected_commander_id = String(config.get("commander_id", selected_commander_id))
 	_save_profile()
 
 func reset_for_new_run() -> void:
@@ -144,11 +151,17 @@ func get_run_stats_text() -> String:
 		objective_text = t("objective_free_mode")
 	else:
 		objective_text = t("objective_target_wave") % target_wave
-	return "%s: %s\n%s: %s\n%s: %d\n%s: %d\n%s: %d\n%s: %s" % [t("difficulty"), difficulty_name, t("objective"), objective_text, t("wave_reached"), current_wave, t("enemies_defeated"), enemies_defeated, t("credits_remaining"), credits, t("survival_time"), get_formatted_elapsed_time()]
+	return "%s: %s\nCommander: %s\n%s: %s\n%s: %d\n%s: %d\n%s: %d\n%s: %s" % [t("difficulty"), difficulty_name, get_selected_commander_name(), t("objective"), objective_text, t("wave_reached"), current_wave, t("enemies_defeated"), enemies_defeated, t("credits_remaining"), credits, t("survival_time"), get_formatted_elapsed_time()]
 
 func get_formatted_elapsed_time() -> String:
 	var total_seconds: int = int(floor(elapsed_run_time))
 	return "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
+
+func get_selected_commander_name() -> String:
+	var commander_data = COMMANDER_DISPLAY_DATA.get(selected_commander_id)
+	if commander_data != null:
+		return commander_data.get_localized_display_name(menu_language)
+	return selected_commander_id.capitalize().replace("_", " ")
 
 func t(key: String) -> String:
 	var lang_table: Dictionary = TEXTS.get(menu_language, TEXTS["en"])
@@ -197,6 +210,7 @@ func _save_profile() -> void:
 	config.set_value("meta", "version", PROFILE_VERSION)
 	config.set_value("profile", "language", menu_language)
 	config.set_value("profile", "game_mode", game_mode)
+	config.set_value("profile", "selected_commander_id", selected_commander_id)
 	config.set_value("audio", "master_volume", master_volume)
 	config.set_value("audio", "music_volume", music_volume)
 	config.set_value("audio", "sfx_volume", sfx_volume)
@@ -212,6 +226,7 @@ func _load_profile() -> void:
 	var profile_version: int = int(config.get_value("meta", "version", 1))
 	menu_language = String(config.get_value("profile", "language", menu_language))
 	game_mode = String(config.get_value("profile", "game_mode", game_mode))
+	selected_commander_id = String(config.get_value("profile", "selected_commander_id", DEFAULT_COMMANDER_ID))
 	if profile_version >= 2:
 		master_volume = float(config.get_value("audio", "master_volume", master_volume))
 		music_volume = float(config.get_value("audio", "music_volume", music_volume))

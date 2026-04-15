@@ -28,12 +28,18 @@ const UI_BUTTON_COOL_SOFT := Color(0.92, 0.94, 1.0, 1.0)
 const UI_BUTTON_GO := Color(0.90, 0.98, 0.92, 1.0)
 const UI_BUTTON_WARM := Color(1.0, 0.88, 0.84, 1.0)
 const UI_SLOT_TINT := Color(0.90, 0.95, 1.0, 0.92)
-const BASIC_TOWER_DATA = preload("res://data/towers/basic_tower.tres")
-const HEAVY_BATTERY_DATA = preload("res://data/towers/heavy_battery.tres")
+const MUSTERLINE_REDOUBT_DATA = preload("res://data/mvp/towers/musterline_redoubt.tres")
+const AURIC_SENTINEL_DATA = preload("res://data/mvp/towers/auric_sentinel_lancepost.tres")
+const PYRE_CHAPEL_DATA = preload("res://data/mvp/towers/pyre_chapel_array.tres")
+const COGFORGED_RELAY_DATA = preload("res://data/mvp/towers/cogforged_relay_spire.tres")
+const RELIQUARY_BOMBARD_DATA = preload("res://data/mvp/towers/reliquary_bombard.tres")
 
 const TOWER_DISPLAY_DATA := {
-	"basic_tower": BASIC_TOWER_DATA,
-	"heavy_battery": HEAVY_BATTERY_DATA,
+	"musterline_redoubt": MUSTERLINE_REDOUBT_DATA,
+	"auric_sentinel_lancepost": AURIC_SENTINEL_DATA,
+	"pyre_chapel_array": PYRE_CHAPEL_DATA,
+	"cogforged_relay_spire": COGFORGED_RELAY_DATA,
+	"reliquary_bombard": RELIQUARY_BOMBARD_DATA,
 }
 
 const TARGET_ICONS := {
@@ -98,6 +104,9 @@ const TARGET_ICONS := {
 @onready var build_title_label: Label = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/BuildTitleLabel
 @onready var basic_tower_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/BasicTowerButton
 @onready var heavy_battery_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/HeavyBatteryButton
+@onready var pyre_chapel_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/PyreChapelButton
+@onready var cogforged_relay_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/CogforgedRelayButton
+@onready var reliquary_bombard_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/BuildPanel/ReliquaryBombardButton
 @onready var flow_title_label: Label = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/FlowTitleLabel
 @onready var pause_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/PauseButton
 @onready var auto_wave_button: CheckButton = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/AutoWaveButton
@@ -152,8 +161,11 @@ var _end_screen_pulse_time: float = 0.0
 var _settings_open: bool = false
 
 func _ready() -> void:
-	basic_tower_button.pressed.connect(func() -> void: build_tower_requested.emit("basic_tower"))
-	heavy_battery_button.pressed.connect(func() -> void: build_tower_requested.emit("heavy_battery"))
+	basic_tower_button.pressed.connect(func() -> void: build_tower_requested.emit("musterline_redoubt"))
+	heavy_battery_button.pressed.connect(func() -> void: build_tower_requested.emit("auric_sentinel_lancepost"))
+	pyre_chapel_button.pressed.connect(func() -> void: build_tower_requested.emit("pyre_chapel_array"))
+	cogforged_relay_button.pressed.connect(func() -> void: build_tower_requested.emit("cogforged_relay_spire"))
+	reliquary_bombard_button.pressed.connect(func() -> void: build_tower_requested.emit("reliquary_bombard"))
 	sell_button.pressed.connect(func() -> void: sell_selected_requested.emit())
 	target_prev_button.pressed.connect(func() -> void: cycle_targeting_previous_requested.emit())
 	target_next_button.pressed.connect(func() -> void: cycle_targeting_next_requested.emit())
@@ -182,8 +194,11 @@ func _ready() -> void:
 	settings_sfx_volume_slider.value = RunState.sfx_volume
 	settings_fullscreen_button.button_pressed = RunState.fullscreen_enabled
 	_placement_text = RunState.t("placement_build_off")
-	basic_tower_button.text = "%s (%d)" % [BASIC_TOWER_DATA.get_localized_display_name(), BASIC_TOWER_DATA.tower_cost]
-	heavy_battery_button.text = "%s (%d)" % [HEAVY_BATTERY_DATA.get_localized_display_name(), HEAVY_BATTERY_DATA.tower_cost]
+	basic_tower_button.text = "%s (%d)" % [MUSTERLINE_REDOUBT_DATA.get_localized_display_name(), MUSTERLINE_REDOUBT_DATA.tower_cost]
+	heavy_battery_button.text = "%s (%d)" % [AURIC_SENTINEL_DATA.get_localized_display_name(), AURIC_SENTINEL_DATA.tower_cost]
+	pyre_chapel_button.text = "%s (%d)" % [PYRE_CHAPEL_DATA.get_localized_display_name(), PYRE_CHAPEL_DATA.tower_cost]
+	cogforged_relay_button.text = "%s (%d)" % [COGFORGED_RELAY_DATA.get_localized_display_name(), COGFORGED_RELAY_DATA.tower_cost]
+	reliquary_bombard_button.text = "%s (%d)" % [RELIQUARY_BOMBARD_DATA.get_localized_display_name(), RELIQUARY_BOMBARD_DATA.tower_cost]
 	_apply_visual_theme()
 	_apply_localized_ui()
 	_update_selected_panel()
@@ -284,10 +299,18 @@ func set_boss_state(active: bool, boss_name: String = "", health_ratio: float = 
 	boss_health_bar.value = clampf(health_ratio, 0.0, 1.0) * 100.0
 
 func set_selected_build_mode(tower_id: String) -> void:
-	basic_tower_button.button_pressed = tower_id == "basic_tower"
-	heavy_battery_button.button_pressed = tower_id == "heavy_battery"
-	basic_tower_button.modulate = Color(0.30, 0.48, 0.54, 1.0) if tower_id == "basic_tower" else Color(0.24, 0.34, 0.38, 1.0)
-	heavy_battery_button.modulate = Color(0.50, 0.34, 0.20, 1.0) if tower_id == "heavy_battery" else Color(0.34, 0.26, 0.22, 1.0)
+	var build_buttons := {
+		"musterline_redoubt": basic_tower_button,
+		"auric_sentinel_lancepost": heavy_battery_button,
+		"pyre_chapel_array": pyre_chapel_button,
+		"cogforged_relay_spire": cogforged_relay_button,
+		"reliquary_bombard": reliquary_bombard_button,
+	}
+	for id in build_buttons.keys():
+		var button: Button = build_buttons[id]
+		var active := tower_id == id
+		button.button_pressed = active
+		button.modulate = UI_BUTTON_GO if active else UI_BUTTON_COOL
 
 func set_selected_tower(tower: Node) -> void:
 	_selected_tower = tower
@@ -337,15 +360,16 @@ func set_end_state(end_state: String, status_text: String = "", hint_text: Strin
 	_update_flow_panel()
 
 func _get_commander_text() -> String:
+	var commander_name := RunState.get_selected_commander_name()
 	if _commander == null or not is_instance_valid(_commander):
-		return RunState.t("commander_offline")
+		return "%s | %s" % [commander_name, RunState.t("commander_offline")]
 	if not _commander.has_method("get_overwatch_cooldown_remaining"):
-		return RunState.t("commander_active")
+		return "%s | %s" % [commander_name, RunState.t("commander_active")]
 	if _commander.has_method("is_overwatch_active") and _commander.is_overwatch_active():
-		return RunState.t("commander_active_timer") % _commander.get_overwatch_remaining()
+		return "%s | %s" % [commander_name, RunState.t("commander_active_timer") % _commander.get_overwatch_remaining()]
 	if _commander.is_overwatch_ready():
-		return RunState.t("commander_ready")
-	return RunState.t("commander_cooldown") % _commander.get_overwatch_cooldown_remaining()
+		return "%s | %s" % [commander_name, RunState.t("commander_ready")]
+	return "%s | %s" % [commander_name, RunState.t("commander_cooldown") % _commander.get_overwatch_cooldown_remaining()]
 
 func _get_build_mode_text() -> String:
 	var tower_data = TOWER_DISPLAY_DATA.get(GameState.selected_tower_id)
@@ -388,10 +412,13 @@ func _apply_visual_theme() -> void:
 	threat_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
 	banner_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
 	boss_name_label.add_theme_color_override("font_color", UI_COLOR_WARNING)
-	for button in [basic_tower_button, heavy_battery_button, pause_button, auto_wave_button, next_wave_button, settings_button, target_prev_button, target_next_button, sell_button, upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d, game_over_restart_button, game_over_menu_button, game_over_continue_button]:
+	for button in [basic_tower_button, heavy_battery_button, pyre_chapel_button, cogforged_relay_button, reliquary_bombard_button, pause_button, auto_wave_button, next_wave_button, settings_button, target_prev_button, target_next_button, sell_button, upgrade_slot_a, upgrade_slot_b, upgrade_slot_c, upgrade_slot_d, game_over_restart_button, game_over_menu_button, game_over_continue_button]:
 		button.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	basic_tower_button.modulate = UI_BUTTON_COOL
-	heavy_battery_button.modulate = Color(1.0, 0.90, 0.82, 1.0)
+	heavy_battery_button.modulate = UI_BUTTON_COOL
+	pyre_chapel_button.modulate = UI_BUTTON_COOL
+	cogforged_relay_button.modulate = UI_BUTTON_COOL
+	reliquary_bombard_button.modulate = UI_BUTTON_COOL
 	pause_button.modulate = UI_BUTTON_COOL_SOFT
 	auto_wave_button.modulate = UI_BUTTON_GO
 	next_wave_button.modulate = UI_BUTTON_WARM
@@ -457,7 +484,7 @@ func _update_selected_panel() -> void:
 	sell_button.disabled = false
 
 func _apply_selected_visual_identity(tower_name: String) -> void:
-	if tower_name == HEAVY_BATTERY_DATA.get_localized_display_name():
+	if tower_name == AURIC_SENTINEL_DATA.get_localized_display_name():
 		_current_header_base_color = Color(0.54, 0.38, 0.24, 1.0)
 		_current_silhouette_base_color = Color(0.22, 0.16, 0.12, 1.0)
 		_current_accent_color = Color(1.0, 0.74, 0.34, 0.95)
@@ -551,7 +578,10 @@ func _apply_localized_ui() -> void:
 	settings_master_volume_value_label.text = "%d%%" % int(round(RunState.master_volume * 100.0))
 	settings_music_volume_value_label.text = "%d%%" % int(round(RunState.music_volume * 100.0))
 	settings_sfx_volume_value_label.text = "%d%%" % int(round(RunState.sfx_volume * 100.0))
-	basic_tower_button.text = "%s (%d)" % [BASIC_TOWER_DATA.get_localized_display_name(), BASIC_TOWER_DATA.tower_cost]
-	heavy_battery_button.text = "%s (%d)" % [HEAVY_BATTERY_DATA.get_localized_display_name(), HEAVY_BATTERY_DATA.tower_cost]
+	basic_tower_button.text = "%s (%d)" % [MUSTERLINE_REDOUBT_DATA.get_localized_display_name(), MUSTERLINE_REDOUBT_DATA.tower_cost]
+	heavy_battery_button.text = "%s (%d)" % [AURIC_SENTINEL_DATA.get_localized_display_name(), AURIC_SENTINEL_DATA.tower_cost]
+	pyre_chapel_button.text = "%s (%d)" % [PYRE_CHAPEL_DATA.get_localized_display_name(), PYRE_CHAPEL_DATA.tower_cost]
+	cogforged_relay_button.text = "%s (%d)" % [COGFORGED_RELAY_DATA.get_localized_display_name(), COGFORGED_RELAY_DATA.tower_cost]
+	reliquary_bombard_button.text = "%s (%d)" % [RELIQUARY_BOMBARD_DATA.get_localized_display_name(), RELIQUARY_BOMBARD_DATA.tower_cost]
 	_update_selected_panel()
 	_update_flow_panel()

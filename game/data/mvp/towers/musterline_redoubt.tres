@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="TowerData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/tower_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+content_id = "musterline_redoubt"
+tower_id = "musterline_redoubt"
+category = "tower"
+display_name = "Musterline Redoubt"
+display_name_de = "Musterlinien-Redoute"
+short_description = "Cheap line-holder and early-game generalist bunker."
+short_description_de = "Günstiger Linienhalter und Generalisten-Bunker fürs Earlygame."
+description = "A standardized defensive bunker for reliable sustained fire. It anchors early and mid waves through cost efficiency, formation play, and simple target coverage."
+description_de = "Ein standardisierter Verteidigungsbunker für verlässliches Dauerfeuer. Er trägt frühe und mittlere Wellen durch Kosteneffizienz, Formationsspiel und einfache Zielabdeckung."
+tags = PackedStringArray("ballistic", "infantry", "core", "generalist", "mvp")
+extra_stats = {"role": "cheap generalist", "dps": 34.0, "armor_pressure": "low", "target_modes": PackedStringArray("First", "Nearest"), "special_rule": "Formation Link: +5% attack speed per adjacent Musterline Redoubt, max 3 stacks."}
+tower_cost = 80
+attack_range = 7.5
+fire_rate = 2.857143
+damage = 12.0
+turn_speed = 12.0
+recoil_distance = 4.0
+sway_speed = 2.8
+sway_amount = 1.0
+muzzle_offset = Vector2(0, -20)
+selection_radius = 30.0
+decal_fill_color = Color(0.10, 0.14, 0.16, 0.42)
+decal_arc_color = Color(0.34, 0.40, 0.44, 0.22)
+laser_color = Color(0.92, 0.86, 0.32, 0.90)
+beam_core_color = Color(1.0, 0.97, 0.75, 0.95)
+laser_width = 2.0
+flash_size = 6.0
+impact_radius = 8.0
+adjacency_radius = 88.0
+adjacency_fire_rate_bonus = 0.05
+max_adjacency_stacks = 3

@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/gameplay/enemies/basic_enemy.gd" id="1"]
+[ext_resource type="Resource" path="res://data/mvp/enemies/maw_colossus.tres" id="2"]
+
+[node name="MawColossus" type="Node2D"]
+script = ExtResource("1")
+enemy_data = ExtResource("2")
+
+[node name="Body" type="Polygon2D" parent="."]
+color = Color(0.18, 0.08, 0.08, 1)
+polygon = PackedVector2Array(-40, -26, -10, -34, 24, -28, 46, -6, 50, 14, 28, 30, -6, 36, -40, 24, -56, 2)
+
+[node name="Core" type="Polygon2D" parent="."]
+color = Color(0.88, 0.60, 0.16, 1)
+polygon = PackedVector2Array(-2, -10, 14, -4, 18, 10, 0, 16, -10, 4)
