@@ -93,7 +93,7 @@ theme_override_constants/separation = 18
 
 [node name="HeaderPanel" type="PanelContainer" parent="Margin/RootVBox"]
 layout_mode = 2
-self_modulate = Color(0.94, 0.97, 1, 0.16)
+self_modulate = Color(0.12, 0.15, 0.20, 0.95)
 
 [node name="HeaderMargin" type="MarginContainer" parent="Margin/RootVBox/HeaderPanel"]
 layout_mode = 2
@@ -120,7 +120,7 @@ autowrap_mode = 3
 [node name="MenuPanel" type="PanelContainer" parent="Margin/RootVBox"]
 layout_mode = 2
 size_flags_vertical = 3
-self_modulate = Color(0.94, 0.97, 1, 0.12)
+self_modulate = Color(0.06, 0.08, 0.12, 0.90)
 
 [node name="MenuMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel"]
 layout_mode = 2
@@ -140,7 +140,7 @@ theme_override_constants/separation = 14
 [node name="LanguagePanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-self_modulate = Color(0.94, 0.97, 1, 0.10)
+self_modulate = Color(0.10, 0.14, 0.18, 0.85)
 
 [node name="LanguageMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/LanguagePanel"]
 layout_mode = 2
@@ -176,7 +176,7 @@ text = "Deutsch"
 [node name="ModePanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-self_modulate = Color(0.94, 0.97, 1, 0.10)
+self_modulate = Color(0.10, 0.14, 0.18, 0.85)
 
 [node name="ModeMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/ModePanel"]
 layout_mode = 2
@@ -212,7 +212,7 @@ text = ""
 [node name="SettingsPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow"]
 layout_mode = 2
 size_flags_horizontal = 2
-self_modulate = Color(0.94, 0.97, 1, 0.10)
+self_modulate = Color(0.10, 0.14, 0.18, 0.85)
 
 [node name="SettingsMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/TopControlRow/SettingsPanel"]
 layout_mode = 2
@@ -290,7 +290,7 @@ autowrap_mode = 3
 
 [node name="SelectedDifficultyPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
 layout_mode = 2
-self_modulate = Color(0.84, 0.88, 0.94, 1)
+self_modulate = Color(0.18, 0.22, 0.28, 0.95)
 
 [node name="SelectedDifficultyMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedDifficultyPanel"]
 layout_mode = 2
@@ -320,7 +320,7 @@ autowrap_mode = 3
 [node name="CustomPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
 visible = false
 layout_mode = 2
-self_modulate = Color(0.86, 0.88, 0.82, 1)
+self_modulate = Color(0.16, 0.20, 0.24, 0.90)
 
 [node name="CustomMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/CustomPanel"]
 layout_mode = 2
@@ -454,7 +454,7 @@ text = "12"
 
 [node name="ControlsPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
 layout_mode = 2
-self_modulate = Color(0.84, 0.86, 0.92, 1)
+self_modulate = Color(0.12, 0.16, 0.20, 0.90)
 
 [node name="ControlsMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ControlsPanel"]
 layout_mode = 2
@@ -470,7 +470,7 @@ autowrap_mode = 3
 
 [node name="ContentBrowserPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
 layout_mode = 2
-self_modulate = Color(0.94, 0.97, 1, 0.10)
+self_modulate = Color(0.10, 0.14, 0.18, 0.85)
 
 [node name="ContentBrowserMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/ContentBrowserPanel"]
 layout_mode = 2
@@ -539,7 +539,7 @@ text = ""
 
 [node name="SelectedCommanderPanel" type="PanelContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox"]
 layout_mode = 2
-self_modulate = Color(0.72, 0.90, 1, 0.16)
+self_modulate = Color(0.14, 0.20, 0.26, 0.90)
 
 [node name="SelectedCommanderMargin" type="MarginContainer" parent="Margin/RootVBox/MenuPanel/MenuMargin/MenuVBox/SelectedCommanderPanel"]
 layout_mode = 2
@@ -603,7 +603,7 @@ mouse_filter = 2
 [node name="CommanderPopup" type="PanelContainer" parent="CommanderOverlay/CommanderCenter"]
 custom_minimum_size = Vector2(520, 320)
 layout_mode = 2
-self_modulate = Color(0.90, 0.95, 1.0, 0.98)
+self_modulate = Color(0.14, 0.18, 0.22, 0.98)
 
 [node name="CommanderMargin" type="MarginContainer" parent="CommanderOverlay/CommanderCenter/CommanderPopup"]
 layout_mode = 2
@@ -694,7 +694,7 @@ mouse_filter = 2
 [node name="SettingsPopup" type="PanelContainer" parent="SettingsOverlay/SettingsCenter"]
 custom_minimum_size = Vector2(420, 220)
 layout_mode = 2
-self_modulate = Color(0.92, 0.94, 0.98, 0.98)
+self_modulate = Color(0.14, 0.18, 0.22, 0.98)
 
 [node name="SettingsMargin" type="MarginContainer" parent="SettingsOverlay/SettingsCenter/SettingsPopup"]
 layout_mode = 2

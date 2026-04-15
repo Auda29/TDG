@@ -20,9 +20,9 @@ const UI_COLOR_CARRION_SOFT := Color(0.96, 0.62, 0.28)
 const UI_COLOR_NEUTRAL := Color(0.76, 0.80, 0.82)
 const UI_COLOR_WARNING := Color(0.96, 0.72, 0.24)
 const UI_COLOR_SUCCESS := Color(0.46, 0.92, 0.68)
-const UI_PANEL_TINT := Color(0.94, 0.97, 1.0, 0.10)
-const UI_PANEL_SOFT_TINT := Color(0.94, 0.97, 1.0, 0.07)
-const UI_PANEL_HEADER_TINT := Color(0.94, 0.97, 1.0, 0.12)
+const UI_PANEL_TINT := Color(0.06, 0.08, 0.12, 0.92)
+const UI_PANEL_SOFT_TINT := Color(0.12, 0.15, 0.18, 0.85)
+const UI_PANEL_HEADER_TINT := Color(0.16, 0.20, 0.24, 0.95)
 const UI_TITLE_TINT := Color(0.80, 0.88, 0.96)
 const UI_BUTTON_COOL := Color(0.88, 0.96, 1.0, 1.0)
 const UI_BUTTON_COOL_SOFT := Color(0.92, 0.94, 1.0, 1.0)
@@ -89,23 +89,17 @@ const TARGET_ICONS := {
 @onready var boss_bar: MarginContainer = $BossBar
 @onready var boss_name_label: Label = $BossBar/BossBarPanel/BossBarVBox/BossNameLabel
 @onready var boss_health_bar: ProgressBar = $BossBar/BossBarPanel/BossBarVBox/BossHealthBar
+@onready var top_bar: PanelContainer = $TopBar
 @onready var bottom_bar: PanelContainer = $BottomBar
-@onready var status_panel: PanelContainer = $BottomBar/Margin/RootHBox/StatusPanel
-@onready var center_panel: PanelContainer = $BottomBar/Margin/RootHBox/CenterPanel
-@onready var selected_panel: PanelContainer = $SelectedPanel
-@onready var frame_top: ColorRect = $SelectedPanel/FrameTop
-@onready var frame_bottom: ColorRect = $SelectedPanel/FrameBottom
-@onready var corner_tl: ColorRect = $SelectedPanel/CornerTL
-@onready var corner_br: ColorRect = $SelectedPanel/CornerBR
-@onready var credits_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/CreditsLabel
-@onready var wave_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/WaveLabel
-@onready var base_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/BaseLabel
-@onready var mode_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/ModeLabel
-@onready var placement_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/PlacementLabel
-@onready var commander_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/StatsGrid/CommanderLabel
-@onready var event_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/EventLabel
-@onready var threat_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/ThreatLabel
-@onready var hint_label: Label = $BottomBar/Margin/RootHBox/StatusPanel/StatusMargin/StatusVBox/HintLabel
+@onready var base_label: Label = $TopBar/Margin/TopHBox/ResourceHBox/BaseLabel
+@onready var credits_label: Label = $TopBar/Margin/TopHBox/ResourceHBox/CreditsLabel
+@onready var wave_label: Label = $TopBar/Margin/TopHBox/WaveHBox/WaveLabel
+@onready var mode_label: Label = $BottomBar/Margin/BottomHBox/ModeLabel
+@onready var placement_label: Label = $BottomBar/Margin/BottomHBox/PlacementLabel
+@onready var commander_label: Label = $BottomBar/Margin/BottomHBox/CommanderLabel
+@onready var hint_label: Label = $BottomBar/Margin/BottomHBox/HintLabel
+@onready var event_label: Label = $MessagesVBox/EventLabel
+@onready var threat_label: Label = $MessagesVBox/ThreatLabel
 
 @onready var build_drawer_toggle_button: Button = $BuildDrawerToggle
 @onready var build_drawer_panel: PanelContainer = $BuildDrawerPanel
@@ -116,11 +110,6 @@ const TARGET_ICONS := {
 @onready var pyre_chapel_button: Button = $BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons/PyreChapelButton
 @onready var cogforged_relay_button: Button = $BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons/CogforgedRelayButton
 @onready var reliquary_bombard_button: Button = $BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons/ReliquaryBombardButton
-@onready var flow_title_label: Label = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/FlowTitleLabel
-@onready var pause_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/PauseButton
-@onready var auto_wave_button: CheckButton = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/AutoWaveButton
-@onready var next_wave_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/NextWaveButton
-@onready var settings_button: Button = $BottomBar/Margin/RootHBox/CenterPanel/CenterMargin/CenterHBox/FlowPanel/SettingsButton
 @onready var header_panel: PanelContainer = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel
 @onready var header_divider: ColorRect = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderDivider
 @onready var silhouette_panel: PanelContainer = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/SilhouettePanel
@@ -429,8 +418,7 @@ func _set_build_drawer_visible(visible: bool) -> void:
 
 func _apply_visual_theme() -> void:
 	bottom_bar.self_modulate = UI_PANEL_TINT
-	status_panel.self_modulate = UI_PANEL_SOFT_TINT
-	center_panel.self_modulate = UI_PANEL_SOFT_TINT
+	top_bar.self_modulate = UI_PANEL_TINT
 	selected_panel.self_modulate = UI_PANEL_TINT
 	selected_panel.modulate = Color(1, 1, 1, 0.98)
 	selected_panel.custom_minimum_size = Vector2(332, 0)
@@ -456,7 +444,6 @@ func _apply_visual_theme() -> void:
 	placement_label.add_theme_color_override("font_color", Color(0.84, 0.90, 0.96))
 	commander_label.add_theme_color_override("font_color", UI_COLOR_DEFENDER_SOFT)
 	build_title_label.add_theme_color_override("font_color", UI_TITLE_TINT)
-	flow_title_label.add_theme_color_override("font_color", UI_TITLE_TINT)
 	actions_title_label.add_theme_color_override("font_color", UI_TITLE_TINT)
 	upgrades_title_label.add_theme_color_override("font_color", UI_TITLE_TINT)
 	event_label.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
@@ -651,7 +638,6 @@ func _apply_settings() -> void:
 func _apply_localized_ui() -> void:
 	build_title_label.text = RunState.t("build")
 	build_hint_label.text = "Drag from the drawer onto the field, or click to arm placement" if RunState.menu_language == "en" else "Aus dem Panel aufs Feld ziehen oder anklicken, um die Platzierung zu aktivieren"
-	flow_title_label.text = RunState.t("wave_control")
 	actions_title_label.text = RunState.t("tower_actions")
 	upgrades_title_label.text = RunState.t("upgrade_slots")
 	settings_title_label.text = RunState.t("settings")
