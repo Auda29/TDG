@@ -58,6 +58,11 @@ var _build_drag_active: bool = false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	map_layer.process_mode = Node.PROCESS_MODE_PAUSABLE
+	build_layer.process_mode = Node.PROCESS_MODE_PAUSABLE
+	enemy_layer.process_mode = Node.PROCESS_MODE_PAUSABLE
+	tower_layer.process_mode = Node.PROCESS_MODE_PAUSABLE
+	commander_layer.process_mode = Node.PROCESS_MODE_PAUSABLE
 	RunState.reset_for_new_run()
 	GameState.clear_selection()
 	_setup_map()
@@ -163,6 +168,7 @@ func _setup_hud() -> void:
 
 func _setup_wave() -> void:
 	wave_runner = WAVE_RUNNER_SCENE.instantiate()
+	wave_runner.process_mode = Node.PROCESS_MODE_PAUSABLE
 	wave_runner.enemy_scene = BASIC_ENEMY_SCENE
 	wave_runner.spawn_interval = 0.9
 	wave_runner.wave_cleared.connect(_on_wave_cleared)
@@ -297,6 +303,14 @@ func _on_boss_reached_goal(enemy: Node) -> void:
 	if active_boss == enemy:
 		active_boss = null
 
+func _clear_all_enemies() -> void:
+	for enemy in enemy_layer.get_children():
+		if is_instance_valid(enemy):
+			enemy.queue_free()
+	active_boss = null
+	if hud_instance != null and hud_instance.has_method("set_boss_state"):
+		hud_instance.set_boss_state(false)
+
 func _trigger_game_over() -> void:
 	RunState.mark_defeat()
 	waiting_for_manual_next_wave = false
@@ -304,6 +318,7 @@ func _trigger_game_over() -> void:
 	_build_drag_active = false
 	_clear_preview()
 	_clear_selected_placed_tower()
+	_clear_all_enemies()
 	GameState.clear_selection()
 	hud_instance.show_banner(RunState.t("fortress_lost"), Color(1.0, 0.42, 0.28), 99.0)
 	hud_instance.show_event(RunState.t("run_over_restart"), Color(1.0, 0.68, 0.30), 99.0)
@@ -317,6 +332,7 @@ func _trigger_victory(cleared_wave: int) -> void:
 	_build_drag_active = false
 	_clear_preview()
 	_clear_selected_placed_tower()
+	_clear_all_enemies()
 	GameState.clear_selection()
 	hud_instance.show_banner(RunState.t("objective_secured"), Color(0.46, 0.92, 0.68), 99.0)
 	hud_instance.show_event(RunState.t("target_wave_cleared") % cleared_wave, Color(0.72, 1.0, 0.78), 99.0)

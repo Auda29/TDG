@@ -145,6 +145,7 @@ const TARGET_ICONS := {
 @onready var upgrade_slot_d: Button = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/UpgradesPanel/UpgradesMargin/UpgradesVBox/UpgradeSlots/UpgradeSlotD
 
 var _placement_text: String = "Build off"
+var _drawer_state_before_selection: bool = true
 var _banner_timer: float = 0.0
 var _damage_flash_timer: float = 0.0
 var _screen_flash_timer: float = 0.0
@@ -224,8 +225,10 @@ func _process(delta: float) -> void:
 	placement_label.text = RunState.t("placement") % _placement_text
 	placement_label.modulate = _placement_color
 	commander_label.text = _get_commander_text()
+	event_label.visible = _event_timer > 0.0
 	event_label.text = _event_text
 	event_label.modulate = _event_color
+	threat_label.visible = _threat_timer > 0.0
 	threat_label.text = _threat_text
 	threat_label.modulate = _threat_color
 	hint_label.text = _run_status_text if _run_over else RunState.t("hint_gameplay")
@@ -343,7 +346,6 @@ func set_selected_build_mode(tower_id: String) -> void:
 		build_drawer_toggle_button.visible = false
 	elif _selected_tower == null:
 		build_drawer_toggle_button.visible = true
-		_set_build_drawer_visible(true)
 
 func set_selected_tower(tower: Node) -> void:
 	_selected_tower = tower
@@ -494,7 +496,7 @@ func _update_selected_panel() -> void:
 	if _selected_tower == null or not is_instance_valid(_selected_tower):
 		selected_panel.visible = false
 		build_drawer_toggle_button.visible = true
-		_set_build_drawer_visible(true)
+		_set_build_drawer_visible(_drawer_state_before_selection)
 		selected_title_label.text = RunState.t("selected_tower")
 		selected_subtitle_label.text = RunState.t("defense_unit")
 		silhouette_label.text = "⬢"
@@ -510,6 +512,7 @@ func _update_selected_panel() -> void:
 		sell_button.disabled = true
 		return
 	selected_panel.visible = true
+	_drawer_state_before_selection = _build_drawer_open
 	_set_build_drawer_visible(false)
 	build_drawer_toggle_button.visible = false
 	var tower_name: String = _selected_tower.get_ui_display_name() if _selected_tower.has_method("get_ui_display_name") else String(_selected_tower.name)
