@@ -695,8 +695,8 @@ func _refresh_commander_dialog() -> void:
 	_selected_commander_index = clampi(_selected_commander_index, 0, COMMANDER_OPTIONS.size() - 1)
 	var commander_option: Dictionary = COMMANDER_OPTIONS[_selected_commander_index]
 	var commander_data = commander_option.get("data")
-	var localized_name := commander_data.get_localized_display_name(_current_language)
-	var is_current := String(commander_option.get("id", "")) == RunState.selected_commander_id
+	var localized_name: String = commander_data.get_localized_display_name(_current_language)
+	var is_current: bool = String(commander_option.get("id", "")) == RunState.selected_commander_id
 	commander_name_label.text = ("✓ " if is_current else "") + localized_name
 	commander_summary_label.text = "%s\n\n%s\n\n%s" % [commander_data.get_localized_short_description(_current_language), commander_data.get_localized_description(_current_language), _text("commander_dialog_current") if is_current else ""]
 	commander_stats_label.text = _format_content_stats(commander_data)

@@ -308,7 +308,7 @@ func set_selected_build_mode(tower_id: String) -> void:
 	}
 	for id in build_buttons.keys():
 		var button: Button = build_buttons[id]
-		var active := tower_id == id
+		var active: bool = tower_id == id
 		button.button_pressed = active
 		button.modulate = UI_BUTTON_GO if active else UI_BUTTON_COOL
 
