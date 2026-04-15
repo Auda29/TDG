@@ -94,6 +94,10 @@ const TARGET_ICONS := {
 @onready var base_label: Label = $TopBar/Margin/TopHBox/ResourceHBox/BaseLabel
 @onready var credits_label: Label = $TopBar/Margin/TopHBox/ResourceHBox/CreditsLabel
 @onready var wave_label: Label = $TopBar/Margin/TopHBox/WaveHBox/WaveLabel
+@onready var pause_button: Button = $TopBar/Margin/TopHBox/WaveFlowHBox/PauseButton
+@onready var auto_wave_button: CheckButton = $TopBar/Margin/TopHBox/WaveFlowHBox/AutoWaveButton
+@onready var next_wave_button: Button = $TopBar/Margin/TopHBox/WaveFlowHBox/NextWaveButton
+@onready var settings_button: Button = $TopBar/Margin/TopHBox/WaveFlowHBox/SettingsButton
 @onready var mode_label: Label = $BottomBar/Margin/BottomHBox/ModeLabel
 @onready var placement_label: Label = $BottomBar/Margin/BottomHBox/PlacementLabel
 @onready var commander_label: Label = $BottomBar/Margin/BottomHBox/CommanderLabel
@@ -110,6 +114,11 @@ const TARGET_ICONS := {
 @onready var pyre_chapel_button: Button = $BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons/PyreChapelButton
 @onready var cogforged_relay_button: Button = $BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons/CogforgedRelayButton
 @onready var reliquary_bombard_button: Button = $BuildDrawerPanel/BuildDrawerMargin/BuildDrawerVBox/BuildButtons/ReliquaryBombardButton
+@onready var selected_panel: PanelContainer = $SelectedPanel
+@onready var frame_top: ColorRect = $SelectedPanel/FrameTop
+@onready var frame_bottom: ColorRect = $SelectedPanel/FrameBottom
+@onready var corner_tl: ColorRect = $SelectedPanel/CornerTL
+@onready var corner_br: ColorRect = $SelectedPanel/CornerBR
 @onready var header_panel: PanelContainer = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel
 @onready var header_divider: ColorRect = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderDivider
 @onready var silhouette_panel: PanelContainer = $SelectedPanel/SelectedScroll/SelectedMargin/SelectedVBox/HeaderPanel/HeaderMargin/HeaderHBox/SilhouettePanel
@@ -435,7 +444,7 @@ func _apply_visual_theme() -> void:
 	corner_tl.color = Color(0.60, 0.90, 1.0, 0.9)
 	corner_br.color = Color(0.96, 0.72, 0.24, 0.8)
 	silhouette_label.add_theme_font_size_override("font_size", 36)
-	for label in [credits_label, wave_label, base_label, mode_label, placement_label, commander_label, hint_label, selected_title_label, selected_subtitle_label, selected_stats_label, silhouette_label, target_mode_label, build_title_label, build_hint_label, flow_title_label, actions_title_label, upgrades_title_label, settings_title_label]:
+	for label in [credits_label, wave_label, base_label, mode_label, placement_label, commander_label, hint_label, selected_title_label, selected_subtitle_label, selected_stats_label, silhouette_label, target_mode_label, build_title_label, build_hint_label, actions_title_label, upgrades_title_label, settings_title_label]:
 		label.add_theme_color_override("font_color", UI_COLOR_NEUTRAL)
 	credits_label.add_theme_color_override("font_color", UI_COLOR_DEFENDER)
 	wave_label.add_theme_color_override("font_color", UI_COLOR_CARRION_SOFT)
