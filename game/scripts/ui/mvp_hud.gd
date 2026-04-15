@@ -168,6 +168,17 @@ var _current_accent_color: Color = UI_COLOR_DEFENDER_SOFT
 var _end_screen_pulse_time: float = 0.0
 var _settings_open: bool = false
 var _build_drawer_open: bool = true
+var _build_drawer_tween: Tween = null
+
+const BUILD_DRAWER_OPEN_LEFT := -352.0
+const BUILD_DRAWER_OPEN_RIGHT := -20.0
+const BUILD_DRAWER_CLOSED_LEFT := -20.0
+const BUILD_DRAWER_CLOSED_RIGHT := 312.0
+const BUILD_DRAWER_TOGGLE_OPEN_LEFT := -396.0
+const BUILD_DRAWER_TOGGLE_OPEN_RIGHT := -360.0
+const BUILD_DRAWER_TOGGLE_CLOSED_LEFT := -56.0
+const BUILD_DRAWER_TOGGLE_CLOSED_RIGHT := -20.0
+const BUILD_DRAWER_ANIM_DURATION := 0.18
 
 func _ready() -> void:
 	_connect_build_button(basic_tower_button, "musterline_redoubt")
@@ -211,7 +222,7 @@ func _ready() -> void:
 	reliquary_bombard_button.text = "%s (%d)" % [RELIQUARY_BOMBARD_DATA.get_localized_display_name(), RELIQUARY_BOMBARD_DATA.tower_cost]
 	_apply_visual_theme()
 	_apply_localized_ui()
-	_set_build_drawer_visible(_build_drawer_open)
+	_set_build_drawer_visible(_build_drawer_open, true)
 	_update_selected_panel()
 	_update_flow_panel()
 
@@ -420,10 +431,43 @@ func _connect_build_button(button: Button, tower_id: String) -> void:
 func _toggle_build_drawer() -> void:
 	_set_build_drawer_visible(not _build_drawer_open)
 
-func _set_build_drawer_visible(visible: bool) -> void:
+func _set_build_drawer_visible(visible: bool, immediate: bool = false) -> void:
+	var state_unchanged := _build_drawer_open == visible and _build_drawer_tween == null
 	_build_drawer_open = visible
-	build_drawer_panel.visible = visible
-	build_drawer_toggle_button.text = "◀" if visible else "▶"
+	build_drawer_toggle_button.visible = _selected_tower == null or not is_instance_valid(_selected_tower)
+	build_drawer_toggle_button.text = "▶" if visible else "◀"
+	if state_unchanged and not immediate:
+		build_drawer_panel.visible = visible
+		return
+	if _build_drawer_tween != null:
+		_build_drawer_tween.kill()
+		_build_drawer_tween = null
+	if immediate:
+		_apply_build_drawer_layout(visible)
+		build_drawer_panel.visible = visible
+		return
+	build_drawer_panel.visible = true
+	_build_drawer_tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_build_drawer_tween.parallel().tween_property(build_drawer_panel, "offset_left", BUILD_DRAWER_OPEN_LEFT if visible else BUILD_DRAWER_CLOSED_LEFT, BUILD_DRAWER_ANIM_DURATION)
+	_build_drawer_tween.parallel().tween_property(build_drawer_panel, "offset_right", BUILD_DRAWER_OPEN_RIGHT if visible else BUILD_DRAWER_CLOSED_RIGHT, BUILD_DRAWER_ANIM_DURATION)
+	_build_drawer_tween.parallel().tween_property(build_drawer_toggle_button, "offset_left", BUILD_DRAWER_TOGGLE_OPEN_LEFT if visible else BUILD_DRAWER_TOGGLE_CLOSED_LEFT, BUILD_DRAWER_ANIM_DURATION)
+	_build_drawer_tween.parallel().tween_property(build_drawer_toggle_button, "offset_right", BUILD_DRAWER_TOGGLE_OPEN_RIGHT if visible else BUILD_DRAWER_TOGGLE_CLOSED_RIGHT, BUILD_DRAWER_ANIM_DURATION)
+	if not visible:
+		_build_drawer_tween.tween_callback(func() -> void:
+			if not _build_drawer_open:
+				build_drawer_panel.visible = false
+			_build_drawer_tween = null
+		)
+	else:
+		_build_drawer_tween.tween_callback(func() -> void:
+			_build_drawer_tween = null
+		)
+
+func _apply_build_drawer_layout(visible: bool) -> void:
+	build_drawer_panel.offset_left = BUILD_DRAWER_OPEN_LEFT if visible else BUILD_DRAWER_CLOSED_LEFT
+	build_drawer_panel.offset_right = BUILD_DRAWER_OPEN_RIGHT if visible else BUILD_DRAWER_CLOSED_RIGHT
+	build_drawer_toggle_button.offset_left = BUILD_DRAWER_TOGGLE_OPEN_LEFT if visible else BUILD_DRAWER_TOGGLE_CLOSED_LEFT
+	build_drawer_toggle_button.offset_right = BUILD_DRAWER_TOGGLE_OPEN_RIGHT if visible else BUILD_DRAWER_TOGGLE_CLOSED_RIGHT
 
 func _apply_visual_theme() -> void:
 	bottom_bar.self_modulate = UI_PANEL_TINT
