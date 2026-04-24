@@ -75,6 +75,7 @@ func _update_position(delta: float) -> void:
 			rotation = lerp_angle(rotation, target_rotation, clampf(delta * turn_speed, 0.0, 1.0))
 
 func _draw() -> void:
+	_draw_role_ground_vfx()
 	if _impact_flash > 0.0:
 		var impact_dir := _impact_local.normalized() if _impact_local.length() > 0.001 else Vector2.LEFT
 		var impact_pos := impact_dir * (14.0 if is_boss else 10.0)
@@ -105,6 +106,41 @@ func _draw() -> void:
 		if is_boss:
 			draw_arc(Vector2(0, marker_y), 24.0 + pulse * 3.0, 0.0, TAU, 28, Color(1.0, 0.62, 0.16, 0.55), 2.0)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+func _draw_role_ground_vfx() -> void:
+	var content_id := enemy_data.content_id if enemy_data != null else ""
+	var pulse := 0.5 + sin(_threat_pulse) * 0.5
+	var shadow_width := 34.0
+	var shadow_height := 15.0
+	if is_elite:
+		shadow_width = 52.0
+		shadow_height = 22.0
+	if is_boss:
+		shadow_width = 92.0
+		shadow_height = 36.0
+	_draw_ellipse(Vector2(6.0, 10.0), shadow_width, shadow_height, Color(0.02, 0.0, 0.0, 0.28))
+	match content_id:
+		"razor_leaper":
+			var trail := PackedVector2Array()
+			trail.append(Vector2(-26, -8))
+			trail.append(Vector2(-58, 0))
+			trail.append(Vector2(-26, 8))
+			draw_colored_polygon(trail, Color(0.88, 0.20, 0.14, 0.10 + pulse * 0.05))
+		"spore_herald":
+			draw_circle(Vector2.ZERO, 74.0 + pulse * 5.0, Color(0.38, 0.86, 0.34, 0.06 + pulse * 0.03))
+			draw_arc(Vector2.ZERO, 72.0 + pulse * 4.0, 0.0, TAU, 64, Color(0.56, 0.94, 0.38, 0.24), 2.0)
+		"shellback_brute_mvp":
+			_draw_ellipse(Vector2(10.0, 6.0), 44.0, 18.0, Color(0.22, 0.05, 0.03, 0.18))
+		"maw_colossus":
+			draw_circle(Vector2.ZERO, 82.0 + pulse * 8.0, Color(0.60, 0.10, 0.06, 0.05))
+			draw_arc(Vector2.ZERO, 76.0 + pulse * 5.0, 0.0, TAU, 72, Color(1.0, 0.32, 0.12, 0.22), 3.0)
+
+func _draw_ellipse(center: Vector2, radius_x: float, radius_y: float, color: Color) -> void:
+	var points := PackedVector2Array()
+	for i in range(28):
+		var angle := TAU * float(i) / 28.0
+		points.append(center + Vector2(cos(angle) * radius_x, sin(angle) * radius_y))
+	draw_colored_polygon(points, color)
 
 func get_threat_label() -> String:
 	if is_boss:

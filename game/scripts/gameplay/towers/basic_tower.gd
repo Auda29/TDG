@@ -152,6 +152,7 @@ func _animate_visuals() -> void:
 
 func _draw() -> void:
 	var overwatch_multiplier := _get_overwatch_multiplier()
+	_draw_role_ground_vfx(overwatch_multiplier)
 	var selection_radius: float = tower_data.selection_radius if tower_data != null else 30.0
 	var decal_color: Color = tower_data.decal_fill_color if tower_data != null else Color(0.10, 0.14, 0.16, 0.42)
 	var decal_arc_color: Color = tower_data.decal_arc_color if tower_data != null else Color(0.34, 0.40, 0.44, 0.22)
@@ -194,6 +195,49 @@ func _draw() -> void:
 		draw_circle(muzzle_pos, flash_size, Color(beam_core.r, beam_core.g, beam_core.b, 0.85 * shot_strength))
 		draw_circle(_last_target_local, impact_radius, Color(laser_color.r, laser_color.g, laser_color.b, 0.16 * shot_strength))
 		draw_arc(_last_target_local, impact_radius + 6.0, 0.0, TAU, 24, Color(beam_core.r, beam_core.g, beam_core.b, 0.45 * shot_strength), 2.0)
+
+func _draw_role_ground_vfx(overwatch_multiplier: float) -> void:
+	if tower_data == null:
+		return
+	match tower_data.tower_id:
+		"musterline_redoubt":
+			if _is_selected or _is_preview:
+				draw_arc(Vector2.ZERO, tower_data.adjacency_radius, 0.0, TAU, 56, Color(0.62, 0.72, 0.72, 0.22), 2.0)
+				draw_arc(Vector2.ZERO, tower_data.adjacency_radius - 8.0, 0.0, TAU, 56, Color(0.28, 0.38, 0.40, 0.14), 1.5)
+		"auric_sentinel_lancepost":
+			if _is_selected or _shot_flash > 0.0 or _is_preview:
+				var aim_color := Color(1.0, 0.76, 0.24, 0.18 + _shot_flash * 0.22)
+				_draw_forward_wedge(_get_effective_attack_range(), 0.12, aim_color, Color(1.0, 0.88, 0.42, 0.20))
+		"pyre_chapel_array":
+			if _is_selected or _shot_flash > 0.0 or _is_preview:
+				var heat_alpha := 0.08 + _shot_flash * 0.20
+				_draw_forward_wedge(_get_effective_attack_range(), 0.46, Color(1.0, 0.28, 0.08, heat_alpha), Color(1.0, 0.58, 0.18, 0.18 + _shot_flash * 0.25))
+		"cogforged_relay_spire":
+			var pulse := 0.5 + sin(_idle_sway * 1.35) * 0.5
+			var aura_alpha := 0.045 + pulse * 0.025
+			if overwatch_multiplier > 1.0:
+				aura_alpha += 0.035
+			draw_circle(Vector2.ZERO, tower_data.support_aura_radius, Color(0.20, 0.78, 0.90, aura_alpha))
+			draw_arc(Vector2.ZERO, tower_data.support_aura_radius, 0.0, TAU, 72, Color(0.32, 0.88, 1.0, 0.20 + pulse * 0.08), 2.0)
+			draw_arc(Vector2.ZERO, tower_data.support_aura_radius * 0.66, 0.0, TAU, 72, Color(0.14, 0.56, 0.70, 0.12), 1.5)
+		"reliquary_bombard":
+			if _is_selected or _is_preview:
+				draw_arc(Vector2.ZERO, _get_effective_attack_range(), 0.0, TAU, 96, Color(0.78, 0.62, 0.24, 0.16), 2.0)
+				draw_arc(Vector2.ZERO, tower_data.splash_radius, 0.0, TAU, 48, Color(1.0, 0.48, 0.18, 0.16), 2.0)
+
+func _draw_forward_wedge(radius: float, half_angle: float, fill_color: Color, edge_color: Color) -> void:
+	var facing := Vector2.UP.rotated(barrel.rotation if barrel != null else 0.0)
+	var points := PackedVector2Array()
+	points.append(Vector2.ZERO)
+	for i in range(13):
+		var t := float(i) / 12.0
+		points.append(facing.rotated(lerpf(-half_angle, half_angle, t)) * radius)
+	draw_colored_polygon(points, fill_color)
+	var outline := PackedVector2Array()
+	for point in points:
+		outline.append(point)
+	outline.append(Vector2.ZERO)
+	draw_polyline(outline, edge_color, 2.0)
 
 func _get_overwatch_multiplier() -> float:
 	var commander = GameState.selected_commander

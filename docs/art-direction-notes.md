@@ -202,6 +202,47 @@ Empfohlene Richtung:
 - Sichtblocker nur dort, wo sie als bewusstes Gameplay-Element funktionieren
 - klare Trennung von begehbaren, nicht begehbaren und bebaubaren Flächen
 
+### 2.5D Prototype Visual Pass
+
+Der aktuelle Godot-Prototyp bleibt spielerisch ein top-down Tower-Defense-Spiel,
+soll aber visuell staerker nach **2.5D / pseudo-3D** wirken. Das bedeutet fuer
+den MVP keine vollstaendige 3D-Produktion, sondern klarere Volumen durch:
+
+- sichtbare Bodenschatten unter Towern und Gegnern
+- dunklere Seitenflaechen unter helleren Deckflaechen
+- kleine Kantenlichter an Waffen, Panzerplatten und Chitin
+- hoehere Silhouetten bei Artillerie, Relay-Spire und Boss
+- breitere, geerdete Sockel bei Verteidigungsanlagen
+- asymmetrische Zusatzformen bei Gegnern, damit sie weniger flach wirken
+
+Die Kamera bleibt lesbar top-down. Pseudo-3D darf den Pfad, Trefferfeedback und
+Auswahlringe nicht verdecken.
+
+### MVP Asset Mapping
+
+Die aktuellen MVP-Namen sollen direkt auf die Designrollen einzahlen:
+
+- **Musterline Redoubt**: kompakter Linienbunker mit niedriger, breiter
+  Stahl-/Betonsilhouette und kleinen Dauerfeuer-Muendungen.
+- **Auric Sentinel Lancepost**: hoeherer Praezisionsposten mit langer
+  Lanzenwaffe, schwerem Sockel und klarer Anti-Boss-Praesenz.
+- **Pyre Chapel Array**: gedrungene Chokepoint-Anlage mit vorderem
+  Emissionsmaul, Hitzekern und kurzer, lesbarer Feuerzone.
+- **Cogforged Relay Spire**: schlanker Support-Spire mit Antennen, Signalringen
+  und subtiler Aura statt rohem Waffengewicht.
+- **Reliquary Bombard**: massive Artillerieplattform mit hoher Bombard-Roehre,
+  Stuetzbeinen und schwerem Rueckstossprofil.
+- **Scuttleborn**: kleiner krabbelnder Schwarmkoerper mit vielen Beinen und
+  klarer Wegwerf-Silhouette.
+- **Razor Leaper**: schmaler, nach vorne gezogener Koerper mit Klingenformen
+  und Bewegungsschweif.
+- **Shellback Brute**: langsamer Frontbrecher mit ueberlappenden
+  Panzerplatten.
+- **Spore Herald**: Support-Ziel mit Rueckensporen und sichtbarer, aber
+  dezenter Buff-Aura.
+- **Maw Colossus**: breiter Bosskoerper mit dominanter Masse, Kieferform,
+  Rueckenplatten und starkem Bodenschatten.
+
 ---
 
 ## Tower Visual Differentiation

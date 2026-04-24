@@ -7,10 +7,43 @@
 script = ExtResource("1")
 enemy_data = ExtResource("2")
 
+[node name="Shadow" type="Polygon2D" parent="."]
+z_index = -20
+color = Color(0.035, 0.0, 0.0, 0.48)
+polygon = PackedVector2Array(-68, -24, -22, -48, 42, -42, 72, -10, 70, 26, 34, 48, -22, 52, -72, 24)
+
+[node name="Belly" type="Polygon2D" parent="."]
+z_index = -5
+color = Color(0.10, 0.03, 0.03, 1)
+polygon = PackedVector2Array(-54, -18, -14, -32, 34, -24, 58, 0, 52, 22, 24, 40, -20, 42, -58, 18)
+
 [node name="Body" type="Polygon2D" parent="."]
-color = Color(0.18, 0.08, 0.08, 1)
-polygon = PackedVector2Array(-40, -26, -10, -34, 24, -28, 46, -6, 50, 14, 28, 30, -6, 36, -40, 24, -56, 2)
+z_index = -4
+color = Color(0.17, 0.06, 0.06, 1)
+polygon = PackedVector2Array(-48, -28, -12, -39, 28, -32, 54, -8, 58, 16, 31, 34, -8, 41, -46, 26, -64, 2)
+
+[node name="BackPlates" type="Polygon2D" parent="."]
+z_index = -2
+color = Color(0.30, 0.11, 0.09, 1)
+polygon = PackedVector2Array(-34, -28, -10, -43, 6, -27, 22, -36, 43, -15, 31, 0, 45, 14, 20, 31, 3, 19, -15, 34, -39, 20, -27, 2, -45, -10)
+
+[node name="MawPlate" type="Polygon2D" parent="."]
+z_index = -1
+color = Color(0.46, 0.17, 0.11, 1)
+polygon = PackedVector2Array(18, -20, 52, -8, 68, 2, 52, 14, 18, 22, 32, 2)
 
 [node name="Core" type="Polygon2D" parent="."]
-color = Color(0.88, 0.60, 0.16, 1)
-polygon = PackedVector2Array(-2, -10, 14, -4, 18, 10, 0, 16, -10, 4)
+color = Color(0.94, 0.62, 0.16, 1)
+polygon = PackedVector2Array(-4, -12, 16, -5, 20, 11, 0, 18, -13, 4)
+
+[node name="UpperMandible" type="Polygon2D" parent="."]
+color = Color(0.74, 0.30, 0.14, 1)
+polygon = PackedVector2Array(48, -14, 82, -26, 65, -2)
+
+[node name="LowerMandible" type="Polygon2D" parent="."]
+color = Color(0.60, 0.20, 0.11, 1)
+polygon = PackedVector2Array(48, 15, 80, 28, 64, 1)
+
+[node name="SpineRidge" type="Polygon2D" parent="."]
+color = Color(0.82, 0.42, 0.18, 1)
+polygon = PackedVector2Array(-34, -31, -26, -50, -16, -34, 0, -47, 8, -30, 25, -40, 31, -24)

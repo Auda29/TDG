@@ -7,10 +7,30 @@
 script = ExtResource("1")
 enemy_data = ExtResource("2")
 
+[node name="Shadow" type="Polygon2D" parent="."]
+z_index = -20
+color = Color(0.03, 0.0, 0.0, 0.30)
+polygon = PackedVector2Array(-22, -6, -6, -14, 18, -10, 28, 0, 16, 12, -8, 14, -26, 4)
+
+[node name="LegsBack" type="Polygon2D" parent="."]
+z_index = -4
+color = Color(0.16, 0.06, 0.07, 1)
+polygon = PackedVector2Array(-16, -10, -30, -20, -21, -6, -32, 2, -16, 4, -25, 18, -10, 10, 4, 18, 0, 8, 18, 14, 10, 2, 24, -8, 7, -6)
+
 [node name="Body" type="Polygon2D" parent="."]
-color = Color(0.26, 0.13, 0.15, 1)
-polygon = PackedVector2Array(-12, -12, 4, -16, 20, 0, 4, 16, -12, 12, -18, 0)
+z_index = -2
+color = Color(0.22, 0.09, 0.11, 1)
+polygon = PackedVector2Array(-14, -13, 4, -17, 21, -2, 22, 4, 4, 17, -14, 13, -21, 0)
+
+[node name="Carapace" type="Polygon2D" parent="."]
+z_index = -1
+color = Color(0.34, 0.15, 0.16, 1)
+polygon = PackedVector2Array(-10, -9, 2, -13, 14, -3, 14, 4, 2, 13, -10, 9, -16, 0)
 
 [node name="Core" type="Polygon2D" parent="."]
-color = Color(0.63, 0.69, 0.22, 1)
-polygon = PackedVector2Array(4, -6, 14, 0, 4, 6, -2, 0)
+color = Color(0.68, 0.76, 0.24, 1)
+polygon = PackedVector2Array(3, -6, 15, 0, 3, 7, -3, 0)
+
+[node name="RidgeHighlight" type="Polygon2D" parent="."]
+color = Color(0.58, 0.28, 0.22, 1)
+polygon = PackedVector2Array(-11, -3, 2, -8, 12, -2, 2, -4)
